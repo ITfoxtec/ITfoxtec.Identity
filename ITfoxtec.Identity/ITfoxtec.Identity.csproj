@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors>ITfoxtec.</Authors>
+    <Authors>ITfoxtec</Authors>
     <Company>ITfoxtec</Company>
     <Copyright>© 2018 ITfoxtec</Copyright>
     <PackageLicenseUrl>https://github.com/ITfoxtec/ITfoxtec.Identity/blob/master/LICENSE</PackageLicenseUrl>
