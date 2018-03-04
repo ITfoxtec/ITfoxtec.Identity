@@ -2,6 +2,23 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>ITfoxtec.</Authors>
+    <Company>ITfoxtec</Company>
+    <Copyright>© 2018 ITfoxtec</Copyright>
+    <PackageLicenseUrl>https://github.com/ITfoxtec/ITfoxtec.Identity/blob/master/LICENSE</PackageLicenseUrl>
+    <Description>OAuth 2.0 and OpenID Connect components.</Description>
+    <PackageTags>OAuth 2.0 OpenID Connect OIDC</PackageTags>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <Version>1.0.0-beta1</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard2.0\ITfoxtec.Identity.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard2.0\ITfoxtec.Identity.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
