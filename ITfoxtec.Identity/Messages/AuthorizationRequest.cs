@@ -27,7 +27,7 @@ namespace ITfoxtec.Identity.Messages
 
         /// <summary>
         /// OAuth 2.0 OPTIONAL. The scope of the access request as described by OAuth 2.0 Section 3.3.
-        /// OpenID Connect REQUIRED. OpenID Connect requests MUST contain the openid scope value.
+        /// OIDC REQUIRED. OpenID Connect requests MUST contain the openid scope value.
         /// The value of the scope parameter is expressed as a list of space-delimited, case-sensitive strings.
         /// </summary>
         [JsonProperty(PropertyName = "scope")]

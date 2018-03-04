@@ -51,6 +51,35 @@
 
         #region OIDC claims
         /// <summary>
+        /// Time when the End-User authentication occurred. Its value is a JSON number representing the number of seconds from 1970-01-01T0:0:0Z as measured in UTC until the date/time. When a max_age
+        /// request is made or when auth_time is requested as an Essential Claim, then this Claim is REQUIRED; otherwise, its inclusion is OPTIONAL.
+        /// </summary>
+        public const string AuthTime = "auth_time";
+        /// <summary>
+        /// String value used to associate a Client session with an ID Token, and to mitigate replay attacks. The value is passed through unmodified from the Authentication Request to the ID Token. 
+        /// If present in the ID Token, Clients MUST verify that the nonce Claim Value is equal to the value of the nonce parameter sent in the Authentication Request. If present in the Authentication 
+        /// Request, Authorization Servers MUST include a nonce Claim in the ID Token with the Claim Value being the nonce value sent in the Authentication Request. Authorization Servers SHOULD 
+        /// perform no other processing on nonce values used. The nonce value is a case sensitive string.
+        /// </summary>
+        public const string Nonce = "nonce";
+        /// <summary>
+        /// OPTIONAL. Authentication Context Class Reference. String specifying an Authentication Context Class Reference value that identifies the Authentication Context Class that the authentication 
+        /// performed satisfied. The value "0" indicates the End-User authentication did not meet the requirements of ISO/IEC 29115 [ISO29115] level 1. Authentication using a long-lived browser cookie, 
+        /// for instance, is one example where the use of "level 0" is appropriate. 
+        /// </summary>
+        public const string Acr = "acr";
+        /// <summary>
+        /// OPTIONAL. Authentication Methods References. JSON array of strings that are identifiers for authentication methods used in the authentication. For instance, values might indicate that both 
+        /// password and OTP authentication methods were used.
+        /// </summary>
+        public const string Amr = "amr";
+        /// <summary>
+        /// OPTIONAL. Authorized party - the party to which the ID Token was issued. If present, it MUST contain the OAuth 2.0 Client ID of this party. This Claim is only needed when the ID Token has 
+        /// a single audience value and that audience is different than the authorized party. It MAY be included even when the authorized party is the same as the sole audience. The azp value is a
+        /// case sensitive string containing a StringOrURI value.
+        /// </summary>
+        public const string Azp = "azp";
+        /// <summary>
         /// End-User's full name in displayable form including all name parts, possibly including titles and suffixes, ordered according to the End-User's locale and preferences.
         /// </summary>
         public const string Name = "name";

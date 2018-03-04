@@ -8,7 +8,7 @@ namespace ITfoxtec.Identity.Messages
     public class AuthenticationResponse : AuthorizationResponse
     {
         /// <summary>
-        /// OpenID Connect Implicit REQUIRED else OPTIONAL.
+        /// OIDC Implicit REQUIRED else OPTIONAL.
         /// </summary>
         [JsonProperty(PropertyName = "id_token")]
         public string IdToken { get; set; }

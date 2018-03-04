@@ -40,12 +40,12 @@ namespace ITfoxtec.Identity
         {
             if (response == null) new ArgumentNullException(nameof(response));
 
-            if (!isImplicitFlow && string.IsNullOrEmpty(response.Code)) throw new ArgumentNullException(nameof(response.Code), response.GetTypeName());
-
-            if (string.IsNullOrEmpty(response.Error))
+            if (!string.IsNullOrEmpty(response.Error))
             {
                 throw new ResponseErrorException(response.Error, $"{response.GetTypeName()}, {response.ErrorDescription}");
             }
+
+            if (!isImplicitFlow && string.IsNullOrEmpty(response.Code)) throw new ArgumentNullException(nameof(response.Code), response.GetTypeName());
         }
 
         /// <summary>
@@ -55,10 +55,38 @@ namespace ITfoxtec.Identity
         {
             if (response == null) new ArgumentNullException(nameof(response));
 
-            (response as AuthorizationResponse).Validate();
+            (response as AuthorizationResponse).Validate(isImplicitFlow);
 
-            if (string.IsNullOrEmpty(response.TokenType)) throw new ArgumentNullException(nameof(response.TokenType), response.GetTypeName());
+            if ((!string.IsNullOrEmpty(response.IdToken) || !string.IsNullOrEmpty(response.IdToken)) && string.IsNullOrEmpty(response.TokenType))
+                throw new ArgumentNullException(nameof(response.TokenType), response.GetTypeName());
             if (isImplicitFlow && string.IsNullOrEmpty(response.IdToken)) throw new ArgumentNullException(nameof(response.IdToken), response.GetTypeName());
+        }
+
+        /// <summary>
+        /// Is Valid OAuth 2.0 Access Token Request or OIDC Token Request.
+        /// </summary>
+        public static void Validate(this TokenRequest request)
+        {
+            if (request == null) new ArgumentNullException(nameof(request));
+
+            if (string.IsNullOrEmpty(request.GrantType)) throw new ArgumentNullException(nameof(request.GrantType), request.GetTypeName());
+        }
+
+        /// <summary>
+        /// Is Valid OAuth 2.0 Access Token Response or OIDC Token Response.
+        /// </summary>
+        public static void Validate(this TokenResponse response, bool isOidc = false)
+        {
+            if (response == null) new ArgumentNullException(nameof(response));
+
+            if (!string.IsNullOrEmpty(response.Error))
+            {
+                throw new ResponseErrorException(response.Error, $"{response.GetTypeName()}, {response.ErrorDescription}");
+            }
+
+            if (!isOidc && string.IsNullOrEmpty(response.AccessToken)) throw new ArgumentNullException(nameof(response.AccessToken), response.GetTypeName());
+            if (string.IsNullOrEmpty(response.TokenType)) throw new ArgumentNullException(nameof(response.TokenType), response.GetTypeName());
+            if (isOidc && string.IsNullOrEmpty(response.IdToken)) throw new ArgumentNullException(nameof(response.IdToken), response.GetTypeName());
         }
     }
 }

@@ -8,20 +8,20 @@ namespace ITfoxtec.Identity
     /// </summary>
     public static class JsonExtensions
     {
-        static readonly JsonSerializer serializer = new JsonSerializer
+        private static readonly JsonSerializer serializer = new JsonSerializer
         {
             NullValueHandling = NullValueHandling.Ignore,
             DefaultValueHandling = DefaultValueHandling.Ignore,
             Formatting = Formatting.Indented
         };
 
-        static readonly JsonSerializerSettings settings = new JsonSerializerSettings
+        private static readonly JsonSerializerSettings settings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore,
             DefaultValueHandling = DefaultValueHandling.Ignore,
         };
 
-        static readonly JsonSerializerSettings settingsIndented = new JsonSerializerSettings
+        private static readonly JsonSerializerSettings settingsIndented = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore,
             DefaultValueHandling = DefaultValueHandling.Ignore,

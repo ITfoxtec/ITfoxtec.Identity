@@ -89,6 +89,10 @@ namespace ITfoxtec.Identity.Schemas
         [JsonProperty(PropertyName = "e")]
         public string Exponent { get; set; }
 
+        public JsonWebKey()
+        {
+        }
+
         public JsonWebKey(X509Certificate2 certificate)
         {
             KeyType = IdentityConstants.JsonWebKeyTypes.RSA;

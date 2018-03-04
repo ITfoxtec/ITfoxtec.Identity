@@ -77,15 +77,5 @@ namespace ITfoxtec.Identity.Schemas
         /// </summary>
         [JsonProperty(PropertyName = "claims_supported")]
         public IEnumerable<string> ClaimsSupported { get; set; }
-
-        public string ToJson()
-        {
-            return this.ToJsonIndented();
-        }
-
-        public JObject ToJObject()
-        {
-            return ((object)this).ToJObject();
-        }
     }
 }

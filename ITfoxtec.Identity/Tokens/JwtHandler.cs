@@ -1,24 +1,61 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.IdentityModel.Tokens;
+using msTokens = Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
+using msJwt = System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
+using ITfoxtec.Identity.Schemas;
 
 namespace ITfoxtec.Identity.Tokens
 {
     public class JwtHandler
     {
-        public static JwtSecurityToken CreateToken(X509Certificate2 certificate, string issuer, string audience, IEnumerable<Claim> claims, int beforeIn = 60, int expiresIn = 3600, string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256)
+        public static msJwt.JwtSecurityToken CreateToken(X509Certificate2 certificate, string issuer, string audience, IEnumerable<Claim> claims, int beforeIn = 60, int expiresIn = 3600, string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256)
         {   
-            var header = new JwtHeader(new SigningCredentials(new X509SecurityKey(certificate), algorithm));
+            var header = new msJwt.JwtHeader(new msTokens.SigningCredentials(new msTokens.X509SecurityKey(certificate), algorithm));
             header.Add(IdentityConstants.JwtHeaders.X509CertificateSHA1Thumbprint, WebEncoders.Base64UrlEncode(certificate.GetCertHash()));
 
             var udtNow = DateTime.UtcNow;
-            var payload = new JwtPayload(issuer, audience, claims, udtNow.AddMinutes(-beforeIn), udtNow.AddSeconds(expiresIn));
+            var payload = new msJwt.JwtPayload(issuer, audience, claims, udtNow.AddMinutes(-beforeIn), udtNow.AddSeconds(expiresIn));
 
-            return new JwtSecurityToken(header, payload);
+            return new msJwt.JwtSecurityToken(header, payload);
+        }
+
+        public static (ClaimsPrincipal, msTokens.SecurityToken) ValidateToken(string token, string issuer, IEnumerable<JsonWebKey> issuerSigningKeys, bool validateAudience = true, string audience = null, string nameClaimType = JwtClaimTypes.Subject, string rolesClaimType = JwtClaimTypes.Roles)
+        {
+            var validationParameters = new msTokens.TokenValidationParameters
+            {
+                SaveSigninToken = true,
+                ValidIssuer = issuer,
+                IssuerSigningKeys = ConvertJsonWebKeys(issuerSigningKeys),
+                ValidateAudience = validateAudience,
+                ValidAudience = audience,
+                NameClaimType = nameClaimType,
+                RoleClaimType = rolesClaimType,
+            };
+
+            msTokens.SecurityToken securityToken;
+            var claimsPrincipal = GetTokenHandler().ValidateToken(token, validationParameters, out securityToken);
+            return (claimsPrincipal, securityToken);
+        }
+
+        public static msJwt.JwtSecurityToken ReadToken(string token)
+        {
+            return GetTokenHandler().ReadJwtToken(token);
+        }
+
+        private static msJwt.JwtSecurityTokenHandler GetTokenHandler()
+        {
+            var tokenHandler = new msJwt.JwtSecurityTokenHandler();
+            tokenHandler.InboundClaimTypeMap.Clear();
+            return tokenHandler;
+        }
+
+        private static IEnumerable<msTokens.JsonWebKey> ConvertJsonWebKeys(IEnumerable<JsonWebKey> issuerSigningKeys)
+        {          
+            var json = issuerSigningKeys.ToJson();
+            return json.ToObject<IEnumerable<msTokens.JsonWebKey>>();
         }
     }
 }
