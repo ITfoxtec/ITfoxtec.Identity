@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
-namespace ITfoxtec.Identity.Schemas
+namespace ITfoxtec.Identity.Discovery
 {
     /// <summary>
     /// A JSON Web Key (JWK) set.

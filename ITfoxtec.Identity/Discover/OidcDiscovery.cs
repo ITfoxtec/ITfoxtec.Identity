@@ -1,8 +1,7 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
-namespace ITfoxtec.Identity.Schemas
+namespace ITfoxtec.Identity.Discovery
 {
     public class OidcDiscovery
     {

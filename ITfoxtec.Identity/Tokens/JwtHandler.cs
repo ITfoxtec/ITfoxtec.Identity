@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using msJwt = System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
-using ITfoxtec.Identity.Schemas;
 
 namespace ITfoxtec.Identity.Tokens
 {
@@ -22,7 +21,7 @@ namespace ITfoxtec.Identity.Tokens
             return new msJwt.JwtSecurityToken(header, payload);
         }
 
-        public static (ClaimsPrincipal, msTokens.SecurityToken) ValidateToken(string token, string issuer, IEnumerable<JsonWebKey> issuerSigningKeys, bool validateAudience = true, string audience = null, string nameClaimType = JwtClaimTypes.Subject, string rolesClaimType = JwtClaimTypes.Roles)
+        public static (ClaimsPrincipal, msTokens.SecurityToken) ValidateToken(string token, string issuer, IEnumerable<JsonWebKey> issuerSigningKeys, string audience = null, bool validateAudience = true, string nameClaimType = JwtClaimTypes.Subject, string rolesClaimType = JwtClaimTypes.Roles)
         {
             var validationParameters = new msTokens.TokenValidationParameters
             {
