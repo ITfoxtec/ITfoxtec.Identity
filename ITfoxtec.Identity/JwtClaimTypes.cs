@@ -173,7 +173,7 @@
 
         #region Custom claims
         /// <summary>
-        /// End-User's roles as al list in a JSON array.
+        /// End-User's roles as a list in a JSON array.
         /// </summary>
         public const string Roles = "roles";
         #endregion
