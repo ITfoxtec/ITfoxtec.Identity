@@ -57,7 +57,7 @@ namespace ITfoxtec.Identity
 
             (response as AuthorizationResponse).Validate(isImplicitFlow);
 
-            if ((!string.IsNullOrEmpty(response.IdToken) || !string.IsNullOrEmpty(response.IdToken)) && string.IsNullOrEmpty(response.TokenType))
+            if ((!string.IsNullOrEmpty(response.IdToken) || !string.IsNullOrEmpty(response.AccessToken)) && string.IsNullOrEmpty(response.TokenType))
                 throw new ArgumentNullException(nameof(response.TokenType), response.GetTypeName());
             if (isImplicitFlow && string.IsNullOrEmpty(response.IdToken)) throw new ArgumentNullException(nameof(response.IdToken), response.GetTypeName());
         }
