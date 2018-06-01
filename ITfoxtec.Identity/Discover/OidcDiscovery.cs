@@ -17,7 +17,7 @@ namespace ITfoxtec.Identity.Discovery
         /// REQUIRED. URL of the OP's OAuth 2.0 Authorization Endpoint [OpenID.Core].
         /// </summary>
         [JsonProperty(PropertyName = "authorization_endpoint")]
-        public string AuthorizationAndpoint { get; set; }
+        public string AuthorizationEndpoint { get; set; }
 
         /// <summary>
         /// URL of the OP's OAuth 2.0 Token Endpoint [OpenID.Core]. This is REQUIRED unless only the Implicit Flow is used.
