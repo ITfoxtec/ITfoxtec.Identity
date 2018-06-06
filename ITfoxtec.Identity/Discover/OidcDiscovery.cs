@@ -26,6 +26,12 @@ namespace ITfoxtec.Identity.Discovery
         public string TokenEndpoint { get; set; }
 
         /// <summary>
+        /// URL at the OP to which an RP can perform a redirect to request that the End-User be logged out at the OP [OpenID.SessionManagement].
+        /// </summary>
+        [JsonProperty(PropertyName = "end_session_endpoint")]
+        public string EndSessionEndpoint { get; set; }
+
+        /// <summary>
         /// REQUIRED. URL of the OP's JSON Web Key Set [JWK] document. This contains the signing key(s) the RP uses to validate signatures from the OP. The JWK Set MAY also contain 
         /// the Server's encryption key(s), which are used by RPs to encrypt requests to the Server. When both signing and encryption keys are made available, a use (Key Use) 
         /// parameter value is REQUIRED for all keys in the referenced JWK Set to indicate each key's intended usage. Although some algorithms allow the same key to be used for 
