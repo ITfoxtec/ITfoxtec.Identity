@@ -8,20 +8,29 @@ namespace ITfoxtec.Identity
     /// </summary>
     public static class JsonExtensions
     {
-        private static readonly JsonSerializer serializer = new JsonSerializer
+        /// <summary>
+        /// JsonSerializer with indented format.
+        /// </summary>
+        public static readonly JsonSerializer SerializerIndented = new JsonSerializer
         {
             NullValueHandling = NullValueHandling.Ignore,
             DefaultValueHandling = DefaultValueHandling.Ignore,
             Formatting = Formatting.Indented
         };
 
-        private static readonly JsonSerializerSettings settings = new JsonSerializerSettings
+        /// <summary>
+        /// JsonSerializerSettings.
+        /// </summary>
+        public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore,
             DefaultValueHandling = DefaultValueHandling.Ignore,
         };
 
-        private static readonly JsonSerializerSettings settingsIndented = new JsonSerializerSettings
+        /// <summary>
+        /// JsonSerializerSettings with indented format.
+        /// </summary>
+        public static readonly JsonSerializerSettings SettingsIndented = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore,
             DefaultValueHandling = DefaultValueHandling.Ignore,
@@ -33,7 +42,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static JObject ToJObject(this object obj)
         {
-            return JObject.FromObject(obj, serializer);
+            return JObject.FromObject(obj, SerializerIndented);
         }
 
         /// <summary>
@@ -41,14 +50,14 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static string ToJson(this object obj)
         {
-            return JsonConvert.SerializeObject(obj, settings);
+            return JsonConvert.SerializeObject(obj, Settings);
         }
         /// <summary>
         /// Converts an object to a json indented string.
         /// </summary>
         public static string ToJsonIndented(this object obj)
         {
-            return JsonConvert.SerializeObject(obj, settingsIndented);
+            return JsonConvert.SerializeObject(obj, SettingsIndented);
         }
 
         /// <summary>
@@ -56,7 +65,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static T ToObject<T>(this string json)
         {
-            return JsonConvert.DeserializeObject<T>(json, settings);
+            return JsonConvert.DeserializeObject<T>(json, Settings);
         }
     }
 }
