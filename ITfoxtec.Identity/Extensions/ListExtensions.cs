@@ -39,7 +39,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static string[] ToSpaceList(this string value)
         {
-            if (!string.IsNullOrEmpty(value))
+            if (!string.IsNullOrWhiteSpace(value))
             {
                 return value.Split(' ');
             }
