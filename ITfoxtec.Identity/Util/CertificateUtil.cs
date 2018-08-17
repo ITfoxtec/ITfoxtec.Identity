@@ -13,25 +13,19 @@ namespace ITfoxtec.Identity.Util
             return new X509Certificate2(path);
         }
 
-        public static X509Certificate2 Load(string path, string password)
+        public static X509Certificate2 Load(string path, string password, X509KeyStorageFlags keyStorageFlags = X509KeyStorageFlags.DefaultKeySet)
         {
             if (string.IsNullOrWhiteSpace(path)) throw new ArgumentNullException(nameof(path));
             if (string.IsNullOrWhiteSpace(password)) throw new ArgumentNullException(nameof(password));
 
-            return new X509Certificate2(path, password);
+            return new X509Certificate2(path, password, keyStorageFlags);
         }
-
-        public static X509Certificate2 Load(string path, SecureString password)
+        public static X509Certificate2 Load(string path, SecureString password, X509KeyStorageFlags keyStorageFlags = X509KeyStorageFlags.DefaultKeySet)
         {
             if (string.IsNullOrWhiteSpace(path)) throw new ArgumentNullException(nameof(path));
             if (password == null) throw new ArgumentNullException(nameof(password));
 
-            return new X509Certificate2(path, password);
-        }
-
-        public static X509Certificate2 Load(object p)
-        {
-            throw new NotImplementedException();
+            return new X509Certificate2(path, password, keyStorageFlags);
         }
 
         public static X509Certificate2 LoadBytes(string certificate)
@@ -42,13 +36,13 @@ namespace ITfoxtec.Identity.Util
             return new X509Certificate2(encoding.GetBytes(certificate));
         }
 
-        public static X509Certificate2 LoadBytes(string certificate, string password)
+        public static X509Certificate2 LoadBytes(string certificate, string password, X509KeyStorageFlags keyStorageFlags = X509KeyStorageFlags.DefaultKeySet)
         {
             if (string.IsNullOrWhiteSpace(certificate)) throw new ArgumentNullException(nameof(certificate));
             if (password == null) throw new ArgumentNullException(nameof(password));
 
             var encoding = new System.Text.UTF8Encoding();
-            return new X509Certificate2(encoding.GetBytes(certificate), password);
+            return new X509Certificate2(encoding.GetBytes(certificate), password, keyStorageFlags);
         }
 
         public static X509Certificate2 Load(StoreName name, StoreLocation location, X509FindType type, string findValue)

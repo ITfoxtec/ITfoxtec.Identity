@@ -89,10 +89,53 @@ namespace ITfoxtec.Identity.Discovery
         [JsonProperty(PropertyName = "e")]
         public string Exponent { get; set; }
 
+        /// <summary>
+        /// The exponent member contains the private exponent value for the RSA private key.It is represented as the base64url encoding of the value's unsigned big endian 
+        /// representation as a byte array.
+        /// </summary>
+        [JsonProperty(PropertyName = "d")]
+        public string D { get; set; }
+
+        /// <summary>
+        /// The exponent member contains the first prime factor, a positive integer. It is represented as the base64url encoding of the value's unsigned big endian 
+        /// representation as a byte array.
+        /// </summary>
+        [JsonProperty(PropertyName = "p")]
+        public string P { get; set; }
+
+        /// <summary>
+        /// The exponent member contains the second prime factor, a positive integer.It is represented as the base64url encoding of the value's unsigned big endian 
+        /// representation as a byte array.
+        /// </summary>
+        [JsonProperty(PropertyName = "q")]
+        public string Q { get; set; }
+
+        /// <summary>
+        /// The exponent member contains the Chinese Remainder Theorem(CRT) exponent of the first factor, a positive integer.It is represented as the base64url encoding 
+        /// of the value's unsigned big endian representation as a byte array.
+        /// </summary>
+        [JsonProperty(PropertyName = "dp")]
+        public string DP { get; set; }
+
+        /// <summary>
+        /// The exponent member contains the Chinese Remainder Theorem(CRT) exponent of the second factor, a positive integer.It is represented as the base64url encoding 
+        /// of the value's unsigned big endian representation as a byte array.
+        /// </summary>
+        [JsonProperty(PropertyName = "dq")]
+        public string DQ { get; set; }
+
+        /// <summary>
+        /// The exponent member contains the Chinese Remainder Theorem(CRT) coefficient of the second factor, a positive integer.It is represented as the base64url encoding 
+        /// of the value's unsigned big endian representation as a byte array.
+        /// </summary>
+        [JsonProperty(PropertyName = "qi")]
+        public string InverseQ { get; set; }
+
         public JsonWebKey()
         {
         }
 
+        [Obsolete("User X509Certificate2.ToJsonWebKey().")]
         public JsonWebKey(X509Certificate2 certificate)
         {
             KeyType = IdentityConstants.JsonWebKeyTypes.RSA;
