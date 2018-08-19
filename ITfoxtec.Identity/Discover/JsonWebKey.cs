@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
 namespace ITfoxtec.Identity.Discovery
@@ -131,6 +128,26 @@ namespace ITfoxtec.Identity.Discovery
         [JsonProperty(PropertyName = "qi")]
         public string InverseQ { get; set; }
 
+        /// <summary>
+        /// JWK with public key.
+        /// </summary>
+        [JsonIgnore]
+        public JsonWebKey Public
+        {
+            get
+            {
+                return new JsonWebKey
+                {
+                    KeyType = KeyType,
+                    KeyId = KeyId,
+                    X509CertificateChain = X509CertificateChain,
+                    X509CertificateSHA1Thumbprint = X509CertificateSHA1Thumbprint,
+                    Modulus = Modulus,
+                    Exponent = Exponent
+                };
+            }
+        }
+
         public JsonWebKey()
         {
         }
@@ -138,16 +155,13 @@ namespace ITfoxtec.Identity.Discovery
         [Obsolete("User X509Certificate2.ToJsonWebKey().")]
         public JsonWebKey(X509Certificate2 certificate)
         {
-            KeyType = IdentityConstants.JsonWebKeyTypes.RSA;
-
-            var securityKey = new X509SecurityKey(certificate);
-            KeyId = securityKey.KeyId;
-            X509CertificateChain = new[] { Convert.ToBase64String(certificate.RawData) };
-            X509CertificateSHA1Thumbprint = WebEncoders.Base64UrlEncode(certificate.GetCertHash());
-
-            var parameters = (securityKey.PublicKey as RSA).ExportParameters(false);
-            Modulus = WebEncoders.Base64UrlEncode(parameters.Modulus);
-            Exponent = WebEncoders.Base64UrlEncode(parameters.Exponent);
+            var jwk = certificate.ToJsonWebKey().Result;
+            KeyType = jwk.KeyType;
+            KeyId = jwk.KeyId;
+            X509CertificateChain = jwk.X509CertificateChain;
+            X509CertificateSHA1Thumbprint = jwk.X509CertificateSHA1Thumbprint;
+            Modulus = jwk.Modulus;
+            Exponent = jwk.Exponent;
         }
     }
 }

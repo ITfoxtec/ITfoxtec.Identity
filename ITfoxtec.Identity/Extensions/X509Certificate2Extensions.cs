@@ -17,29 +17,31 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static Task<JsonWebKey> ToJsonWebKey(this X509Certificate2 certificate, bool includePrivateKey = false)
         {
-            var jsonWebKey = new JsonWebKey();
-            jsonWebKey.KeyType = IdentityConstants.JsonWebKeyTypes.RSA;
+            if (certificate == null) new ArgumentNullException(nameof(certificate));
+
+            var jwk = new JsonWebKey();
+            jwk.KeyType = IdentityConstants.JsonWebKeyTypes.RSA;
 
             var securityKey = new Microsoft.IdentityModel.Tokens.X509SecurityKey(certificate);
-            jsonWebKey.KeyId = securityKey.KeyId;
-            jsonWebKey.X509CertificateChain = new[] { Convert.ToBase64String(certificate.RawData) };
-            jsonWebKey.X509CertificateSHA1Thumbprint = WebEncoders.Base64UrlEncode(certificate.GetCertHash());
+            jwk.KeyId = securityKey.KeyId;
+            jwk.X509CertificateChain = new[] { Convert.ToBase64String(certificate.RawData) };
+            jwk.X509CertificateSHA1Thumbprint = WebEncoders.Base64UrlEncode(certificate.GetCertHash());
 
             var parameters = (securityKey.PublicKey as RSA).ExportParameters(false);
-            jsonWebKey.Modulus = WebEncoders.Base64UrlEncode(parameters.Modulus);
-            jsonWebKey.Exponent = WebEncoders.Base64UrlEncode(parameters.Exponent);
+            jwk.Modulus = WebEncoders.Base64UrlEncode(parameters.Modulus);
+            jwk.Exponent = WebEncoders.Base64UrlEncode(parameters.Exponent);
 
             if (includePrivateKey && securityKey.PrivateKeyStatus == Microsoft.IdentityModel.Tokens.PrivateKeyStatus.Exists)
             {
                 parameters = (securityKey.PrivateKey as RSA).ExportParameters(true);
-                jsonWebKey.D = WebEncoders.Base64UrlEncode(parameters.D);
-                jsonWebKey.P = WebEncoders.Base64UrlEncode(parameters.P);
-                jsonWebKey.Q = WebEncoders.Base64UrlEncode(parameters.Q);
-                jsonWebKey.DP = WebEncoders.Base64UrlEncode(parameters.DP);
-                jsonWebKey.DQ = WebEncoders.Base64UrlEncode(parameters.DQ);
-                jsonWebKey.InverseQ = WebEncoders.Base64UrlEncode(parameters.InverseQ);
+                jwk.D = WebEncoders.Base64UrlEncode(parameters.D);
+                jwk.P = WebEncoders.Base64UrlEncode(parameters.P);
+                jwk.Q = WebEncoders.Base64UrlEncode(parameters.Q);
+                jwk.DP = WebEncoders.Base64UrlEncode(parameters.DP);
+                jwk.DQ = WebEncoders.Base64UrlEncode(parameters.DQ);
+                jwk.InverseQ = WebEncoders.Base64UrlEncode(parameters.InverseQ);
             }
-            return Task.FromResult(jsonWebKey);
+            return Task.FromResult(jwk);
         }
     }
 }
