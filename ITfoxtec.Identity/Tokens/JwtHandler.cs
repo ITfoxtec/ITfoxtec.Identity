@@ -11,6 +11,20 @@ namespace ITfoxtec.Identity.Tokens
 {
     public class JwtHandler
     {
+        public static msJwt.JwtSecurityToken CreateToken(JsonWebKey jwk, string issuer, string audience, IEnumerable<Claim> claims, int beforeIn = 60, int expiresIn = 3600, string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256)
+        {
+            var header = new msJwt.JwtHeader(new msTokens.SigningCredentials(ConvertJsonWebKey(jwk), algorithm));
+            if (!string.IsNullOrEmpty(jwk.X509CertificateSHA1Thumbprint))
+            {
+                header.Add(IdentityConstants.JwtHeaders.X509CertificateSHA1Thumbprint, jwk.X509CertificateSHA1Thumbprint);
+            }
+
+            var udtNow = DateTime.UtcNow;
+            var payload = new msJwt.JwtPayload(issuer, audience, claims, udtNow.AddMinutes(-beforeIn), udtNow.AddSeconds(expiresIn));
+
+            return new msJwt.JwtSecurityToken(header, payload);
+        }
+
         public static msJwt.JwtSecurityToken CreateToken(X509Certificate2 certificate, string issuer, string audience, IEnumerable<Claim> claims, int beforeIn = 60, int expiresIn = 3600, string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256)
         {   
             var header = new msJwt.JwtHeader(new msTokens.SigningCredentials(new msTokens.X509SecurityKey(certificate), algorithm));
@@ -52,9 +66,15 @@ namespace ITfoxtec.Identity.Tokens
             return tokenHandler;
         }
 
-        private static IEnumerable<msTokens.JsonWebKey> ConvertJsonWebKeys(IEnumerable<JsonWebKey> issuerSigningKeys)
+        private static msTokens.JsonWebKey ConvertJsonWebKey(JsonWebKey jwk)
+        {
+            var json = jwk.ToJson();
+            return json.ToObject<msTokens.JsonWebKey>();
+        }
+
+        private static IEnumerable<msTokens.JsonWebKey> ConvertJsonWebKeys(IEnumerable<JsonWebKey> jwks)
         {          
-            var json = issuerSigningKeys.ToJson();
+            var json = jwks.ToJson();
             return json.ToObject<IEnumerable<msTokens.JsonWebKey>>();
         }
     }
