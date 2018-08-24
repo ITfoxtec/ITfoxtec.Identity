@@ -11,7 +11,7 @@ namespace ITfoxtec.Identity.Tokens
 {
     public class JwtHandler
     {
-        public static msJwt.JwtSecurityToken CreateToken(JsonWebKey jwk, string issuer, string audience, IEnumerable<Claim> claims, int beforeIn = 60, int expiresIn = 3600, string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256)
+        public static msJwt.JwtSecurityToken CreateToken(JsonWebKey jwk, string issuer, string audience, IEnumerable<Claim> claims, DateTime? issuedAt = null, int beforeIn = 60, int expiresIn = 3600, string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256)
         {
             var header = new msJwt.JwtHeader(new msTokens.SigningCredentials(ConvertJsonWebKey(jwk), algorithm));
             if (!string.IsNullOrEmpty(jwk.X509CertificateSHA1Thumbprint))
@@ -19,19 +19,25 @@ namespace ITfoxtec.Identity.Tokens
                 header.Add(IdentityConstants.JwtHeaders.X509CertificateSHA1Thumbprint, jwk.X509CertificateSHA1Thumbprint);
             }
 
-            var udtNow = DateTime.UtcNow;
-            var payload = new msJwt.JwtPayload(issuer, audience, claims, udtNow.AddMinutes(-beforeIn), udtNow.AddSeconds(expiresIn));
+            if(!issuedAt.HasValue)
+            {
+                issuedAt = DateTime.UtcNow;
+            }
+            var payload = new msJwt.JwtPayload(issuer, audience, claims, issuedAt.Value.AddMinutes(-beforeIn), issuedAt.Value.AddSeconds(expiresIn), issuedAt.Value);
 
             return new msJwt.JwtSecurityToken(header, payload);
         }
 
-        public static msJwt.JwtSecurityToken CreateToken(X509Certificate2 certificate, string issuer, string audience, IEnumerable<Claim> claims, int beforeIn = 60, int expiresIn = 3600, string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256)
+        public static msJwt.JwtSecurityToken CreateToken(X509Certificate2 certificate, string issuer, string audience, IEnumerable<Claim> claims, DateTime? issuedAt = null, int beforeIn = 60, int expiresIn = 3600, string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256)
         {   
             var header = new msJwt.JwtHeader(new msTokens.SigningCredentials(new msTokens.X509SecurityKey(certificate), algorithm));
             header.Add(IdentityConstants.JwtHeaders.X509CertificateSHA1Thumbprint, WebEncoders.Base64UrlEncode(certificate.GetCertHash()));
 
-            var udtNow = DateTime.UtcNow;
-            var payload = new msJwt.JwtPayload(issuer, audience, claims, udtNow.AddMinutes(-beforeIn), udtNow.AddSeconds(expiresIn));
+            if (!issuedAt.HasValue)
+            {
+                issuedAt = DateTime.UtcNow;
+            }
+            var payload = new msJwt.JwtPayload(issuer, audience, claims, issuedAt.Value.AddMinutes(-beforeIn), issuedAt.Value.AddSeconds(expiresIn), issuedAt.Value);
 
             return new msJwt.JwtSecurityToken(header, payload);
         }

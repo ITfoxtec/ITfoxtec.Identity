@@ -169,6 +169,21 @@
         /// Time the End-User's information was last updated. Its value is a JSON number representing the number of seconds from 1970-01-01T0:0:0Z as measured in UTC until the date/time.
         /// </summary>
         public const string UpdatedAt = "updated_at";
+        /// <summary>
+        /// OPTIONAL. Access Token hash value. Its value is the base64url encoding of the left-most half of the hash of the octets of the ASCII representation of the access_token value, 
+        /// where the hash algorithm used is the hash algorithm used in the alg Header Parameter of the ID Token's JOSE Header. 
+        /// </summary>
+        public const string AtHash = "at_hash";
+        /// <summary>
+        ///  Its value is the base64url encoding of the left-most half of the hash of the octets of the ASCII representation of the code value, where the hash algorithm used is the hash algorithm 
+        ///  used in the alg Header Parameter of the ID Token's JOSE Header.
+        /// </summary>
+        public const string CHash = "c_hash";
+        /// <summary>
+        /// OPTIONAL. Session ID - String identifier for a Session. This represents a Session of a User Agent or device for a logged-in End-User at an RP. Different sid values are used to identify 
+        /// distinct sessions at an OP. The sid value need only be unique in the context of a particular issuer.
+        /// </summary>
+        public const string SessionId = "sid";
         #endregion
 
         #region Custom claims

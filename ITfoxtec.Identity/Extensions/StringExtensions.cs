@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 using System;
+using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ITfoxtec.Identity
 {
@@ -63,6 +66,22 @@ namespace ITfoxtec.Identity
             if (value == null) new ArgumentNullException(nameof(value));
 
             return Encoding.UTF8.GetString(Convert.FromBase64String(value));
+        }
+
+        /// <summary>
+        /// Compute a base64url encoded left-most half of the hash of the octets of the ASCII representation of a value. 
+        /// For instance, if the algorithm is RS256, hash the value with SHA-256, then take the left-most 128 bits and base64url encode them.
+        /// </summary>
+        public static Task<string> LeftMostBase64urlEncodingHash(this string value, string algorithm)
+        {
+            if (value == null) new ArgumentNullException(nameof(value));
+            if (algorithm != IdentityConstants.Algorithms.Asymmetric.RS256) throw new NotSupportedException($"Algorithm {algorithm} not supported. Supports {IdentityConstants.Algorithms.Asymmetric.RS256}.");
+
+            using (var sha = SHA256.Create())
+            {
+                var hash = sha.ComputeHash(Encoding.ASCII.GetBytes(value));
+                return Task.FromResult(WebEncoders.Base64UrlEncode(hash.Take(16).ToArray()));
+            }
         }
     }
 }

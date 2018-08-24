@@ -76,9 +76,17 @@ namespace ITfoxtec.Identity
         /// <summary>
         /// Converts a Dictionary<string, string> to a HTML Post page.
         /// </summary>
+        public static string ToHtmlPostPage(this Dictionary<string, string> items, string url)
+        {
+            return string.Concat(HtmlPostPageList(items, url));
+        }
+
+        /// <summary>
+        /// Converts a Dictionary<string, string> to a HTML Post page.
+        /// </summary>
         public static Task<string> ToHtmlPostPageAsync(this Dictionary<string, string> items, string url)
         {
-            return Task.FromResult(string.Concat(HtmlPostPageList(items, url)));
+            return Task.FromResult(ToHtmlPostPage(items, url));
         }
 
         private static IEnumerable<string> HtmlPostPageList(Dictionary<string, string> items, string url)

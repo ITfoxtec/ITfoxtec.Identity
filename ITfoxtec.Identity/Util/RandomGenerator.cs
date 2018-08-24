@@ -5,13 +5,18 @@ namespace ITfoxtec.Identity.Util
 {
     public static class RandomGenerator
     {
-        private static readonly RandomNumberGenerator randomNonceGenerator = RandomNumberGenerator.Create();
+        private static readonly RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
+
+        public static string Generate(int length)
+        {
+            var bytes = new byte[length];
+            randomNumberGenerator.GetNonZeroBytes(bytes);
+            return WebEncoders.Base64UrlEncode(bytes);
+        }
 
         public static string GenerateNonce(int length = 32)
         {
-            var bytes = new byte[length];
-            randomNonceGenerator.GetNonZeroBytes(bytes);
-            return WebEncoders.Base64UrlEncode(bytes);
+            return Generate(length);
         }
     }
 }
