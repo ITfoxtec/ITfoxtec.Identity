@@ -12,6 +12,7 @@
         {
             public const string Authorization = "authorization";
             public const string Token = "token";
+            public const string EndSession = "EndSession";            
         }
 
         public static class DefaultOidcScopes
