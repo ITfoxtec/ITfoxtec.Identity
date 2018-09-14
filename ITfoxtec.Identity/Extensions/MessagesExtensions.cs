@@ -15,9 +15,9 @@ namespace ITfoxtec.Identity
         {
             if (request == null) new ArgumentNullException(nameof(request));
 
-            if (string.IsNullOrEmpty(request.ResponseType)) throw new ArgumentNullException(nameof(request.ResponseType), request.GetTypeName());
-            if (string.IsNullOrEmpty(request.ClientId)) throw new ArgumentNullException(nameof(request.ClientId), request.GetTypeName());
-            if (string.IsNullOrEmpty(request.RedirectUri)) throw new ArgumentNullException(nameof(request.RedirectUri), request.GetTypeName());
+            if (request.ResponseType.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.ResponseType), request.GetTypeName());
+            if (request.ClientId.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.ClientId), request.GetTypeName());
+            if (request.RedirectUri.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.RedirectUri), request.GetTypeName());
         }
 
         /// <summary>
@@ -29,8 +29,8 @@ namespace ITfoxtec.Identity
 
             (request as AuthorizationRequest).Validate();
 
-            if (string.IsNullOrEmpty(request.Scope)) throw new ArgumentNullException(nameof(request.Scope), request.GetTypeName());
-            if (isImplicitFlow && string.IsNullOrEmpty(request.Nonce)) throw new ArgumentNullException(nameof(request.Nonce), request.GetTypeName());        
+            if (request.Scope.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.Scope), request.GetTypeName());
+            if (isImplicitFlow && request.Nonce.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.Nonce), request.GetTypeName());        
         }
 
         /// <summary>
@@ -40,12 +40,12 @@ namespace ITfoxtec.Identity
         {
             if (response == null) new ArgumentNullException(nameof(response));
 
-            if (!string.IsNullOrEmpty(response.Error))
+            if (!response.Error.IsNullOrEmpty())
             {
                 throw new ResponseErrorException(response.Error, $"{response.GetTypeName()}, {response.ErrorDescription}");
             }
 
-            if (!isImplicitFlow && string.IsNullOrEmpty(response.Code)) throw new ArgumentNullException(nameof(response.Code), response.GetTypeName());
+            if (!isImplicitFlow && response.Code.IsNullOrEmpty()) throw new ArgumentNullException(nameof(response.Code), response.GetTypeName());
         }
 
         /// <summary>
@@ -57,9 +57,9 @@ namespace ITfoxtec.Identity
 
             (response as AuthorizationResponse).Validate(isImplicitFlow);
 
-            if ((!string.IsNullOrEmpty(response.IdToken) || !string.IsNullOrEmpty(response.AccessToken)) && string.IsNullOrEmpty(response.TokenType))
+            if ((!response.IdToken.IsNullOrEmpty() || !response.AccessToken.IsNullOrEmpty()) && response.TokenType.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(response.TokenType), response.GetTypeName());
-            if (isImplicitFlow && string.IsNullOrEmpty(response.IdToken)) throw new ArgumentNullException(nameof(response.IdToken), response.GetTypeName());
+            if (isImplicitFlow && response.IdToken.IsNullOrEmpty()) throw new ArgumentNullException(nameof(response.IdToken), response.GetTypeName());
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace ITfoxtec.Identity
         {
             if (request == null) new ArgumentNullException(nameof(request));
 
-            if (string.IsNullOrEmpty(request.GrantType)) throw new ArgumentNullException(nameof(request.GrantType), request.GetTypeName());
+            if (request.GrantType.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.GrantType), request.GetTypeName());
         }
 
         /// <summary>
@@ -79,14 +79,14 @@ namespace ITfoxtec.Identity
         {
             if (response == null) new ArgumentNullException(nameof(response));
 
-            if (!string.IsNullOrEmpty(response.Error))
+            if (!response.Error.IsNullOrEmpty())
             {
                 throw new ResponseErrorException(response.Error, $"{response.GetTypeName()}, {response.ErrorDescription}");
             }
 
-            if (!isOidc && string.IsNullOrEmpty(response.AccessToken)) throw new ArgumentNullException(nameof(response.AccessToken), response.GetTypeName());
-            if (string.IsNullOrEmpty(response.TokenType)) throw new ArgumentNullException(nameof(response.TokenType), response.GetTypeName());
-            if (isOidc && string.IsNullOrEmpty(response.IdToken)) throw new ArgumentNullException(nameof(response.IdToken), response.GetTypeName());
+            if (!isOidc && response.AccessToken.IsNullOrEmpty()) throw new ArgumentNullException(nameof(response.AccessToken), response.GetTypeName());
+            if (response.TokenType.IsNullOrEmpty()) throw new ArgumentNullException(nameof(response.TokenType), response.GetTypeName());
+            if (isOidc && response.IdToken.IsNullOrEmpty()) throw new ArgumentNullException(nameof(response.IdToken), response.GetTypeName());
         }
     }
 }

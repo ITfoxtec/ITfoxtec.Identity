@@ -8,21 +8,21 @@ namespace ITfoxtec.Identity.Util
     {
         public static X509Certificate2 Load(string path)
         {
-            if (string.IsNullOrWhiteSpace(path)) throw new ArgumentNullException(nameof(path));
+            if (path.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(path));
 
             return new X509Certificate2(path);
         }
 
         public static X509Certificate2 Load(string path, string password, X509KeyStorageFlags keyStorageFlags = X509KeyStorageFlags.DefaultKeySet)
         {
-            if (string.IsNullOrWhiteSpace(path)) throw new ArgumentNullException(nameof(path));
-            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentNullException(nameof(password));
+            if (path.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(path));
+            if (password.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(password));
 
             return new X509Certificate2(path, password, keyStorageFlags);
         }
         public static X509Certificate2 Load(string path, SecureString password, X509KeyStorageFlags keyStorageFlags = X509KeyStorageFlags.DefaultKeySet)
         {
-            if (string.IsNullOrWhiteSpace(path)) throw new ArgumentNullException(nameof(path));
+            if (path.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(path));
             if (password == null) throw new ArgumentNullException(nameof(password));
 
             return new X509Certificate2(path, password, keyStorageFlags);
@@ -30,7 +30,7 @@ namespace ITfoxtec.Identity.Util
 
         public static X509Certificate2 LoadBytes(string certificate)
         {
-            if (string.IsNullOrWhiteSpace(certificate)) throw new ArgumentNullException(nameof(certificate));
+            if (certificate.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(certificate));
 
             var encoding = new System.Text.UTF8Encoding();
             return new X509Certificate2(encoding.GetBytes(certificate));
@@ -38,7 +38,7 @@ namespace ITfoxtec.Identity.Util
 
         public static X509Certificate2 LoadBytes(string certificate, string password, X509KeyStorageFlags keyStorageFlags = X509KeyStorageFlags.DefaultKeySet)
         {
-            if (string.IsNullOrWhiteSpace(certificate)) throw new ArgumentNullException(nameof(certificate));
+            if (certificate.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(certificate));
             if (password == null) throw new ArgumentNullException(nameof(password));
 
             var encoding = new System.Text.UTF8Encoding();
@@ -47,7 +47,7 @@ namespace ITfoxtec.Identity.Util
 
         public static X509Certificate2 Load(StoreName name, StoreLocation location, X509FindType type, string findValue)
         {
-            if (string.IsNullOrWhiteSpace(findValue)) throw new ArgumentNullException(nameof(findValue));
+            if (findValue.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(findValue));
 
             var store = new X509Store(name, location);
             store.Open(OpenFlags.ReadOnly);

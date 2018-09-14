@@ -14,7 +14,7 @@ namespace ITfoxtec.Identity.Tokens
         public static msJwt.JwtSecurityToken CreateToken(JsonWebKey jwk, string issuer, string audience, IEnumerable<Claim> claims, DateTime? issuedAt = null, int beforeIn = 60, int expiresIn = 3600, string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256)
         {
             var header = new msJwt.JwtHeader(new msTokens.SigningCredentials(ConvertJsonWebKey(jwk), algorithm));
-            if (!string.IsNullOrEmpty(jwk.X509CertificateSHA1Thumbprint))
+            if (!jwk.X509CertificateSHA1Thumbprint.IsNullOrEmpty())
             {
                 header.Add(IdentityConstants.JwtHeaders.X509CertificateSHA1Thumbprint, jwk.X509CertificateSHA1Thumbprint);
             }
