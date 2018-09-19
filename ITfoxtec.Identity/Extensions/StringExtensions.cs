@@ -29,6 +29,17 @@ namespace ITfoxtec.Identity
         }
 
         /// <summary>
+        /// Validate a specified string max length.
+        /// </summary>
+        public static void ValidateMaxLength(this string value, int maxLength, string paramName, string className)
+        {
+            if(!string.IsNullOrEmpty(value) && value.Length > maxLength)
+            {
+                throw new ArgumentException($"Invalid value, max length {maxLength}.", $"{paramName} at {className}");
+            }
+        }        
+
+        /// <summary>
         /// Base64 url encode a string.
         /// </summary>
         public static string Base64UrlEncode(this string value)
