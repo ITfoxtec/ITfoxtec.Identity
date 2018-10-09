@@ -20,6 +20,12 @@ namespace ITfoxtec.Identity.Messages
         public string Code { get; set; }
 
         /// <summary>
+        /// REQUIRED in Refresh Token Grant. The refresh token issued to the client.
+        /// </summary>
+        [JsonProperty(PropertyName = "refresh_token")]
+        public string RefreshToken { get; set; }
+
+        /// <summary>
         /// REQUIRED in Extension Grants. The assertion can e.g. contain a Access Token or SAML 2.0 token.
         /// </summary>
         [JsonProperty(PropertyName = "assertion")]

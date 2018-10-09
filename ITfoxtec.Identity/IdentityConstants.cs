@@ -143,6 +143,47 @@
             ///  The authorization server is currently unable to handle the request due to a temporary overloading or maintenance of the server.
             /// </summary>
             public const string TemporarilyUnavailable = "temporarily_unavailable";
+            /// <summary>
+            /// The Authorization Server requires End-User interaction of some form to proceed. This error MAY be returned when the prompt parameter value in the Authentication Request is none, 
+            /// but the Authentication Request cannot be completed without displaying a user interface for End-User interaction.
+            /// </summary>
+            public const string InteractionRequired = "interaction_required";
+            /// <summary>
+            ///  The Authorization Server requires End-User authentication. This error MAY be returned when the prompt parameter value in the Authentication Request is none, but the 
+            ///  Authentication Request cannot be completed without displaying a user interface for End-User authentication.
+            /// </summary>
+            public const string LoginRequired = "login_required";
+            /// <summary>
+            ///  The End-User is REQUIRED to select a session at the Authorization Server. The End-User MAY be authenticated at the Authorization Server with different associated accounts, 
+            ///  but the End-User did not select a session. This error MAY be returned when the prompt parameter value in the Authentication Request is none, but the Authentication Request 
+            ///  cannot be completed without displaying a user interface to prompt for a session to use.
+            /// </summary>
+            public const string AccountSelectionRequired = "account_selection_required";
+            /// <summary>
+            /// The Authorization Server requires End-User consent.This error MAY be returned when the prompt parameter value in the Authentication Request is none, but the Authentication Request cannot 
+            /// be completed without displaying a user interface for End-User consent.
+            /// </summary>
+            public const string ConsentRequired = "consent_required";
+            /// <summary>
+            /// The request_uri in the Authorization Request returns an error or contains invalid data.
+            /// </summary>
+            public const string InvalidRequestUri = "invalid_request_uri";
+            /// <summary>
+            /// The request parameter contains an invalid Request Object.
+            /// </summary>
+            public const string InvalidRequestObject = "invalid_request_object";
+            /// <summary>
+            /// The OP does not support use of the request parameter defined in Section 6.
+            /// </summary>
+            public const string RequestNotSupported = "request_not_supported";
+            /// <summary>
+            /// The OP does not support use of the request_uri parameter defined in Section 6.
+            /// </summary>
+            public const string RequestUriNotSupported = "request_uri_not_supported";
+            /// <summary>
+            /// The OP does not support use of the registration parameter defined in Section 7.2.1.
+            /// </summary>
+            public const string RegistrationNotSupported = "registration_not_supported";
         }
 
         public static class Algorithms
@@ -209,6 +250,130 @@
                 /// </summary>
                 public const string PS512 = "PS512";
             }
+        }
+
+        /// <summary>
+        /// Default claims.
+        /// </summary>
+        public static class DefaultJwtClaims
+        {
+            /// <summary>
+            /// Default ID Token claims.
+            /// </summary>
+            public readonly static string[] IdToken = { JwtClaimTypes.Issuer, JwtClaimTypes.Subject, JwtClaimTypes.SessionId, JwtClaimTypes.Audience, JwtClaimTypes.ExpirationTime, JwtClaimTypes.NotBefore, JwtClaimTypes.IssuedAt, JwtClaimTypes.AuthTime, JwtClaimTypes.Nonce, JwtClaimTypes.Acr, JwtClaimTypes.Amr, JwtClaimTypes.Azp, JwtClaimTypes.AtHash, JwtClaimTypes.CHash };
+
+            /// <summary>
+            /// Default Access Token claims.
+            /// </summary>
+            public readonly static string[] AccessToken = { JwtClaimTypes.Issuer, JwtClaimTypes.Subject, JwtClaimTypes.Audience, JwtClaimTypes.ExpirationTime, JwtClaimTypes.NotBefore, JwtClaimTypes.IssuedAt, /*jti*/ };
+        }
+
+        /// <summary>
+        /// Authentication Method Reference values defined by this specification.
+        /// </summary>
+        public static class AuthenticationMethodReferenceValues
+        {
+            /// <summary>
+            /// Biometric authentication[RFC4949] using facial recognition.
+            /// </summary>
+            public const string Face = "face";
+
+            /// <summary>
+            /// Biometric authentication[RFC4949] using a fingerprint.
+            /// </summary>
+            public const string Fpt = "fpt";
+
+            /// <summary>
+            /// Use of geolocation information for authentication, such as that provided by [W3C.REC-geolocation-API-20161108].
+            /// </summary>
+            public const string Geo = "geo";
+
+            /// <summary>
+            /// Proof-of-Possession(PoP) of a hardware-secured key.See Appendix C of [RFC4211] for a discussion on PoP.
+            /// </summary>
+            public const string Hwk = "hwk";
+
+            /// <summary>
+            /// Biometric authentication [RFC4949] using an iris scan.
+            /// </summary>
+            public const string Iris = "iris";
+
+            /// <summary>
+            /// Knowledge-based authentication [NIST.800-63-2] [ISO29115].
+            /// </summary>
+            public const string Kba = "kba";
+
+            /// <summary>
+            /// Multiple-channel authentication [MCA]. The authentication involves communication over more than one distinct communication channel. For instance, a multiple-channel authentication 
+            /// might involve both entering information into a workstation's browser and providing information on a telephone call to a pre-registered number.
+            /// </summary>
+            public const string Mca = "mca";
+
+            /// <summary>
+            /// Multiple-factor authentication [NIST.800-63-2] [ISO29115]. When this is present, specific authentication methods used may also be included.
+            /// </summary>
+            public const string Mfa = "mfa";
+
+            /// <summary>
+            /// One-time password [RFC4949]. One-time password specifications that this authentication method applies to include [RFC4226] and [RFC6238].
+            /// </summary>
+            public const string Otp = "otp";
+
+            /// <summary>
+            ///  Personal Identification Number(PIN) [RFC4949] or pattern (not restricted to containing only numbers) that a user enters to unlock a key on the device. This mechanism should 
+            ///  have a way to deter an attacker from obtaining the PIN by trying repeated guesses.
+            /// </summary>
+            public const string Pin = "pin";
+
+            /// <summary>
+            /// Password-based authentication [RFC4949].
+            /// </summary>
+            public const string Pwd = "pwd";
+
+            /// <summary>
+            /// Risk-based authentication [JECM].
+            /// </summary>
+            public const string rba = "rba";
+
+            /// <summary>
+            /// Biometric authentication [RFC4949] using a retina scan.
+            /// </summary>
+            public const string Retina = "retina";
+
+            /// <summary>
+            ///  Smart card [RFC4949].
+            /// </summary>
+            public const string Sc = "sc";
+
+            /// <summary>
+            /// Confirmation using SMS [SMS] text message to the user at a registered number.
+            /// </summary>
+            public const string Sms = "sms";
+
+            /// <summary>
+            /// Proof-of-Possession(PoP) of a software-secured key. See Appendix C of[RFC4211] for a discussion on PoP.
+            /// </summary>
+            public const string Swk = "swk";
+
+            /// <summary>
+            /// Confirmation by telephone call to the user at a registered number. This authentication technique is sometimes also referred to as "call back" [RFC4949].
+            /// </summary>
+            public const string Tel = "tel";
+
+            /// <summary>
+            /// User presence test.Evidence that the end user is present and interacting with the device.This is sometimes also referred to as "test of user presence" [W3C.WD-webauthn-20170216].
+            /// </summary>
+            public const string User = "user";
+
+            /// <summary>
+            /// Biometric authentication[RFC4949] using a voiceprint.
+            /// </summary>
+            public const string Vbm = "vbm";
+
+            /// <summary>
+            /// Windows integrated authentication [MSDN].
+            /// </summary>
+            public const string Wia = "wia";
         }
 
         public static class JwtHeaders

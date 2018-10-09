@@ -23,7 +23,7 @@ namespace ITfoxtec.Identity.Tokens
             {
                 issuedAt = DateTime.UtcNow;
             }
-            var payload = new msJwt.JwtPayload(issuer, audience, claims, issuedAt.Value.AddMinutes(-beforeIn), issuedAt.Value.AddSeconds(expiresIn), issuedAt.Value);
+            var payload = new msJwt.JwtPayload(issuer, audience, claims, issuedAt.Value.AddSeconds(-beforeIn), issuedAt.Value.AddSeconds(expiresIn), issuedAt.Value);
 
             return new msJwt.JwtSecurityToken(header, payload);
         }
@@ -37,20 +37,21 @@ namespace ITfoxtec.Identity.Tokens
             {
                 issuedAt = DateTime.UtcNow;
             }
-            var payload = new msJwt.JwtPayload(issuer, audience, claims, issuedAt.Value.AddMinutes(-beforeIn), issuedAt.Value.AddSeconds(expiresIn), issuedAt.Value);
+            var payload = new msJwt.JwtPayload(issuer, audience, claims, issuedAt.Value.AddSeconds(-beforeIn), issuedAt.Value.AddSeconds(expiresIn), issuedAt.Value);
 
             return new msJwt.JwtSecurityToken(header, payload);
         }
 
-        public static (ClaimsPrincipal, msTokens.SecurityToken) ValidateToken(string token, string issuer, IEnumerable<JsonWebKey> issuerSigningKeys, string audience = null, bool validateAudience = true, string nameClaimType = JwtClaimTypes.Subject, string rolesClaimType = JwtClaimTypes.Roles)
+        public static (ClaimsPrincipal, msTokens.SecurityToken) ValidateToken(string token, string issuer, IEnumerable<JsonWebKey> issuerSigningKeys, string audience = null, bool validateAudience = true, bool validateLifetime = true, string nameClaimType = JwtClaimTypes.Subject, string rolesClaimType = JwtClaimTypes.Roles)
         {
             var validationParameters = new msTokens.TokenValidationParameters
             {
                 SaveSigninToken = true,
                 ValidIssuer = issuer,
                 IssuerSigningKeys = ConvertJsonWebKeys(issuerSigningKeys),
-                ValidateAudience = validateAudience,
                 ValidAudience = audience,
+                ValidateAudience = validateAudience,
+                ValidateLifetime = validateLifetime,
                 NameClaimType = nameClaimType,
                 RoleClaimType = rolesClaimType,
             };

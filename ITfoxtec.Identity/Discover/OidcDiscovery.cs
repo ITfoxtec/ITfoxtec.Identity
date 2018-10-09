@@ -81,6 +81,6 @@ namespace ITfoxtec.Identity.Discovery
         /// reasons, this might not be an exhaustive list.
         /// </summary>
         [JsonProperty(PropertyName = "claims_supported")]
-        public IEnumerable<string> ClaimsSupported { get; set; }
+        public IEnumerable<string> ClaimsSupported { get; set; } = IdentityConstants.DefaultJwtClaims.AccessToken;
     }
 }
