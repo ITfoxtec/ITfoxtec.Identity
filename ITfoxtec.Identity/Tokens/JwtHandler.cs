@@ -11,7 +11,7 @@ namespace ITfoxtec.Identity.Tokens
 {
     public class JwtHandler
     {
-        public static msJwt.JwtSecurityToken CreateToken(JsonWebKey jwk, string issuer, string audience, IEnumerable<Claim> claims, DateTime? issuedAt = null, int beforeIn = 60, int expiresIn = 3600, string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256)
+        public static msJwt.JwtSecurityToken CreateToken(JsonWebKey jwk, string issuer, string audience, IEnumerable<Claim> claims, DateTimeOffset? issuedAt = null, int beforeIn = 60, int expiresIn = 3600, string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256)
         {
             var header = new msJwt.JwtHeader(new msTokens.SigningCredentials(ConvertJsonWebKey(jwk), algorithm));
             if (!jwk.X509CertificateSHA1Thumbprint.IsNullOrEmpty())
@@ -21,23 +21,23 @@ namespace ITfoxtec.Identity.Tokens
 
             if(!issuedAt.HasValue)
             {
-                issuedAt = DateTime.UtcNow;
+                issuedAt = DateTimeOffset.UtcNow;
             }
-            var payload = new msJwt.JwtPayload(issuer, audience, claims, issuedAt.Value.AddSeconds(-beforeIn), issuedAt.Value.AddSeconds(expiresIn), issuedAt.Value);
+            var payload = new msJwt.JwtPayload(issuer, audience, claims, issuedAt.Value.AddSeconds(-beforeIn).UtcDateTime, issuedAt.Value.AddSeconds(expiresIn).UtcDateTime, issuedAt.Value.UtcDateTime);
 
             return new msJwt.JwtSecurityToken(header, payload);
         }
 
-        public static msJwt.JwtSecurityToken CreateToken(X509Certificate2 certificate, string issuer, string audience, IEnumerable<Claim> claims, DateTime? issuedAt = null, int beforeIn = 60, int expiresIn = 3600, string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256)
+        public static msJwt.JwtSecurityToken CreateToken(X509Certificate2 certificate, string issuer, string audience, IEnumerable<Claim> claims, DateTimeOffset? issuedAt = null, int beforeIn = 60, int expiresIn = 3600, string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256)
         {   
             var header = new msJwt.JwtHeader(new msTokens.SigningCredentials(new msTokens.X509SecurityKey(certificate), algorithm));
             header.Add(IdentityConstants.JwtHeaders.X509CertificateSHA1Thumbprint, WebEncoders.Base64UrlEncode(certificate.GetCertHash()));
 
             if (!issuedAt.HasValue)
             {
-                issuedAt = DateTime.UtcNow;
+                issuedAt = DateTimeOffset.UtcNow;
             }
-            var payload = new msJwt.JwtPayload(issuer, audience, claims, issuedAt.Value.AddSeconds(-beforeIn), issuedAt.Value.AddSeconds(expiresIn), issuedAt.Value);
+            var payload = new msJwt.JwtPayload(issuer, audience, claims, issuedAt.Value.AddSeconds(-beforeIn).UtcDateTime, issuedAt.Value.AddSeconds(expiresIn).UtcDateTime, issuedAt.Value.UtcDateTime);
 
             return new msJwt.JwtSecurityToken(header, payload);
         }

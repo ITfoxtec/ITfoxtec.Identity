@@ -11,8 +11,8 @@ namespace ITfoxtec.Identity.Discovery
         private readonly int expiresIn;
         private OidcDiscovery oidcDiscovery;
         private JsonWebKeySet jsonWebKeySet;
-        private DateTime oidcDiscoveryValidUntil = DateTime.MinValue;
-        private DateTime jsonWebKeySetValidUntil = DateTime.MinValue;
+        private DateTimeOffset oidcDiscoveryValidUntil = DateTimeOffset.MinValue;
+        private DateTimeOffset jsonWebKeySetValidUntil = DateTimeOffset.MinValue;
 
         public OidcDiscoveryHandler(string oidcDiscoveryUri, int expiresIn = 3600)
         {
@@ -22,7 +22,7 @@ namespace ITfoxtec.Identity.Discovery
 
         public async Task<OidcDiscovery> GetOidcDiscovery()
         {
-            if (oidcDiscovery == null || oidcDiscoveryValidUntil < DateTime.UtcNow)
+            if (oidcDiscovery == null || oidcDiscoveryValidUntil < DateTimeOffset.UtcNow)
             {
                 using (var client = new HttpClient())
                 {
@@ -36,7 +36,7 @@ namespace ITfoxtec.Identity.Discovery
                             case HttpStatusCode.OK:
                                 var result = await response.Content.ReadAsStringAsync();
                                 oidcDiscovery = result.ToObject<OidcDiscovery>();
-                                oidcDiscoveryValidUntil = DateTime.UtcNow.AddSeconds(expiresIn);
+                                oidcDiscoveryValidUntil = DateTimeOffset.UtcNow.AddSeconds(expiresIn);
                                 break;
 
                             default:
@@ -52,7 +52,7 @@ namespace ITfoxtec.Identity.Discovery
 
         public async Task<JsonWebKeySet> GetOidcDiscoveryKeys()
         {
-            if (jsonWebKeySet == null || jsonWebKeySetValidUntil < DateTime.UtcNow)
+            if (jsonWebKeySet == null || jsonWebKeySetValidUntil < DateTimeOffset.UtcNow)
             {
                 await GetOidcDiscovery();
                 using (var client = new HttpClient())
@@ -67,7 +67,7 @@ namespace ITfoxtec.Identity.Discovery
                             case HttpStatusCode.OK:
                                 var result = await response.Content.ReadAsStringAsync();
                                 jsonWebKeySet = result.ToObject<JsonWebKeySet>();
-                                jsonWebKeySetValidUntil = DateTime.UtcNow.AddSeconds(expiresIn);
+                                jsonWebKeySetValidUntil = DateTimeOffset.UtcNow.AddSeconds(expiresIn);
                                 break;
 
                             default:
