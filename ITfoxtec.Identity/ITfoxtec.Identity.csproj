@@ -5,15 +5,19 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>ITfoxtec</Authors>
     <Company>ITfoxtec</Company>
-    <Copyright>© 2018 ITfoxtec</Copyright>
-    <PackageLicenseUrl>https://github.com/ITfoxtec/ITfoxtec.Identity/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
+    <Copyright>© 2019 ITfoxtec</Copyright>
+    <AssemblyName>ITfoxtec.Identity</AssemblyName>
+    <PackageId>ITfoxtec.Identity</PackageId>
+    <PackageTitle>ITfoxtec Identity</PackageTitle>   
     <Description>OAuth 2.0 and OpenID Connect components.</Description>
     <PackageTags>OAuth 2.0 OpenID Connect OIDC</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <Version>1.0.2.6</Version>
+    <Version>1.0.3</Version>
     <PackageIconUrl>https://itfoxtec.com/favicon.ico</PackageIconUrl>
-    <AssemblyVersion>1.0.2.6</AssemblyVersion>
-    <FileVersion>1.0.2.6</FileVersion>
+    <AssemblyVersion>1.0.3.0</AssemblyVersion>
+    <FileVersion>1.0.3.0</FileVersion>
+    <RepositoryUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
