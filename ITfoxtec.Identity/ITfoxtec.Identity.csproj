@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net472;net462;netcoreapp2.1;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.1;netcoreapp2.2;netstandard2.0;net472</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>ITfoxtec</Authors>
     <Company>ITfoxtec</Company>
@@ -20,13 +20,10 @@
     <RepositoryUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</RepositoryUrl>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.1.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.2.4" />
-  </ItemGroup>
-
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
     <DefineConstants>NETSTANDARD20;NETSTANDARD;</DefineConstants>
@@ -39,6 +36,9 @@
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1'">
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.1.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1'">
     <DefineConstants>NETCORE21;NETCORE;</DefineConstants>
@@ -50,6 +50,26 @@
     <DocumentationFile>bin\Debug\netcoreapp2.1\ITfoxtec.Identity.xml</DocumentationFile>
   </PropertyGroup>
 
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.2'">
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
+  </ItemGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.2'">
+    <DefineConstants>NETCORE22;NETCORE;</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.2|AnyCPU'">
+    <DocumentationFile>bin\Release\netcoreapp2.2\ITfoxtec.Identity.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.2|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.2\ITfoxtec.Identity.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.1.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
+  </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <Reference Include="mscorlib" />
     <Reference Include="System" />
@@ -71,27 +91,5 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
     <DocumentationFile>bin\Debug\net472\ITfoxtec.Identity.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
-    <Reference Include="mscorlib" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Configuration" />
-  </ItemGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net462'">
-    <DefineConstants>NET462;NETFULL</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net462|AnyCPU'">
-    <DocumentationFile>bin\Release\net462\ITfoxtec.Identity.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net462|AnyCPU'">
-    <DocumentationFile>bin\Debug\net462\ITfoxtec.Identity.xml</DocumentationFile>
   </PropertyGroup>
 </Project>
