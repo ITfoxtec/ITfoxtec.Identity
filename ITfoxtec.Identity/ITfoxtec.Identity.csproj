@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.1;netcoreapp2.2;netstandard2.0;net472;net462</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.1;netcoreapp2.2;net472</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>ITfoxtec</Authors>
     <Company>ITfoxtec</Company>
@@ -12,9 +12,8 @@
     <Description>
       OAuth 2.0 and OpenID Connect components.
     
-      Support .NET Standard 2.0
       Support .NET Core 2.1 and 2.2
-      Support .NET Framework 4.6.2 and 4.7.2
+      Support .NET Framework 4.7.2
     </Description>
     <PackageTags>OAuth 2.0 OpenID Connect OIDC</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -23,23 +22,6 @@
     <AssemblyVersion>1.0.4.0</AssemblyVersion>
     <FileVersion>1.0.4.0</FileVersion>
     <RepositoryUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</RepositoryUrl>
-  </PropertyGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
-  </ItemGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
-    <DefineConstants>NETSTANDARD20;NETSTANDARD;</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-    <DebugType>pdbonly</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-    <DocumentationFile>bin\Release\netstandard2.0\ITfoxtec.Identity.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-    <DocumentationFile>bin\Debug\netstandard2.0\ITfoxtec.Identity.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1'">
@@ -102,33 +84,5 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
     <DocumentationFile>bin\Debug\net472\ITfoxtec.Identity.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
-    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.1.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
-    <Reference Include="mscorlib" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Net.Http" />
-  </ItemGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net462'">
-    <DefineConstants>NET462;NETFULL</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net462|AnyCPU'">
-    <DebugType>pdbonly</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-    <DocumentationFile>bin\Release\net462\ITfoxtec.Identity.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net462|AnyCPU'">
-    <DocumentationFile>bin\Debug\net462\ITfoxtec.Identity.xml</DocumentationFile>
   </PropertyGroup>
 </Project>

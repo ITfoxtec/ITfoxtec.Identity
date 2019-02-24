@@ -188,9 +188,13 @@
 
         #region Custom claims
         /// <summary>
-        /// End-User's roles as a list in a JSON array.
+        /// End-User's role as a string or a list of roles in a JSON array.
         /// </summary>
-        public const string Roles = "roles";
+        public const string Role = "role";
+        /// <summary>
+        /// The clients granted scope as a string or a list of scopes in a JSON array.
+        /// </summary>
+        public const string Scope = "scope";
         #endregion
     }
 }
