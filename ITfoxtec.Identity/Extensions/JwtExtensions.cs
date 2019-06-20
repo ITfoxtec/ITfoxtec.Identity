@@ -15,6 +15,6 @@ namespace ITfoxtec.Identity
         {
             var handler = new JwtSecurityTokenHandler();
             return Task.FromResult(handler.WriteToken(jwt));
-        }       
+        }
     }
 }

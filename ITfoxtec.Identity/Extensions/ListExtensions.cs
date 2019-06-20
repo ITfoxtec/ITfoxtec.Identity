@@ -15,11 +15,11 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static string ToSpaceList(this string[] values)
         {
-            if(values != null)
+            if(values?.Count() > 0)
             {
                 return string.Join(" ", values);
             }
-            return string.Empty;
+            return null;
         }
 
         /// <summary>
@@ -27,11 +27,11 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static string ToSpaceList(this IEnumerable<string> values)
         {
-            if (values != null)
+            if (values?.Count() > 0)
             {
                 return string.Join(" ", values);
             }
-            return string.Empty;
+            return null;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace ITfoxtec.Identity
             {
                 return value.Split(' ');
             }
-            return new[] { string.Empty };
+            return null;
         }
 
         /// <summary>

@@ -1,5 +1,5 @@
-﻿using ITfoxtec.Identity.Discovery;
-using Microsoft.AspNetCore.WebUtilities;
+﻿using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -15,23 +15,23 @@ namespace ITfoxtec.Identity
         /// <summary>
         /// Converts a X509 Certificate to JWK.
         /// </summary>
-        public static Task<JsonWebKey> ToJsonWebKey(this X509Certificate2 certificate, bool includePrivateKey = false)
+        public static Task<JsonWebKey> ToJsonWebKeyAsync(this X509Certificate2 certificate, bool includePrivateKey = false)
         {
             if (certificate == null) new ArgumentNullException(nameof(certificate));
 
             var jwk = new JsonWebKey();
-            jwk.KeyType = IdentityConstants.JsonWebKeyTypes.RSA;
+            jwk.Kty = JsonWebAlgorithmsKeyTypes.RSA;
 
-            var securityKey = new Microsoft.IdentityModel.Tokens.X509SecurityKey(certificate);
+            var securityKey = new X509SecurityKey(certificate);
             jwk.KeyId = securityKey.KeyId;
-            jwk.X509CertificateChain = new[] { Convert.ToBase64String(certificate.RawData) };
-            jwk.X509CertificateSHA1Thumbprint = WebEncoders.Base64UrlEncode(certificate.GetCertHash());
+            jwk.X5c.Add(Convert.ToBase64String(certificate.RawData));
+            jwk.X5t = WebEncoders.Base64UrlEncode(certificate.GetCertHash());
 
             var parameters = (securityKey.PublicKey as RSA).ExportParameters(false);
-            jwk.Modulus = WebEncoders.Base64UrlEncode(parameters.Modulus);
-            jwk.Exponent = WebEncoders.Base64UrlEncode(parameters.Exponent);
+            jwk.N = WebEncoders.Base64UrlEncode(parameters.Modulus);
+            jwk.E = WebEncoders.Base64UrlEncode(parameters.Exponent);
 
-            if (includePrivateKey && securityKey.PrivateKeyStatus == Microsoft.IdentityModel.Tokens.PrivateKeyStatus.Exists)
+            if (includePrivateKey && securityKey.PrivateKeyStatus == PrivateKeyStatus.Exists)
             {
                 parameters = (securityKey.PrivateKey as RSA).ExportParameters(true);
                 jwk.D = WebEncoders.Base64UrlEncode(parameters.D);
@@ -39,7 +39,7 @@ namespace ITfoxtec.Identity
                 jwk.Q = WebEncoders.Base64UrlEncode(parameters.Q);
                 jwk.DP = WebEncoders.Base64UrlEncode(parameters.DP);
                 jwk.DQ = WebEncoders.Base64UrlEncode(parameters.DQ);
-                jwk.InverseQ = WebEncoders.Base64UrlEncode(parameters.InverseQ);
+                jwk.QI = WebEncoders.Base64UrlEncode(parameters.InverseQ);
             }
             return Task.FromResult(jwk);
         }

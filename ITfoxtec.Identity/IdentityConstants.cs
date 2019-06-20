@@ -382,22 +382,6 @@
             public const string X509CertificateSHA1Thumbprint = "x5t";
         }
 
-        public static class JsonWebKeyTypes
-        {
-            /// <summary>
-            /// Elliptic Curve [Digital Signature Standard (DSS)]
-            /// </summary>
-            public const string EC = "EC";
-            /// <summary>
-            /// RSA [RFC3447]   
-            /// </summary>
-            public const string RSA = "RSA";
-            /// <summary>
-            /// Octet sequence (used to represent symmetric keys)
-            /// </summary>
-            public const string Oct = "oct";
-        }
-
         public static class JsonPublicKeyUse
         {
             public const string Signature = "sig";
