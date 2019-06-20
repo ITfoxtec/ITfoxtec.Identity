@@ -22,7 +22,10 @@ namespace ITfoxtec.Identity.Helpers
             if (clientSecret.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientSecret));
             if (redirectUri.IsNullOrEmpty()) throw new ArgumentNullException(nameof(redirectUri));
 
-            var tokenEndpoint = (await serviceProvider.GetService<OidcDiscoveryHandler>().GetOidcDiscoveryAsync()).TokenEndpoint;
+            var oidcDiscoveryHandler = serviceProvider.GetService<OidcDiscoveryHandler>();
+            if (oidcDiscoveryHandler == null) new Exception($"Unable to resolve {nameof(OidcDiscoveryHandler)}.");
+
+            var tokenEndpoint = (await oidcDiscoveryHandler.GetOidcDiscoveryAsync()).TokenEndpoint;
             var accessTokenRequest = new TokenRequest
             {
                 RedirectUri = redirectUri,
@@ -52,9 +55,11 @@ namespace ITfoxtec.Identity.Helpers
             var request = new HttpRequestMessage(HttpMethod.Post, tokenEndpoint);
             var nameValueCollection = accessTokenRequest.ToDictionary().AddToDictionary(clientCredentials);
             request.Content = new FormUrlEncodedContent(nameValueCollection);
+           
+            var httpClientFactory = serviceProvider.GetService<IHttpClientFactory>();
+            if (httpClientFactory == null) new Exception($"Unable to resolve {nameof(IHttpClientFactory)}.");
 
-            var client = serviceProvider.GetService<IHttpClientFactory>().CreateClient();
-            using (var response = await client.SendAsync(request))
+            using (var response = await httpClientFactory.CreateClient().SendAsync(request))
             {
                 var result = await response.Content.ReadAsStringAsync();
 
