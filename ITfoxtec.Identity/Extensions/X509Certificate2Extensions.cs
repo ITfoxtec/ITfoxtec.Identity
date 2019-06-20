@@ -15,7 +15,7 @@ namespace ITfoxtec.Identity
         /// <summary>
         /// Converts a X509 Certificate to JWK.
         /// </summary>
-        public static Task<JsonWebKey> ToJsonWebKey(this X509Certificate2 certificate, bool includePrivateKey = false)
+        public static Task<JsonWebKey> ToJsonWebKeyAsync(this X509Certificate2 certificate, bool includePrivateKey = false)
         {
             if (certificate == null) new ArgumentNullException(nameof(certificate));
 
