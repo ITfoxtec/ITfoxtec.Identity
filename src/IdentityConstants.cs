@@ -266,7 +266,7 @@
             /// <summary>
             /// Default Access Token claims.
             /// </summary>
-            public readonly static string[] AccessToken = { JwtClaimTypes.Issuer, JwtClaimTypes.Subject, JwtClaimTypes.Audience, JwtClaimTypes.ExpirationTime, JwtClaimTypes.NotBefore, JwtClaimTypes.IssuedAt, /*jti*/ };
+            public readonly static string[] AccessToken = { JwtClaimTypes.Issuer, JwtClaimTypes.Subject, JwtClaimTypes.Audience, JwtClaimTypes.ExpirationTime, JwtClaimTypes.NotBefore, JwtClaimTypes.IssuedAt, JwtClaimTypes.AuthTime, /*jti*/ };
         }
 
         /// <summary>
