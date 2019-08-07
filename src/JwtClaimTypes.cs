@@ -186,15 +186,22 @@
         public const string SessionId = "sid";
         #endregion
 
+        #region Token Exchange claims
+        /// <summary>
+        /// The value of the "scope" claim is a JSON string containing a space-separated list of scopes associated with the token, in the format described in Section 3.3 of[RFC6749].
+        /// </summary>
+        public const string Scope = "scope";
+        /// <summary>
+        /// The "client_id" claim carries the client identifier of the OAuth 2.0 [RFC6749] client that requested the token.
+        /// </summary>
+        public const string ClientId = "client_id";
+        #endregion
+
         #region Custom claims
         /// <summary>
         /// End-User's role as a string or a list of roles in a JSON array.
         /// </summary>
         public const string Role = "role";
-        /// <summary>
-        /// The clients granted scope as a string or a list of scopes in a JSON array.
-        /// </summary>
-        public const string Scope = "scope";
         #endregion
     }
 }
