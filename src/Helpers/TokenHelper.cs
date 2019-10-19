@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using ITfoxtec.Identity.Messages;
+﻿using ITfoxtec.Identity.Messages;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -12,14 +11,30 @@ namespace ITfoxtec.Identity.Helpers
     /// </summary>
     public class TokenHelper
     {
-        private readonly IServiceProvider serviceProvider;
+#if NETCORE
+        private readonly IHttpClientFactory httpClientFactory;
+#else
+        private readonly HttpClient httpClient;
+#endif
+        private readonly OidcDiscoveryHandler oidcDiscoveryHandler;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public TokenHelper(IServiceProvider serviceProvider)
+        public TokenHelper(
+#if NETCORE
+            IHttpClientFactory httpClientFactory,
+#else
+            HttpClient httpClient,
+#endif
+            OidcDiscoveryHandler oidcDiscoveryHandler)
         {
-            this.serviceProvider = serviceProvider;
+#if NETCORE
+            this.httpClientFactory = httpClientFactory;
+#else
+            this.httpClient = httpClient;
+#endif
+            this.oidcDiscoveryHandler = oidcDiscoveryHandler;
         }
 
         /// <summary>
@@ -35,9 +50,6 @@ namespace ITfoxtec.Identity.Helpers
             if (clientId.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientId));
             if (clientSecret.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientSecret));
             if (redirectUri.IsNullOrEmpty()) throw new ArgumentNullException(nameof(redirectUri));
-
-            var oidcDiscoveryHandler = serviceProvider.GetService<OidcDiscoveryHandler>();
-            if (oidcDiscoveryHandler == null) new Exception($"Unable to resolve {nameof(OidcDiscoveryHandler)}.");
 
             var tokenEndpoint = (await oidcDiscoveryHandler.GetOidcDiscoveryAsync()).TokenEndpoint;
             var accessTokenRequest = new TokenRequest
@@ -78,11 +90,12 @@ namespace ITfoxtec.Identity.Helpers
             var request = new HttpRequestMessage(HttpMethod.Post, tokenEndpoint);
             var nameValueCollection = accessTokenRequest.ToDictionary().AddToDictionary(clientCredentials);
             request.Content = new FormUrlEncodedContent(nameValueCollection);
-           
-            var httpClientFactory = serviceProvider.GetService<IHttpClientFactory>();
-            if (httpClientFactory == null) new Exception($"Unable to resolve {nameof(IHttpClientFactory)}.");
 
-            using (var response = await httpClientFactory.CreateClient().SendAsync(request))
+#if NETCORE
+            var httpClient = httpClientFactory.CreateClient();
+#endif
+
+            using (var response = await httpClient.SendAsync(request))
             {
                 var result = await response.Content.ReadAsStringAsync();
 

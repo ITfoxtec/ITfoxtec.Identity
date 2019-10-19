@@ -14,7 +14,11 @@ namespace ITfoxtec.Identity.Discovery
     public class OidcDiscoveryHandler : IDisposable
     {
         private readonly CancellationTokenSource cleanUpCancellationTokenSource;
+#if NETCORE
         private readonly IHttpClientFactory httpClientFactory;
+#else
+        private readonly HttpClient httpClient;
+#endif
         private readonly string defaultOidcDiscoveryUri;
         private readonly int defaultExpiresIn;
         private Dictionary<string, (OidcDiscovery, DateTimeOffset)> oidcDiscoveryCache = new Dictionary<string, (OidcDiscovery, DateTimeOffset)>();
@@ -23,12 +27,21 @@ namespace ITfoxtec.Identity.Discovery
         /// <summary>
         /// Call OIDC Discovery and cache result.
         /// </summary>
-        /// <param name="httpClientFactory">The IHttpClientFactory instance.</param>
         /// <param name="defaultOidcDiscoveryUri">The default OIDC Discovery uri.</param>
         /// <param name="defaultExpiresIn">The default expires in seconds.</param>
-        public OidcDiscoveryHandler(IHttpClientFactory httpClientFactory, string defaultOidcDiscoveryUri = null, int defaultExpiresIn = 3600)
+        public OidcDiscoveryHandler(
+#if NETCORE
+            IHttpClientFactory httpClientFactory,
+#else
+            HttpClient httpClient,
+#endif
+            string defaultOidcDiscoveryUri = null, int defaultExpiresIn = 3600)
         {
+#if NETCORE
             this.httpClientFactory = httpClientFactory;
+#else
+            this.httpClient = httpClient;
+#endif
             this.defaultOidcDiscoveryUri = defaultOidcDiscoveryUri;
             this.defaultExpiresIn = defaultExpiresIn;
 
@@ -87,8 +100,10 @@ namespace ITfoxtec.Identity.Discovery
             }
 
             var request = new HttpRequestMessage(HttpMethod.Get, oidcDiscoveryUri);
-            var client = httpClientFactory.CreateClient();
-            using (var response = await client.SendAsync(request))
+#if NETCORE
+            var httpClient = httpClientFactory.CreateClient();
+#endif
+            using (var response = await httpClient.SendAsync(request))
             {
                 // Handle the response
                 switch (response.StatusCode)
@@ -128,8 +143,10 @@ namespace ITfoxtec.Identity.Discovery
 
             var oidcDiscovery = await GetOidcDiscoveryAsync(oidcDiscoveryUri, expiresIn);
             var request = new HttpRequestMessage(HttpMethod.Get, oidcDiscovery.JwksUri);
-            var client = httpClientFactory.CreateClient();
-            using (var response = await client.SendAsync(request))
+#if NETCORE
+            var httpClient = httpClientFactory.CreateClient();
+#endif
+            using (var response = await httpClient.SendAsync(request))
             {
                 // Handle the response
                 switch (response.StatusCode)

@@ -17,7 +17,7 @@ namespace ITfoxtec.Identity
         {
             if(values?.Count() > 0)
             {
-                return string.Join(' ', values);
+                return string.Join(" ", values);
             }
             return null;
         }
@@ -29,7 +29,7 @@ namespace ITfoxtec.Identity
         {
             if (values?.Count() > 0)
             {
-                return string.Join(' ', values);
+                return string.Join(" ", values);
             }
             return null;
         }
