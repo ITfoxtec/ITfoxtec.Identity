@@ -80,10 +80,24 @@ namespace ITfoxtec.Identity
         }
 
         /// <summary>
+        /// Base64 url encoded SHA-256 hash. Code challenge method S256.
+        /// </summary>
+        public static Task<string> Sha256HashBase64urlEncoded(this string value)
+        {
+            if (value == null) new ArgumentNullException(nameof(value));
+        
+            using (var sha = SHA256.Create())
+            {
+                var hash = sha.ComputeHash(Encoding.ASCII.GetBytes(value));
+                return Task.FromResult(WebEncoders.Base64UrlEncode(hash));
+            }
+        }
+
+        /// <summary>
         /// Compute a base64url encoded left-most half of the hash of the octets of the ASCII representation of a value. 
         /// For instance, if the algorithm is RS256, hash the value with SHA-256, then take the left-most 128 bits and base64url encode them.
         /// </summary>
-        public static Task<string> LeftMostBase64urlEncodingHash(this string value, string algorithm)
+        public static Task<string> LeftMostBase64urlEncodedHash(this string value, string algorithm)
         {
             if (value == null) new ArgumentNullException(nameof(value));
             if (algorithm != IdentityConstants.Algorithms.Asymmetric.RS256) throw new NotSupportedException($"Algorithm {algorithm} not supported. Supports {IdentityConstants.Algorithms.Asymmetric.RS256}.");
