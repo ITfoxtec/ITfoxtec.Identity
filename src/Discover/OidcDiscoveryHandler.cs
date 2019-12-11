@@ -105,12 +105,6 @@ namespace ITfoxtec.Identity.Discovery
                 (var oidcDiscovery, var oidcDiscoveryValidUntil) = oidcDiscoveryCache[oidcDiscoveryUri];
                 if(oidcDiscoveryValidUntil >= DateTimeOffset.UtcNow)
                 {
-                    try
-                    {
-                        oidcDiscoveryCache.Remove(oidcDiscoveryUri);
-                    }
-                    catch 
-                    { }
                     return oidcDiscovery;
                 }
             }
@@ -128,7 +122,22 @@ namespace ITfoxtec.Identity.Discovery
                         var result = await response.Content.ReadAsStringAsync();
                         var oidcDiscovery = result.ToObject<OidcDiscovery>();
                         var oidcDiscoveryValidUntil = DateTimeOffset.UtcNow.AddSeconds(expiresIn.Value);
-                        oidcDiscoveryCache.Add(oidcDiscoveryUri, (oidcDiscovery, oidcDiscoveryValidUntil));
+
+                        if(oidcDiscoveryCache.ContainsKey(oidcDiscoveryUri))
+                        {
+                            try
+                            {
+                                oidcDiscoveryCache.Remove(oidcDiscoveryUri);
+                            }
+                            catch
+                            { }
+                        }
+                        try
+                        {
+                            oidcDiscoveryCache.Add(oidcDiscoveryUri, (oidcDiscovery, oidcDiscoveryValidUntil));
+                        }
+                        catch
+                        { }
                         return oidcDiscovery;
 
                     default:
@@ -153,12 +162,6 @@ namespace ITfoxtec.Identity.Discovery
                 (var jsonWebKeySet, var jsonWebKeySetValidUntil) = jsonWebKeySetCache[oidcDiscoveryUri];
                 if (jsonWebKeySetValidUntil >= DateTimeOffset.UtcNow)
                 {
-                    try
-                    {
-                        jsonWebKeySetCache.Remove(oidcDiscoveryUri);
-                    }
-                    catch
-                    { }
                     return jsonWebKeySet;
                 }
             }
@@ -177,7 +180,22 @@ namespace ITfoxtec.Identity.Discovery
                         var result = await response.Content.ReadAsStringAsync();
                         var jsonWebKeySet = result.ToObject<JsonWebKeySet>();
                         var jsonWebKeySetValidUntil = DateTimeOffset.UtcNow.AddSeconds(expiresIn.Value);
-                        jsonWebKeySetCache.Add(oidcDiscoveryUri, (jsonWebKeySet, jsonWebKeySetValidUntil));
+
+                        if (jsonWebKeySetCache.ContainsKey(oidcDiscoveryUri))
+                        {
+                            try
+                            {
+                                jsonWebKeySetCache.Remove(oidcDiscoveryUri);
+                            }
+                            catch
+                            { }
+                        }
+                        try
+                        {
+                            jsonWebKeySetCache.Add(oidcDiscoveryUri, (jsonWebKeySet, jsonWebKeySetValidUntil));
+                        }
+                        catch
+                        { }
                         return jsonWebKeySet;
 
                     default:
