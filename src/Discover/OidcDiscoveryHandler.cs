@@ -60,20 +60,30 @@ namespace ITfoxtec.Identity.Discovery
                 ct.ThrowIfCancellationRequested();
                 foreach (var item in oidcDiscoveryCache)
                 {
-                    (var oidcDiscovery, var oidcDiscoveryValidUntil) = item.Value;
+                    (_ , var oidcDiscoveryValidUntil) = item.Value;
                     if (oidcDiscoveryValidUntil < DateTimeOffset.UtcNow)
                     {
-                        oidcDiscoveryCache.Remove(item.Key);
+                        try
+                        {
+                            oidcDiscoveryCache.Remove(item.Key);
+                        }
+                        catch
+                        { }
                     }
                 }
 
                 ct.ThrowIfCancellationRequested();
                 foreach (var item in jsonWebKeySetCache)
                 {
-                    (var jsonWebKeySet, var jsonWebKeySetValidUntil) = item.Value;
+                    (_ , var jsonWebKeySetValidUntil) = item.Value;
                     if (jsonWebKeySetValidUntil < DateTimeOffset.UtcNow)
                     {
-                        jsonWebKeySetCache.Remove(item.Key);
+                        try
+                        {
+                            jsonWebKeySetCache.Remove(item.Key);
+                        }
+                        catch
+                        { }
                     }
                 }
             }
@@ -95,6 +105,12 @@ namespace ITfoxtec.Identity.Discovery
                 (var oidcDiscovery, var oidcDiscoveryValidUntil) = oidcDiscoveryCache[oidcDiscoveryUri];
                 if(oidcDiscoveryValidUntil >= DateTimeOffset.UtcNow)
                 {
+                    try
+                    {
+                        oidcDiscoveryCache.Remove(oidcDiscoveryUri);
+                    }
+                    catch 
+                    { }
                     return oidcDiscovery;
                 }
             }
@@ -137,6 +153,12 @@ namespace ITfoxtec.Identity.Discovery
                 (var jsonWebKeySet, var jsonWebKeySetValidUntil) = jsonWebKeySetCache[oidcDiscoveryUri];
                 if (jsonWebKeySetValidUntil >= DateTimeOffset.UtcNow)
                 {
+                    try
+                    {
+                        jsonWebKeySetCache.Remove(oidcDiscoveryUri);
+                    }
+                    catch
+                    { }
                     return jsonWebKeySet;
                 }
             }
