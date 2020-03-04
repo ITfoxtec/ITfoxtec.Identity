@@ -127,17 +127,28 @@ namespace ITfoxtec.Identity.Discovery
                         {
                             try
                             {
-                                oidcDiscoveryCache.Remove(oidcDiscoveryUri);
+                                oidcDiscoveryCache[oidcDiscoveryUri] = (oidcDiscovery, oidcDiscoveryValidUntil);
                             }
                             catch
                             { }
                         }
-                        try
+                        else
                         {
-                            oidcDiscoveryCache.Add(oidcDiscoveryUri, (oidcDiscovery, oidcDiscoveryValidUntil));
+                            try
+                            {
+                                oidcDiscoveryCache.Add(oidcDiscoveryUri, (oidcDiscovery, oidcDiscoveryValidUntil));
+                            }
+                            catch
+                            { 
+                                try
+                                {
+                                    oidcDiscoveryCache[oidcDiscoveryUri] = (oidcDiscovery, oidcDiscoveryValidUntil);
+                                }
+                                catch
+                                { }
+                            }
                         }
-                        catch
-                        { }
+
                         return oidcDiscovery;
 
                     default:
@@ -185,17 +196,28 @@ namespace ITfoxtec.Identity.Discovery
                         {
                             try
                             {
-                                jsonWebKeySetCache.Remove(oidcDiscoveryUri);
+                                jsonWebKeySetCache[oidcDiscoveryUri] = (jsonWebKeySet, jsonWebKeySetValidUntil);
                             }
                             catch
                             { }
                         }
-                        try
+                        else
                         {
-                            jsonWebKeySetCache.Add(oidcDiscoveryUri, (jsonWebKeySet, jsonWebKeySetValidUntil));
+                            try
+                            {
+                                jsonWebKeySetCache.Add(oidcDiscoveryUri, (jsonWebKeySet, jsonWebKeySetValidUntil));
+                            }
+                            catch
+                            {
+                                try
+                                {
+                                    jsonWebKeySetCache[oidcDiscoveryUri] = (jsonWebKeySet, jsonWebKeySetValidUntil);
+                                }
+                                catch
+                                { }
+                            }
                         }
-                        catch
-                        { }
+
                         return jsonWebKeySet;
 
                     default:
