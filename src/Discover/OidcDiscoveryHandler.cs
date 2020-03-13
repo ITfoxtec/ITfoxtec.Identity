@@ -1,6 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -53,38 +54,58 @@ namespace ITfoxtec.Identity.Discovery
         {
             while (true)
             {
-                var ct = cleanUpCancellationTokenSource.Token;
-                ct.ThrowIfCancellationRequested();
-                await Task.Delay(new TimeSpan(0, 5, 0), ct);
-
-                ct.ThrowIfCancellationRequested();
-                foreach (var item in oidcDiscoveryCache)
+                try
                 {
-                    (_ , var oidcDiscoveryValidUntil) = item.Value;
-                    if (oidcDiscoveryValidUntil < DateTimeOffset.UtcNow)
+                    var ct = cleanUpCancellationTokenSource.Token;
+                    ct.ThrowIfCancellationRequested();
+                    await Task.Delay(new TimeSpan(2, 0, 0), ct);
+
+                    ct.ThrowIfCancellationRequested();
+                    var olderThenUtcNow = DateTimeOffset.UtcNow.AddHours(-4);
+                    foreach (var item in oidcDiscoveryCache)
                     {
-                        try
+                        (_, var oidcDiscoveryValidUntil) = item.Value;
+                        if (oidcDiscoveryValidUntil < olderThenUtcNow)
                         {
-                            oidcDiscoveryCache.Remove(item.Key);
+                            try
+                            {
+                                oidcDiscoveryCache.Remove(item.Key);
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"OidcDiscoveryHandler unable to remove from oidcDiscoveryCache. {ex.ToString()}");
+                            }
                         }
-                        catch
-                        { }
+                    }
+
+                    ct.ThrowIfCancellationRequested();
+                    foreach (var item in jsonWebKeySetCache)
+                    {
+                        (_, var jsonWebKeySetValidUntil) = item.Value;
+                        if (jsonWebKeySetValidUntil < olderThenUtcNow)
+                        {
+                            try
+                            {
+                                jsonWebKeySetCache.Remove(item.Key);
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"OidcDiscoveryHandler unable to remove from jsonWebKeySetCache. {ex.ToString()}");
+                            }
+                        }
                     }
                 }
-
-                ct.ThrowIfCancellationRequested();
-                foreach (var item in jsonWebKeySetCache)
+                catch (OperationCanceledException)
                 {
-                    (_ , var jsonWebKeySetValidUntil) = item.Value;
-                    if (jsonWebKeySetValidUntil < DateTimeOffset.UtcNow)
-                    {
-                        try
-                        {
-                            jsonWebKeySetCache.Remove(item.Key);
-                        }
-                        catch
-                        { }
-                    }
+                    throw;
+                }
+                catch (ObjectDisposedException)
+                {
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"OidcDiscoveryHandler claen failed. {ex.ToString()}");
                 }
             }
         }
@@ -123,31 +144,12 @@ namespace ITfoxtec.Identity.Discovery
                         var oidcDiscovery = result.ToObject<OidcDiscovery>();
                         var oidcDiscoveryValidUntil = DateTimeOffset.UtcNow.AddSeconds(expiresIn.Value);
 
-                        if(oidcDiscoveryCache.ContainsKey(oidcDiscoveryUri))
+                        try
                         {
-                            try
-                            {
-                                oidcDiscoveryCache[oidcDiscoveryUri] = (oidcDiscovery, oidcDiscoveryValidUntil);
-                            }
-                            catch
-                            { }
+                            oidcDiscoveryCache[oidcDiscoveryUri] = (oidcDiscovery, oidcDiscoveryValidUntil);
                         }
-                        else
-                        {
-                            try
-                            {
-                                oidcDiscoveryCache.Add(oidcDiscoveryUri, (oidcDiscovery, oidcDiscoveryValidUntil));
-                            }
-                            catch
-                            { 
-                                try
-                                {
-                                    oidcDiscoveryCache[oidcDiscoveryUri] = (oidcDiscovery, oidcDiscoveryValidUntil);
-                                }
-                                catch
-                                { }
-                            }
-                        }
+                        catch
+                        { }
 
                         return oidcDiscovery;
 
@@ -192,31 +194,12 @@ namespace ITfoxtec.Identity.Discovery
                         var jsonWebKeySet = result.ToObject<JsonWebKeySet>();
                         var jsonWebKeySetValidUntil = DateTimeOffset.UtcNow.AddSeconds(expiresIn.Value);
 
-                        if (jsonWebKeySetCache.ContainsKey(oidcDiscoveryUri))
+                        try
                         {
-                            try
-                            {
-                                jsonWebKeySetCache[oidcDiscoveryUri] = (jsonWebKeySet, jsonWebKeySetValidUntil);
-                            }
-                            catch
-                            { }
+                            jsonWebKeySetCache[oidcDiscoveryUri] = (jsonWebKeySet, jsonWebKeySetValidUntil);
                         }
-                        else
-                        {
-                            try
-                            {
-                                jsonWebKeySetCache.Add(oidcDiscoveryUri, (jsonWebKeySet, jsonWebKeySetValidUntil));
-                            }
-                            catch
-                            {
-                                try
-                                {
-                                    jsonWebKeySetCache[oidcDiscoveryUri] = (jsonWebKeySet, jsonWebKeySetValidUntil);
-                                }
-                                catch
-                                { }
-                            }
-                        }
+                        catch
+                        { }
 
                         return jsonWebKeySet;
 
