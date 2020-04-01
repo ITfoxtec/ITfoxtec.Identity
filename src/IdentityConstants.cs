@@ -8,13 +8,6 @@
             public const string Keys = "keys";
         }        
 
-        public static class Endpoints
-        {
-            public const string Authorization = "authorization";
-            public const string Token = "token";
-            public const string EndSession = "EndSession";            
-        }
-
         public static class DefaultOidcScopes
         {
             public const string OpenId = "openid";

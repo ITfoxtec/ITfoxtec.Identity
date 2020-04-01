@@ -29,6 +29,17 @@ namespace ITfoxtec.Identity
         }
 
         /// <summary>
+        /// Validate a specified string min length.
+        /// </summary>
+        public static void ValidateMinLength(this string value, int minLength, string paramName, string className)
+        {
+            if (!string.IsNullOrEmpty(value) && value.Length < minLength)
+            {
+                throw new ArgumentException($"Invalid value, min length {minLength}.", $"{paramName} at {className}");
+            }
+        }
+
+        /// <summary>
         /// Validate a specified string max length.
         /// </summary>
         public static void ValidateMaxLength(this string value, int maxLength, string paramName, string className)

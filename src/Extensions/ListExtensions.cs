@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.Primitives;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -56,11 +57,28 @@ namespace ITfoxtec.Identity
         }
 
         /// <summary>
-        /// Converts a Dictionary<string, string> to an object.
+        /// Converts a IEnumerable&lt;KeyValuePair&lt;string, StringValues&gt;&gt; to a Dictionary&lt;string, string&gt;.
+        /// </summary>
+        public static Dictionary<string, string> ToDictionary(this IEnumerable<KeyValuePair<string, StringValues>> items)
+        {
+            return items.ToDictionary(x => x.Key, x => x.Value.FirstOrDefault());
+        }
+
+        /// <summary>
+        /// Converts a Dictionary&lt;string, string&gt; to an object.
         /// </summary>
         public static T ToObject<T>(this Dictionary<string, string> items)
         {
             var json = items.ToJson();
+            return json.ToObject<T>();
+        }
+
+        /// <summary>
+        /// Converts a IEnumerable&lt;KeyValuePair&lt;string, StringValues&gt;&gt; to an object.
+        /// </summary>
+        public static T ToObject<T>(this IEnumerable<KeyValuePair<string, StringValues>> items)
+        {
+            var json = items.ToDictionary().ToJson();
             return json.ToObject<T>();
         }
 

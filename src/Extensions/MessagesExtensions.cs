@@ -155,6 +155,32 @@ namespace ITfoxtec.Identity
         }
 
         /// <summary>
+        /// Is Valid OAuth 2.0 Code Challenge Secret.
+        /// </summary>
+        public static void Validate(this CodeChallengeSecret codeChallengeSecret)
+        {
+            if (codeChallengeSecret == null) new ArgumentNullException(nameof(codeChallengeSecret));
+
+            if (codeChallengeSecret.CodeChallenge.IsNullOrEmpty()) throw new ArgumentNullException(nameof(codeChallengeSecret.CodeChallenge), codeChallengeSecret.GetTypeName());
+
+            codeChallengeSecret.CodeChallenge.ValidateMaxLength(512, nameof(codeChallengeSecret.CodeChallenge), codeChallengeSecret.GetTypeName());
+            codeChallengeSecret.CodeChallengeMethod.ValidateMaxLength(32, nameof(codeChallengeSecret.CodeChallengeMethod), codeChallengeSecret.GetTypeName());
+        }
+
+        /// <summary>
+        /// Is Valid OAuth 2.0 Code Verifier Secret.
+        /// </summary>
+        public static void Validate(this CodeVerifierSecret codeVerifierSecret)
+        {
+            if (codeVerifierSecret == null) new ArgumentNullException(nameof(codeVerifierSecret));
+
+            if (codeVerifierSecret.CodeVerifier.IsNullOrEmpty()) throw new ArgumentNullException(nameof(codeVerifierSecret.CodeVerifier), codeVerifierSecret.GetTypeName());
+
+            codeVerifierSecret.CodeVerifier.ValidateMinLength(43, nameof(codeVerifierSecret.CodeVerifier), codeVerifierSecret.GetTypeName());
+            codeVerifierSecret.CodeVerifier.ValidateMaxLength(128, nameof(codeVerifierSecret.CodeVerifier), codeVerifierSecret.GetTypeName());
+        }
+
+        /// <summary>
         /// Is Valid OIDC Session Response.
         /// </summary>
         public static void Validate(this SessionResponse response)
