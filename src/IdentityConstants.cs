@@ -422,5 +422,39 @@
             /// </summary>
             public const string DeriveBits = "deriveBits";
         }
+
+        public static class MessageLength
+        {
+            public const int ResponseTypeMax = 50;
+            public const int ResponseModeMax = 50;
+            public const int ClientIdMax = 2000;
+            public const int RedirectUriMax = 2000;
+            public const int ScopeMax = 2000;
+            public const int StateMax = 2000;
+            public const int NonceMax = 2000;
+            public const int TokenTypeMax = 50;
+            public const int DisplayMax = 50;
+            public const int PromptMax = 50;
+            public const int UiLocalesMax = 50;
+            public const int LoginHintMax = 2000;
+            public const int AcrValuesMax = 100;
+            public const int CodeMax = 2000;
+            public const int GrantTypeMax = 50;
+            public const int SessionStatedMax = 2000;
+
+            public const int ClientSecretMax = 2000;
+            public const int UsernameMax = 2000;
+            public const int PasswordMax = 2000;
+
+            public const int CodeChallengeMax = 2000;
+            public const int CodeChallengeMethodMax = 50;
+            public const int CodeVerifierMin = 43;
+            public const int CodeVerifierMax = 128;
+
+            public const int AccessTokenMax = 50000;
+            public const int IdTokenMax = 50000;
+            public const int RefreshTokenMax = 50000;
+            public const int AssertionMax = 50000;
+        }
     }
 }
