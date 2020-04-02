@@ -1,6 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
@@ -22,8 +22,8 @@ namespace ITfoxtec.Identity.Discovery
 #endif
         private readonly string defaultOidcDiscoveryUri;
         private readonly int defaultExpiresIn;
-        private Dictionary<string, (OidcDiscovery, DateTimeOffset)> oidcDiscoveryCache = new Dictionary<string, (OidcDiscovery, DateTimeOffset)>();
-        private Dictionary<string, (JsonWebKeySet, DateTimeOffset)> jsonWebKeySetCache = new Dictionary<string, (JsonWebKeySet, DateTimeOffset)>();
+        private ConcurrentDictionary<string, (OidcDiscovery, DateTimeOffset)> oidcDiscoveryCache = new ConcurrentDictionary<string, (OidcDiscovery, DateTimeOffset)>();
+        private ConcurrentDictionary<string, (JsonWebKeySet, DateTimeOffset)> jsonWebKeySetCache = new ConcurrentDictionary<string, (JsonWebKeySet, DateTimeOffset)>();
 
         /// <summary>
         /// Call OIDC Discovery and cache result.
@@ -67,13 +67,9 @@ namespace ITfoxtec.Identity.Discovery
                         (_, var oidcDiscoveryValidUntil) = item.Value;
                         if (oidcDiscoveryValidUntil < olderThenUtcNow)
                         {
-                            try
+                            if(!oidcDiscoveryCache.TryRemove(item.Key, out _)) 
                             {
-                                oidcDiscoveryCache.Remove(item.Key);
-                            }
-                            catch (Exception ex)
-                            {
-                                Debug.WriteLine($"OidcDiscoveryHandler unable to remove from oidcDiscoveryCache. {ex.ToString()}");
+                                Debug.WriteLine($"OidcDiscoveryHandler unable to remove key '{item.Key}' from oidcDiscoveryCache.");
                             }
                         }
                     }
@@ -84,13 +80,9 @@ namespace ITfoxtec.Identity.Discovery
                         (_, var jsonWebKeySetValidUntil) = item.Value;
                         if (jsonWebKeySetValidUntil < olderThenUtcNow)
                         {
-                            try
+                            if(!jsonWebKeySetCache.TryRemove(item.Key, out _))
                             {
-                                jsonWebKeySetCache.Remove(item.Key);
-                            }
-                            catch (Exception ex)
-                            {
-                                Debug.WriteLine($"OidcDiscoveryHandler unable to remove from jsonWebKeySetCache. {ex.ToString()}");
+                                Debug.WriteLine($"OidcDiscoveryHandler unable to remove key '{item.Key}' from jsonWebKeySetCache.");
                             }
                         }
                     }
@@ -105,7 +97,7 @@ namespace ITfoxtec.Identity.Discovery
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"OidcDiscoveryHandler claen failed. {ex.ToString()}");
+                    Debug.WriteLine($"OidcDiscoveryHandler claen failed. {ex}");
                 }
             }
         }
