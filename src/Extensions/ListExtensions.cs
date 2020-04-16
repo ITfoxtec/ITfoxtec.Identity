@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Primitives;
+using Microsoft.Net.Http.Headers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -62,6 +64,19 @@ namespace ITfoxtec.Identity
         public static Dictionary<string, string> ToDictionary(this IEnumerable<KeyValuePair<string, StringValues>> items)
         {
             return items.ToDictionary(x => x.Key, x => x.Value.FirstOrDefault());
+        }
+
+        /// <summary>
+        /// Get authorization header bearer token from a IEnumerable&lt;KeyValuePair&lt;string, StringValues&gt;&gt;.
+        /// </summary>
+        public static string GetAuthorizationHeaderBearer(this IEnumerable<KeyValuePair<string, StringValues>> items)
+        {
+            var bearerHeader = items.Where(h => h.Key.Equals(HeaderNames.Authorization, StringComparison.Ordinal)).Select(h => h.Value.FirstOrDefault()).FirstOrDefault();
+            if(bearerHeader?.StartsWith($"{IdentityConstants.TokenTypes.Bearer} ", StringComparison.Ordinal) == true)
+            {
+                return bearerHeader.Substring(IdentityConstants.TokenTypes.Bearer.Length + 1);
+            }
+            return null;
         }
 
         /// <summary>
