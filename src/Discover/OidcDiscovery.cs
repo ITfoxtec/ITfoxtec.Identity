@@ -26,6 +26,12 @@ namespace ITfoxtec.Identity.Discovery
         public string TokenEndpoint { get; set; }
 
         /// <summary>
+        /// RECOMMENDED. URL of the OP's UserInfo Endpoint [OpenID.Core]. This URL MUST use the https scheme and MAY contain port, path, and query parameter components.
+        /// </summary>
+        [JsonProperty(PropertyName = "userinfo_endpoint")]
+        public string UserInfoEndpoint { get; set; }        
+
+        /// <summary>
         /// URL at the OP to which an RP can perform a redirect to request that the End-User be logged out at the OP [OpenID.SessionManagement].
         /// </summary>
         [JsonProperty(PropertyName = "end_session_endpoint")]
@@ -82,5 +88,11 @@ namespace ITfoxtec.Identity.Discovery
         /// </summary>
         [JsonProperty(PropertyName = "claims_supported")]
         public IEnumerable<string> ClaimsSupported { get; set; } = IdentityConstants.DefaultJwtClaims.AccessToken;
+
+        /// <summary>
+        /// OPTIONAL. JSON array containing a list of PKCE [RFC7636] code challenge methods supported by this authorization server.
+          /// </summary>
+        [JsonProperty(PropertyName = "code_challenge_methods_supported")]
+        public IEnumerable<string> CodeChallengeMethodsSupported { get; set; }
     }
 }

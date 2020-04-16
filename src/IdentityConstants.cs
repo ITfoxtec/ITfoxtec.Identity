@@ -184,6 +184,10 @@
             /// The OP does not support use of the registration parameter defined in Section 7.2.1.
             /// </summary>
             public const string RegistrationNotSupported = "registration_not_supported";
+            /// <summary>
+            /// The access token provided is expired, revoked, malformed, or invalid for other reasons. Bearer Token Usage.
+            /// </summary>
+            public const string InvalidToken = "invalid_token";
         }
 
         public static class Algorithms
