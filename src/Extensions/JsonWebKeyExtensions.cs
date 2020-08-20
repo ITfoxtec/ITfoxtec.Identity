@@ -76,7 +76,7 @@ namespace ITfoxtec.Identity
         public static X509Certificate2 ToX509Certificate(this JsonWebKey jwk)
         {
             if (jwk == null) new ArgumentNullException(nameof(jwk));
-            if (jwk.Kty != JsonWebAlgorithmsKeyTypes.RSA) throw new NotSupportedException($"Only key type '{JsonWebAlgorithmsKeyTypes.RSA }' supported.");
+            if (jwk.Kty != JsonWebAlgorithmsKeyTypes.RSA) throw new NotSupportedException($"Key type '{jwk.Kty}' not supported. Only key type '{JsonWebAlgorithmsKeyTypes.RSA }' supported.");
 
             if (jwk.X5c == null || jwk.X5c.Count() <= 0) throw new ArgumentNullException(nameof(jwk.X5c), jwk.GetTypeName());
 
