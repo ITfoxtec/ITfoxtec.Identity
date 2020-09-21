@@ -107,13 +107,14 @@ namespace ITfoxtec.Identity.Discovery
         /// </summary>
         /// <param name="oidcDiscoveryUri">The OIDC Discovery uri. If not specified the default OIDC Discovery uri is used.</param>
         /// <param name="expiresIn">The expires in seconds. If not specified the default expires in is used.</param>
+        /// <param name="refreshCache">Reload and refresh cache.</param>
         /// <returns>Return OIDC Discovery result.</returns>
-        public async Task<OidcDiscovery> GetOidcDiscoveryAsync(string oidcDiscoveryUri = null, int? expiresIn = null)
+        public async Task<OidcDiscovery> GetOidcDiscoveryAsync(string oidcDiscoveryUri = null, int? expiresIn = null, bool refreshCache = false)
         {
             oidcDiscoveryUri = oidcDiscoveryUri ?? defaultOidcDiscoveryUri;
             expiresIn = expiresIn ?? defaultExpiresIn;
 
-            if(oidcDiscoveryCache.ContainsKey(oidcDiscoveryUri))
+            if(!refreshCache && oidcDiscoveryCache.ContainsKey(oidcDiscoveryUri))
             {
                 (var oidcDiscovery, var oidcDiscoveryValidUntil) = oidcDiscoveryCache[oidcDiscoveryUri];
                 if(oidcDiscoveryValidUntil >= DateTimeOffset.UtcNow)
@@ -156,13 +157,14 @@ namespace ITfoxtec.Identity.Discovery
         /// </summary>
         /// <param name="oidcDiscoveryUri">The OIDC Discovery uri, used to resolve the Keys endpoint. If not specified the default OIDC Discovery uri is used.</param>
         /// <param name="expiresIn">The expires in seconds. If not specified the default expires in is used.</param>
+        /// <param name="refreshCache">Reload and refresh cache.</param>
         /// <returns>Return OIDC Discovery Keys result.</returns>
-        public async Task<JsonWebKeySet> GetOidcDiscoveryKeysAsync(string oidcDiscoveryUri = null, int? expiresIn = null)
+        public async Task<JsonWebKeySet> GetOidcDiscoveryKeysAsync(string oidcDiscoveryUri = null, int? expiresIn = null, bool refreshCache = false)
         {
             oidcDiscoveryUri = oidcDiscoveryUri ?? defaultOidcDiscoveryUri;
             expiresIn = expiresIn ?? defaultExpiresIn;
 
-            if (jsonWebKeySetCache.ContainsKey(oidcDiscoveryUri))
+            if (!refreshCache && jsonWebKeySetCache.ContainsKey(oidcDiscoveryUri))
             {
                 (var jsonWebKeySet, var jsonWebKeySetValidUntil) = jsonWebKeySetCache[oidcDiscoveryUri];
                 if (jsonWebKeySetValidUntil >= DateTimeOffset.UtcNow)
