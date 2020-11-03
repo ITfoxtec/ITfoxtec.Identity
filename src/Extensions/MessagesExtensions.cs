@@ -151,6 +151,8 @@ namespace ITfoxtec.Identity
         {
             if (clientCredentials == null) new ArgumentNullException(nameof(clientCredentials));
 
+            if (clientCredentials.ClientSecret.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientCredentials.ClientSecret), clientCredentials.GetTypeName());
+
             clientCredentials.ClientSecret.ValidateMaxLength(IdentityConstants.MessageLength.ClientSecretMax, nameof(clientCredentials.ClientSecret), clientCredentials.GetTypeName());
         }
 
