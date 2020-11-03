@@ -140,12 +140,14 @@ $@"<!DOCTYPE html>
             </p>
         </noscript>
         <form action=""{url}"" method=""post"">
-            <div>";
+            <div>
+";
 
             foreach (var item in items)
             {
                 yield return
-$@"                <input type=""hidden"" name=""{item.Key}"" value=""{WebUtility.HtmlEncode(item.Value)}""/>";
+$@"                <input type=""hidden"" name=""{item.Key}"" value=""{WebUtility.HtmlEncode(item.Value)}""/>
+";
             }
 
             yield return
