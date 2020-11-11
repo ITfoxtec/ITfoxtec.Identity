@@ -3,6 +3,7 @@ using ITfoxtec.Identity.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ITfoxtec.Identity.Models;
 
 namespace ITfoxtec.Identity
 {
@@ -12,31 +13,59 @@ namespace ITfoxtec.Identity
     public static class AuthorizationPolicyBuilderExtensions
     {
         /// <summary>
-        /// Adds a <see cref="ScopeAuthorizationRequirement"/> to the current instance.
+        /// Add scope requirement.
         /// </summary>
         /// <param name="policy">Extending <see cref="AuthorizationPolicyBuilder"/> policy.</param>
-        /// <param name="allowedValues">Values the scope must process one or more of for evaluation to succeed.</param>
+        /// <param name="allowedScopes">The list of scope values the scope must match one or more of.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
-        public static AuthorizationPolicyBuilder RequireScope(this AuthorizationPolicyBuilder policy, params string[] allowedValues)
+        public static AuthorizationPolicyBuilder RequireScope(this AuthorizationPolicyBuilder policy, params string[] allowedScopes)
         {
-            return RequireScope(policy, (IEnumerable<string>)allowedValues);
+            return RequireScope(policy, (IEnumerable<string>)allowedScopes);
 
         }
 
         /// <summary>
-        /// Adds a <see cref="ScopeAuthorizationRequirement"/> to the current instance.
+        /// Add scope requirement.
         /// </summary>
         /// <param name="policy">Extending <see cref="AuthorizationPolicyBuilder"/> policy.</param>
-        /// <param name="allowedValues">Values the scope must process one or more of for evaluation to succeed.</param>
+        /// <param name="allowedScopes">The list of scope values the scope must match one or more of.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
-        public static AuthorizationPolicyBuilder RequireScope(this AuthorizationPolicyBuilder policy, IEnumerable<string> allowedValues)
+        public static AuthorizationPolicyBuilder RequireScope(this AuthorizationPolicyBuilder policy, IEnumerable<string> allowedScopes)
         {
-            if (allowedValues == null || !allowedValues.Any())
+            if (allowedScopes?.Any() != true)
             {
-                throw new ArgumentNullException(nameof(allowedValues), "The list of scope values is null or empty.");
+                throw new ArgumentNullException(nameof(allowedScopes), "The list of scope values is null or empty.");
             }
 
-            policy.Requirements.Add(new ScopeAuthorizationRequirement(allowedValues));
+            policy.Requirements.Add(new ScopeAuthorizationRequirement(allowedScopes));
+            return policy;
+        }
+
+        /// <summary>
+        /// Add scope and roles requirement.
+        /// </summary>
+        /// <param name="policy">Extending <see cref="AuthorizationPolicyBuilder"/> policy.</param>
+        /// <param name="allowedScopeRolesList">The list of scope and roles values. The scope must match one or more of the items in combination with one or more of the user's roles.</param>
+        /// <returns>A reference to this instance after the operation has completed.</returns>
+        public static AuthorizationPolicyBuilder RequireScopeAndRoles(this AuthorizationPolicyBuilder policy, params ScopeAndRoles[] allowedScopeRolesList)
+        {
+            return RequireScopeAndRoles(policy, (IEnumerable<ScopeAndRoles>)allowedScopeRolesList);
+        }
+
+        /// <summary>
+        /// Add scope and roles requirement.
+        /// </summary>
+        /// <param name="policy">Extending <see cref="AuthorizationPolicyBuilder"/> policy.</param>
+        /// <param name="allowedScopeRolesList">The list of scope and roles values. The scope must match one or more of the items in combination with one or more of the user's roles.</param>
+        /// <returns>A reference to this instance after the operation has completed.</returns>
+        public static AuthorizationPolicyBuilder RequireScopeAndRoles(this AuthorizationPolicyBuilder policy, IEnumerable<ScopeAndRoles> allowedScopeRolesList)
+        {
+            if (allowedScopeRolesList?.Any() != true)
+            {
+                throw new ArgumentNullException(nameof(allowedScopeRolesList), "The list of scope and roles pairs is null or empty.");
+            }
+
+            policy.Requirements.Add(new ScopeAndRolesAuthorizationRequirement(allowedScopeRolesList));
             return policy;
         }
     }

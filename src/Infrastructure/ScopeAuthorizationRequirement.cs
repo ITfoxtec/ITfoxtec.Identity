@@ -14,21 +14,21 @@ namespace ITfoxtec.Identity.Infrastructure
         /// <summary>
         /// Creates a new instance of <see cref="ScopeAuthorizationRequirement"/>.
         /// </summary>
-        /// <param name="allowedValues">The list of scope values the scope must match one or more of.</param>
-        public ScopeAuthorizationRequirement(IEnumerable<string> allowedValues)
+        /// <param name="allowedScopes">The list of scope values the scope must match one or more of.</param>
+        public ScopeAuthorizationRequirement(IEnumerable<string> allowedScopes)
         {
-            if (allowedValues == null || !allowedValues.Any())
+            if (allowedScopes?.Any() != true)
             {
-                throw new ArgumentNullException(nameof(allowedValues), "The list of scope values is null or empty.");
+                throw new ArgumentNullException(nameof(allowedScopes), "The list of scope values is null or empty.");
             }
 
-            AllowedValues = allowedValues;
+            AllowedScopes = allowedScopes;
         }
 
         /// <summary>
         /// Gets the list of scope values the scope must match one or more of.
         /// </summary>
-        public IEnumerable<string> AllowedValues { get; }
+        public IEnumerable<string> AllowedScopes { get; }
 
         /// <summary>
         /// Makes a decision if authorization is allowed based on the scopes requirements specified.
@@ -45,7 +45,7 @@ namespace ITfoxtec.Identity.Infrastructure
                     var scopes = scopeClaimValue.ToSpaceList();
                     foreach (var scope in scopes)
                     {
-                        if (requirement.AllowedValues.Contains(scope, StringComparer.Ordinal))
+                        if (requirement.AllowedScopes.Contains(scope, StringComparer.Ordinal))
                         {
                             context.Succeed(requirement);
                             break;
