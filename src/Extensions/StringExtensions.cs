@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -26,6 +27,28 @@ namespace ITfoxtec.Identity
         public static bool IsNullOrWhiteSpace(this string value)
         {
             return string.IsNullOrWhiteSpace(value);
+        }
+
+        /// <summary>
+        /// Validate a specified list min length.
+        /// </summary>
+        public static void ValidateMinListLength(this IEnumerable<string> list, int minCount, string paramName, string className)
+        {
+            if (list == null || list.Count() < minCount)
+            {
+                throw new ArgumentException($"Invalid list, min length {minCount}.", $"{paramName} at {className}");
+            }
+        }
+
+        /// <summary>
+        /// Validate a specified list max length.
+        /// </summary>
+        public static void ValidateMaxListLength(this IEnumerable<string> list, int maxCount, string paramName, string className)
+        {
+            if (list?.Count() > maxCount)
+            {
+                throw new ArgumentException($"Invalid list, max length {maxCount}.", $"{paramName} at {className}");
+            }
         }
 
         /// <summary>

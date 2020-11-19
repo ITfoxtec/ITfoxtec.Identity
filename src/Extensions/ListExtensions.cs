@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Primitives;
+﻿using ITfoxtec.Identity.Messages;
+using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
@@ -104,6 +105,26 @@ namespace ITfoxtec.Identity
         {
             var json = data.ToJson();
             return list.Concat(json.ToObject<Dictionary<string, string>>()).ToDictionary(x => x.Key, x => x.Value);
+        }
+
+        /// <summary>
+        /// Converts and add an ResourceRequest object to a Dictionary<string, string>.
+        /// </summary>
+        public static Dictionary<string, string> AddToDictionary(this Dictionary<string, string> list, ResourceRequest resourceRequest)
+        {
+            if(resourceRequest?.Resources?.Count() > 0)
+            {
+                if(resourceRequest.Resources.Count() > 1)
+                {
+                    throw new NotSupportedException("Currently only one resource parameter is supported.");
+                }
+                var resourceJsonName = resourceRequest.GetJsonPropertyName(nameof(ResourceRequest.Resources));
+                foreach (var resource in resourceRequest.Resources)
+                {
+                    list.Add(resourceJsonName, resource);
+                }
+            }
+            return list;
         }
 
         /// <summary>
