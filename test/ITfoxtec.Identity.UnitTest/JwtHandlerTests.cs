@@ -15,6 +15,8 @@ namespace ITfoxtec.Identity.UnitTest
 
             var token = JwtHandler.CreateToken(testKey, "test-issuer", new[] { "test-aud" }, new[] { new Claim("sub", "test-user") });
             var tokenString = token.ToJwtString();
+
+            Assert.NotNull(tokenString);
         }
     }
 }

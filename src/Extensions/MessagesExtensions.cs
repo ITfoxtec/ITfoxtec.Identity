@@ -1,5 +1,6 @@
 ﻿using ITfoxtec.Identity.Messages;
 using System;
+using System.Linq;
 
 namespace ITfoxtec.Identity
 {
@@ -212,6 +213,27 @@ namespace ITfoxtec.Identity
             if (response == null) new ArgumentNullException(nameof(response));
 
             response.State.ValidateMaxLength(IdentityConstants.MessageLength.StateMax, nameof(response.State), response.GetTypeName());
+        }
+
+        /// <summary>
+        /// Is Valid Resource Indicators for OAuth 2.0 request.
+        /// </summary>
+        public static void Validate(this ResourceRequest request)
+        {
+            if (request == null) new ArgumentNullException(nameof(request));
+
+            request.Resources.ValidateMinListLength(IdentityConstants.MessageLength.ResourceCountMin, nameof(request.Resources), request.GetTypeName());
+            request.Resources.ValidateMaxListLength(IdentityConstants.MessageLength.ResourceCountMax, nameof(request.Resources), request.GetTypeName());
+
+            var count = 1;
+            foreach(var resource in request.Resources)
+            {
+                if (resource.IsNullOrEmpty()) throw new ArgumentNullException($"{nameof(request.Resources)}[{count}]", request.GetTypeName());
+                resource.ValidateMaxLength(IdentityConstants.MessageLength.ResourceMax, $"{nameof(request.Resources)}[{count}]", request.GetTypeName());
+                count++;
+            }
+
+            
         }
     }
 }

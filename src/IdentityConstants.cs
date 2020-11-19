@@ -433,6 +433,9 @@
             public const int ResponseModeMax = 50;
             public const int ClientIdMax = 2000;
             public const int RedirectUriMax = 2000;
+            public const int ResourceMax = 500;
+            public const int ResourceCountMin = 1;
+            public const int ResourceCountMax = 50;
             public const int ScopeMax = 2000;
             public const int StateMax = 2000;
             public const int NonceMax = 2000;
