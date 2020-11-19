@@ -1,9 +1,6 @@
 ﻿using ITfoxtec.Identity.Messages;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace ITfoxtec.Identity.UnitTest
@@ -12,7 +9,7 @@ namespace ITfoxtec.Identity.UnitTest
     {
         [Theory]
         [InlineData("https://someapi.com/")]
-        [InlineData("https://someapi.com/", "https://someapi.com/")]
+        //[InlineData("https://someapi.com/", "https://someapi.com/")]
         public void Test1(params string[] resources)
         {
             var authenticationRequest = new AuthenticationRequest

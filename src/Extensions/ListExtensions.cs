@@ -114,6 +114,10 @@ namespace ITfoxtec.Identity
         {
             if(resourceRequest?.Resources?.Count() > 0)
             {
+                if(resourceRequest.Resources.Count() > 1)
+                {
+                    throw new NotSupportedException("Currently only one resource parameter is supported.");
+                }
                 var resourceJsonName = resourceRequest.GetJsonPropertyName(nameof(ResourceRequest.Resources));
                 foreach (var resource in resourceRequest.Resources)
                 {

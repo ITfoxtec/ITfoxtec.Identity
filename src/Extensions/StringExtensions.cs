@@ -34,7 +34,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static void ValidateMinListLength(this IEnumerable<string> list, int minCount, string paramName, string className)
         {
-            if (list == null || list.Count() <= minCount)
+            if (list == null || list.Count() < minCount)
             {
                 throw new ArgumentException($"Invalid list, min length {minCount}.", $"{paramName} at {className}");
             }
