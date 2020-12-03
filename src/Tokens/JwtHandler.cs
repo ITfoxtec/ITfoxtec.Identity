@@ -47,7 +47,8 @@ namespace ITfoxtec.Identity.Tokens
             if (audiences?.Count() < 1) throw new ArgumentException($"At least one audience is required.", nameof(audiences));
             if (claims?.Count() < 1) throw new ArgumentException($"At least one claim is required.", nameof(claims));
 
-            var header = new JwtHeader(new SigningCredentials(securityKey, algorithm));
+            var key = securityKey is JsonWebKey jsonWebKey ? new RsaSecurityKey(jsonWebKey.ToRsaParameters(true)) : securityKey;
+            var header = new JwtHeader(new SigningCredentials(key, algorithm));
             x509CertificateSHA1Thumbprint = x509CertificateSHA1Thumbprint ?? GetX509CertificateSHA1Thumbprint(securityKey);
             if(!x509CertificateSHA1Thumbprint.IsNullOrEmpty())
             {
@@ -143,6 +144,25 @@ namespace ITfoxtec.Identity.Tokens
             var tokenHandler = new JwtSecurityTokenHandler();
             tokenHandler.InboundClaimTypeMap.Clear();
             return tokenHandler;
+        }
+    }
+
+    public class SigningCredentials2 : SigningCredentials
+    {
+        public SigningCredentials2(SecurityKey key, string algorithm) : base(key, algorithm)
+        {
+        }
+
+        public SigningCredentials2(SecurityKey key, string algorithm, string digest) : base(key, algorithm, digest)
+        {
+        }
+
+        public SigningCredentials2(X509Certificate2 certificate) : base(certificate)
+        {
+        }
+
+        public SigningCredentials2(X509Certificate2 certificate, string algorithm) : base(certificate, algorithm)
+        {
         }
     }
 }

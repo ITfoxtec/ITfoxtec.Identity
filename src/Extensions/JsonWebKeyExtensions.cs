@@ -60,7 +60,7 @@ namespace ITfoxtec.Identity
             return rsaParameters;
         }
 
-#if NETCORE
+#if NET || NETCORE
         /// <summary>
         /// Converts a JWK to RSA.
         /// </summary>

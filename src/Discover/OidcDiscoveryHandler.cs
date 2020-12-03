@@ -15,7 +15,7 @@ namespace ITfoxtec.Identity.Discovery
     public class OidcDiscoveryHandler : IDisposable
     {
         private readonly CancellationTokenSource cleanUpCancellationTokenSource;
-#if NETCORE
+#if NET || NETCORE
         private readonly IHttpClientFactory httpClientFactory;
 #else
         private readonly HttpClient httpClient;
@@ -31,14 +31,14 @@ namespace ITfoxtec.Identity.Discovery
         /// <param name="defaultOidcDiscoveryUri">The default OIDC Discovery uri.</param>
         /// <param name="defaultExpiresIn">The default expires in seconds.</param>
         public OidcDiscoveryHandler(
-#if NETCORE
+#if NET || NETCORE
             IHttpClientFactory httpClientFactory,
 #else
             HttpClient httpClient,
 #endif
             string defaultOidcDiscoveryUri = null, int defaultExpiresIn = 3600)
         {
-#if NETCORE
+#if NET || NETCORE
             this.httpClientFactory = httpClientFactory;
 #else
             this.httpClient = httpClient;
@@ -124,7 +124,7 @@ namespace ITfoxtec.Identity.Discovery
             }
 
             var request = new HttpRequestMessage(HttpMethod.Get, oidcDiscoveryUri);
-#if NETCORE
+#if NET || NETCORE
             var httpClient = httpClientFactory.CreateClient();
 #endif
             using (var response = await httpClient.SendAsync(request))
@@ -175,7 +175,7 @@ namespace ITfoxtec.Identity.Discovery
 
             var oidcDiscovery = await GetOidcDiscoveryAsync(oidcDiscoveryUri, expiresIn);
             var request = new HttpRequestMessage(HttpMethod.Get, oidcDiscovery.JwksUri);
-#if NETCORE
+#if NET || NETCORE
             var httpClient = httpClientFactory.CreateClient();
 #endif
             using (var response = await httpClient.SendAsync(request))

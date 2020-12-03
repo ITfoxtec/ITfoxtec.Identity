@@ -11,7 +11,7 @@ namespace ITfoxtec.Identity.Helpers
     /// </summary>
     public class TokenHelper
     {
-#if NETCORE
+#if NET || NETCORE
         private readonly IHttpClientFactory httpClientFactory;
 #else
         private readonly HttpClient httpClient;
@@ -22,14 +22,14 @@ namespace ITfoxtec.Identity.Helpers
         /// Constructor.
         /// </summary>
         public TokenHelper(
-#if NETCORE
+#if NET || NETCORE
             IHttpClientFactory httpClientFactory,
 #else
             HttpClient httpClient,
 #endif
             OidcDiscoveryHandler oidcDiscoveryHandler)
         {
-#if NETCORE
+#if NET || NETCORE
             this.httpClientFactory = httpClientFactory;
 #else
             this.httpClient = httpClient;
@@ -42,7 +42,7 @@ namespace ITfoxtec.Identity.Helpers
         /// </summary>
         /// <param name="clientId">The client id.</param>
         /// <param name="clientSecret">The client secret.</param>
-        /// <param name="redirectUri">The redirect uri.</param>
+        /// <param name="redirectUri">The redirect Uri.</param>
         /// <param name="scope">The scope.</param>
         /// <returns>The access token and expires in.</returns>
         public async Task<(string, int)> GetAccessTokenWithClientCredentialsAsync(string clientId, string clientSecret, string redirectUri, string scope = null)
@@ -91,7 +91,7 @@ namespace ITfoxtec.Identity.Helpers
             var nameValueCollection = accessTokenRequest.ToDictionary().AddToDictionary(clientCredentials);
             request.Content = new FormUrlEncodedContent(nameValueCollection);
 
-#if NETCORE
+#if NET || NETCORE
             var httpClient = httpClientFactory.CreateClient();
 #endif
 
