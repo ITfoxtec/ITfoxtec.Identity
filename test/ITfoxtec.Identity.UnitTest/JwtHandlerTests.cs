@@ -12,7 +12,7 @@ namespace ITfoxtec.Identity.UnitTest
         [Fact]
         public async Task CreateTest()
         {
-            var testCertificate = await "test1".CreateSelfSignedCertificateAsync();
+            var testCertificate = await "CN=test1, O=Test".CreateSelfSignedCertificateAsync();
             var testKey = await testCertificate.ToJsonWebKeyAsync(true);
 
             var token = JwtHandler.CreateToken(testKey, "test-issuer", new[] { "test-aud" }, new[] { new Claim("sub", "test-user") });
@@ -24,7 +24,7 @@ namespace ITfoxtec.Identity.UnitTest
         [Fact]
         public async Task CreateAndValidateTest()
         {
-            var testCertificate = await "test1".CreateSelfSignedCertificateAsync();
+            var testCertificate = await "CN=test2, O=Test".CreateSelfSignedCertificateAsync();
             var testKey = await testCertificate.ToJsonWebKeyAsync(true);
 
             var issuer = "test-issuer";
