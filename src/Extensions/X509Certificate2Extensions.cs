@@ -12,6 +12,35 @@ namespace ITfoxtec.Identity
     /// </summary>
     public static class X509Certificate2Extensions
     {
+#if NET || NETCORE
+        /// <summary>
+        /// Create self-signed certificate with subject name. .
+        /// </summary>
+        /// <param name="subjectName">Certificate subject name, example: "CN=my-certificate, O=some-organisation".</param>
+        /// <param name="expiry">Certificate expiry, default 365 days.</param>
+        public static Task<X509Certificate2> CreateSelfSignedCertificateAsync(this string subjectName, TimeSpan? expiry = null)
+        {
+            using (var rsa = RSA.Create(2048))
+            {
+                var certRequest = new CertificateRequest(subjectName, rsa, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+
+                certRequest.CertificateExtensions.Add(
+                    new X509BasicConstraintsExtension(false, false, 0, false));
+
+                certRequest.CertificateExtensions.Add(
+                    new X509SubjectKeyIdentifierExtension(certRequest.PublicKey, false));
+
+                certRequest.CertificateExtensions.Add(
+                    new X509KeyUsageExtension(
+                        X509KeyUsageFlags.DigitalSignature | X509KeyUsageFlags.KeyEncipherment | X509KeyUsageFlags.DataEncipherment | X509KeyUsageFlags.KeyAgreement,
+                        false));
+
+                var now = DateTimeOffset.UtcNow;
+                return Task.FromResult(certRequest.CreateSelfSigned(now.AddDays(-1), now.Add(expiry ?? TimeSpan.FromDays(365))));
+            }
+        }
+#endif
+
         /// <summary>
         /// Converts a X509 Certificate to JWK.
         /// </summary>
