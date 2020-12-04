@@ -10,6 +10,16 @@ namespace ITfoxtec.Identity.UnitTest
     public class JwtHandlerTests
     {
         [Fact]
+        public async Task KidTest()
+        {
+            var testCertificate = await "CN=test1, O=Test".CreateSelfSignedCertificateAsync();
+            var testKey = await testCertificate.ToJsonWebKeyAsync(true);
+
+            Assert.Equal(testKey.X5t, testKey.Kid);
+            Assert.Equal(testKey.X5t, testKey.KeyId);
+        }
+
+        [Fact]
         public async Task CreateTest()
         {
             var testCertificate = await "CN=test1, O=Test".CreateSelfSignedCertificateAsync();
@@ -24,7 +34,7 @@ namespace ITfoxtec.Identity.UnitTest
         [Fact]
         public async Task CreateAndValidateTest()
         {
-            var testCertificate = await "CN=test2, O=Test".CreateSelfSignedCertificateAsync();
+            var testCertificate = await "CN=test1, O=Test".CreateSelfSignedCertificateAsync();
             var testKey = await testCertificate.ToJsonWebKeyAsync(true);
 
             var issuer = "test-issuer";

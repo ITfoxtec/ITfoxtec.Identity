@@ -28,7 +28,7 @@ namespace ITfoxtec.Identity.Discovery
         /// <summary>
         /// Call OIDC Discovery and cache result.
         /// </summary>
-        /// <param name="defaultOidcDiscoveryUri">The default OIDC Discovery uri.</param>
+        /// <param name="defaultOidcDiscoveryUri">The default OIDC Discovery Uri.</param>
         /// <param name="defaultExpiresIn">The default expires in seconds.</param>
         public OidcDiscoveryHandler(
 #if NET || NETCORE
@@ -97,7 +97,7 @@ namespace ITfoxtec.Identity.Discovery
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"OidcDiscoveryHandler claen failed. {ex}");
+                    Debug.WriteLine($"OidcDiscoveryHandler clean failed. {ex}");
                 }
             }
         }
@@ -105,7 +105,7 @@ namespace ITfoxtec.Identity.Discovery
         /// <summary>
         /// Call OIDC Discovery endpoint or read the OIDC Discovery from the cache.
         /// </summary>
-        /// <param name="oidcDiscoveryUri">The OIDC Discovery uri. If not specified the default OIDC Discovery uri is used.</param>
+        /// <param name="oidcDiscoveryUri">The OIDC Discovery Uri. If not specified the default OIDC Discovery Uri is used.</param>
         /// <param name="expiresIn">The expires in seconds. If not specified the default expires in is used.</param>
         /// <param name="refreshCache">Reload and refresh cache.</param>
         /// <returns>Return OIDC Discovery result.</returns>
@@ -155,7 +155,7 @@ namespace ITfoxtec.Identity.Discovery
         /// <summary>
         /// Call OIDC Discovery Keys endpoint or read the OIDC Discovery Keys from the cache.
         /// </summary>
-        /// <param name="oidcDiscoveryUri">The OIDC Discovery uri, used to resolve the Keys endpoint. If not specified the default OIDC Discovery uri is used.</param>
+        /// <param name="oidcDiscoveryUri">The OIDC Discovery Uri, used to resolve the Keys endpoint. If not specified the default OIDC Discovery Uri is used.</param>
         /// <param name="expiresIn">The expires in seconds. If not specified the default expires in is used.</param>
         /// <param name="refreshCache">Reload and refresh cache.</param>
         /// <returns>Return OIDC Discovery Keys result.</returns>

@@ -52,9 +52,9 @@ namespace ITfoxtec.Identity
             jwk.Kty = JsonWebAlgorithmsKeyTypes.RSA;
 
             var securityKey = new X509SecurityKey(certificate);
-            jwk.KeyId = securityKey.KeyId;
             jwk.X5c.Add(Convert.ToBase64String(certificate.RawData));
             jwk.X5t = WebEncoders.Base64UrlEncode(certificate.GetCertHash());
+            jwk.Kid = jwk.X5t;
 
             var parameters = (securityKey.PublicKey as RSA).ExportParameters(false);
             jwk.N = WebEncoders.Base64UrlEncode(parameters.Modulus);
