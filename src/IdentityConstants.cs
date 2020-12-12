@@ -382,7 +382,33 @@
 
         public static class JwtHeaders
         {
-            public const string X509CertificateSHA1Thumbprint = "x5t";
+            /// <summary>
+            /// The "kid" (key ID) header parameter is a hint indicating which specific key owned by the signer should be used to validate the signature. This allows signers to explicitly 
+            /// signal a change of key to recipients. Omitting this parameter is equivalent to setting it to an empty string. The interpretation of the contents of the "kid" parameter is 
+            /// unspecified. This header parameter is OPTIONAL.
+            /// </summary>
+            public const string Kid = "kid";
+
+            /// <summary>
+            /// The "typ" (type) Header Parameter is used by JWT applications to declare the media type of this complete JWT.
+            /// </summary>
+            public const string Typ = "typ";
+
+            /// <summary>
+            /// JWT media types.
+            /// </summary>
+            public static class MediaTypes
+            {
+                /// <summary>
+                /// JWT media type.
+                /// </summary>
+                public const string Jwt = "jwt";
+
+                /// <summary>
+                /// Access token JWT media type.
+                /// </summary>
+                public const string AtJwt = "at+jwt";
+            }
         }
 
         public static class JsonPublicKeyUse

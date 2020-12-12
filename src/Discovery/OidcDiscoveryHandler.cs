@@ -1,4 +1,4 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using ITfoxtec.Identity.Models;
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
