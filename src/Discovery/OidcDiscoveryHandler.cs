@@ -1,4 +1,4 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using ITfoxtec.Identity.Models;
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
@@ -15,7 +15,7 @@ namespace ITfoxtec.Identity.Discovery
     public class OidcDiscoveryHandler : IDisposable
     {
         private readonly CancellationTokenSource cleanUpCancellationTokenSource;
-#if NETCORE
+#if NET || NETCORE
         private readonly IHttpClientFactory httpClientFactory;
 #else
         private readonly HttpClient httpClient;
@@ -28,17 +28,17 @@ namespace ITfoxtec.Identity.Discovery
         /// <summary>
         /// Call OIDC Discovery and cache result.
         /// </summary>
-        /// <param name="defaultOidcDiscoveryUri">The default OIDC Discovery uri.</param>
+        /// <param name="defaultOidcDiscoveryUri">The default OIDC Discovery Uri.</param>
         /// <param name="defaultExpiresIn">The default expires in seconds.</param>
         public OidcDiscoveryHandler(
-#if NETCORE
+#if NET || NETCORE
             IHttpClientFactory httpClientFactory,
 #else
             HttpClient httpClient,
 #endif
             string defaultOidcDiscoveryUri = null, int defaultExpiresIn = 3600)
         {
-#if NETCORE
+#if NET || NETCORE
             this.httpClientFactory = httpClientFactory;
 #else
             this.httpClient = httpClient;
@@ -97,7 +97,7 @@ namespace ITfoxtec.Identity.Discovery
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"OidcDiscoveryHandler claen failed. {ex}");
+                    Debug.WriteLine($"OidcDiscoveryHandler clean failed. {ex}");
                 }
             }
         }
@@ -105,7 +105,7 @@ namespace ITfoxtec.Identity.Discovery
         /// <summary>
         /// Call OIDC Discovery endpoint or read the OIDC Discovery from the cache.
         /// </summary>
-        /// <param name="oidcDiscoveryUri">The OIDC Discovery uri. If not specified the default OIDC Discovery uri is used.</param>
+        /// <param name="oidcDiscoveryUri">The OIDC Discovery Uri. If not specified the default OIDC Discovery Uri is used.</param>
         /// <param name="expiresIn">The expires in seconds. If not specified the default expires in is used.</param>
         /// <param name="refreshCache">Reload and refresh cache.</param>
         /// <returns>Return OIDC Discovery result.</returns>
@@ -124,7 +124,7 @@ namespace ITfoxtec.Identity.Discovery
             }
 
             var request = new HttpRequestMessage(HttpMethod.Get, oidcDiscoveryUri);
-#if NETCORE
+#if NET || NETCORE
             var httpClient = httpClientFactory.CreateClient();
 #endif
             using (var response = await httpClient.SendAsync(request))
@@ -155,7 +155,7 @@ namespace ITfoxtec.Identity.Discovery
         /// <summary>
         /// Call OIDC Discovery Keys endpoint or read the OIDC Discovery Keys from the cache.
         /// </summary>
-        /// <param name="oidcDiscoveryUri">The OIDC Discovery uri, used to resolve the Keys endpoint. If not specified the default OIDC Discovery uri is used.</param>
+        /// <param name="oidcDiscoveryUri">The OIDC Discovery Uri, used to resolve the Keys endpoint. If not specified the default OIDC Discovery Uri is used.</param>
         /// <param name="expiresIn">The expires in seconds. If not specified the default expires in is used.</param>
         /// <param name="refreshCache">Reload and refresh cache.</param>
         /// <returns>Return OIDC Discovery Keys result.</returns>
@@ -175,7 +175,7 @@ namespace ITfoxtec.Identity.Discovery
 
             var oidcDiscovery = await GetOidcDiscoveryAsync(oidcDiscoveryUri, expiresIn);
             var request = new HttpRequestMessage(HttpMethod.Get, oidcDiscovery.JwksUri);
-#if NETCORE
+#if NET || NETCORE
             var httpClient = httpClientFactory.CreateClient();
 #endif
             using (var response = await httpClient.SendAsync(request))

@@ -4,13 +4,15 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Linq;
 using Microsoft.IdentityModel.Tokens;
+using FTModels = ITfoxtec.Identity.Models;
+using System.Collections.Generic;
 
 namespace ITfoxtec.Identity
 {
     /// <summary>
-    /// Extension methods for JsonWebKey.
+    /// Extension methods for Microsoft JsonWebKey.
     /// </summary>
-    public static class JsonWebKeyExtensions
+    public static class MSJsonWebKeyExtensions
     {
         /// <summary>
         /// Get public JWK.
@@ -20,12 +22,12 @@ namespace ITfoxtec.Identity
             var publicKey = new JsonWebKey
             {
                 Kty = jwk.Kty,
-                Kid = jwk.Kid,
                 X5t = jwk.X5t,
+                Kid = jwk.Kid,
                 N = jwk.N,
                 E = jwk.E
             };
-            if (jwk.X5c != null && jwk.X5c.Count() > 0)
+            if (jwk.X5c?.Count() > 0)
             {
                 publicKey.X5c.Add(jwk.X5c.First());
             }
@@ -60,7 +62,70 @@ namespace ITfoxtec.Identity
             return rsaParameters;
         }
 
-#if NETCORE
+        /// <summary>
+        /// Converts a JWK to a SecurityKey.
+        /// </summary>
+        public static SecurityKey ToSecurityKey(this JsonWebKey jwk)
+        {
+            var key = new RsaSecurityKey(jwk.ToRsaParameters(true));
+            key.KeyId = jwk.Kid;
+            return key;
+        }
+
+        /// <summary>
+        /// Converts a Microsoft JWK to a ITfoxtec JWK.
+        /// </summary>
+        public static FTModels.JsonWebKey ToFTJsonWebKey(this JsonWebKey jwk, bool includePrivateKey = false)
+        {
+            if (jwk == null) new ArgumentNullException(nameof(jwk));
+            if (jwk.Kty != JsonWebAlgorithmsKeyTypes.RSA) throw new NotSupportedException($"Only key type '{JsonWebAlgorithmsKeyTypes.RSA }' supported.");
+
+            if (jwk.N.IsNullOrEmpty()) new ArgumentNullException(nameof(jwk.N), jwk.GetTypeName());
+            if (jwk.E.IsNullOrEmpty()) new ArgumentNullException(nameof(jwk.E), jwk.GetTypeName());
+
+            var jwkResult = new FTModels.JsonWebKey();
+            jwkResult.Kty = jwk.Kty;
+            jwkResult.Use = jwk.Use;
+
+            if (jwk.KeyOps?.Count > 0)
+            {
+                foreach (var keyOps in jwk.KeyOps)
+                {
+                    jwkResult.KeyOps.Add(keyOps);
+                }
+            }
+
+            jwkResult.Alg = jwk.Alg;
+            jwkResult.X5u = jwk.X5u;
+
+            if (jwk.X5c?.Count > 0)
+            {
+                jwkResult.X5c = new List<string>();
+                foreach (var x5c in jwk.X5c)
+                {
+                    jwkResult.X5c.Add(x5c);
+                }
+            }
+
+            jwkResult.X5t = jwk.X5t;
+            jwkResult.Kid = jwk.Kid;
+
+            jwkResult.N = jwk.N;
+            jwkResult.E = jwk.E;
+
+            if (includePrivateKey && !jwk.D.IsNullOrEmpty() && !jwk.P.IsNullOrEmpty() && !jwk.Q.IsNullOrEmpty() && !jwk.DP.IsNullOrEmpty() && !jwk.DQ.IsNullOrEmpty() && !jwk.QI.IsNullOrEmpty())
+            {
+                jwkResult.D = jwk.D;
+                jwkResult.P = jwk.P;
+                jwkResult.Q = jwk.Q;
+                jwkResult.DP = jwk.DP;
+                jwkResult.DQ = jwk.DQ;
+                jwkResult.QI = jwk.QI;
+            }
+            return jwkResult;
+        }
+
+#if NET || NETCORE
         /// <summary>
         /// Converts a JWK to RSA.
         /// </summary>
@@ -78,7 +143,7 @@ namespace ITfoxtec.Identity
             if (jwk == null) new ArgumentNullException(nameof(jwk));
             if (jwk.Kty != JsonWebAlgorithmsKeyTypes.RSA) throw new NotSupportedException($"Key type '{jwk.Kty}' not supported. Only key type '{JsonWebAlgorithmsKeyTypes.RSA }' supported.");
 
-            if (jwk.X5c == null || jwk.X5c.Count() <= 0) throw new ArgumentNullException(nameof(jwk.X5c), jwk.GetTypeName());
+            if (jwk.X5c?.Count() <= 0) throw new ArgumentNullException(nameof(jwk.X5c), jwk.GetTypeName());
 
             var certificate = new X509Certificate2(Convert.FromBase64String(jwk.X5c.First()));
             if (!jwk.X5t.IsNullOrEmpty())

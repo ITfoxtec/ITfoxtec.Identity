@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using MSTokens = Microsoft.IdentityModel.Tokens;
+using ITfoxtec.Identity.Models;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -16,42 +17,46 @@ namespace ITfoxtec.Identity.Tokens
         /// <summary>
         /// Create and sign JWT token.
         /// </summary>
-        public static JwtSecurityToken CreateToken(SecurityKey securityKey, string issuer, string audience, IEnumerable<Claim> claims, DateTimeOffset? issuedAt = null, int beforeIn = 60, int expiresIn = 3600, string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256, string x509CertificateSHA1Thumbprint = null)
+        public static JwtSecurityToken CreateToken(MSTokens.SecurityKey securityKey, string issuer, string audience, IEnumerable<Claim> claims, DateTimeOffset? issuedAt = null, int beforeIn = 60, int expiresIn = 3600, 
+            string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256, string typ = IdentityConstants.JwtHeaders.MediaTypes.Jwt)
         {
-            return CreateToken(securityKey, issuer, new[] { audience }, claims, issuedAt, beforeIn, expiresIn, algorithm, x509CertificateSHA1Thumbprint);
+            return CreateToken(securityKey, issuer, new[] { audience }, claims, issuedAt: issuedAt, beforeIn: beforeIn, expiresIn: expiresIn, algorithm: algorithm, typ: typ);
         }
 
         /// <summary>
         /// Create and sign JWT token.
         /// </summary>
-        public static JwtSecurityToken CreateToken(JsonWebKey jsonWebKey, string issuer, IEnumerable<string> audiences, IEnumerable<Claim> claims, DateTimeOffset? issuedAt = null, int beforeIn = 60, int expiresIn = 3600, string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256)
+        public static JwtSecurityToken CreateToken(JsonWebKey jsonWebKey, string issuer, IEnumerable<string> audiences, IEnumerable<Claim> claims, DateTimeOffset? issuedAt = null, int beforeIn = 60, int expiresIn = 3600,
+            string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256, string typ = IdentityConstants.JwtHeaders.MediaTypes.Jwt)
         {
-            return CreateToken(jsonWebKey as SecurityKey, issuer, audiences , claims, issuedAt, beforeIn, expiresIn, algorithm);
+            return CreateToken(jsonWebKey.ToSecurityKey(), issuer, audiences , claims, issuedAt: issuedAt, beforeIn: beforeIn, expiresIn: expiresIn, algorithm: algorithm, typ: typ);
         }
 
         /// <summary>
         /// Create and sign JWT token.
         /// </summary>
-        public static JwtSecurityToken CreateToken(X509Certificate2 certificate, string issuer, IEnumerable<string> audiences, IEnumerable<Claim> claims, DateTimeOffset? issuedAt = null, int beforeIn = 60, int expiresIn = 3600, string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256)
+        public static JwtSecurityToken CreateToken(X509Certificate2 certificate, string issuer, IEnumerable<string> audiences, IEnumerable<Claim> claims, DateTimeOffset? issuedAt = null, int beforeIn = 60, int expiresIn = 3600, 
+            string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256, string typ = IdentityConstants.JwtHeaders.MediaTypes.Jwt)
         {
-            return CreateToken(new X509SecurityKey(certificate), issuer, audiences, claims, issuedAt, beforeIn, expiresIn, algorithm);
+            return CreateToken(new MSTokens.X509SecurityKey(certificate), issuer, audiences, claims, issuedAt: issuedAt, beforeIn: beforeIn, expiresIn: expiresIn, algorithm: algorithm, typ: typ);
         }
 
         /// <summary>
         /// Create and sign JWT token.
         /// </summary>
-        public static JwtSecurityToken CreateToken(SecurityKey securityKey, string issuer, IEnumerable<string> audiences, IEnumerable<Claim> claims, DateTimeOffset? issuedAt = null, int beforeIn = 60, int expiresIn = 3600, string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256, string x509CertificateSHA1Thumbprint = null)
+        public static JwtSecurityToken CreateToken(MSTokens.SecurityKey securityKey, string issuer, IEnumerable<string> audiences, IEnumerable<Claim> claims, DateTimeOffset? issuedAt = null, int beforeIn = 60, int expiresIn = 3600,
+            string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256, string typ = IdentityConstants.JwtHeaders.MediaTypes.Jwt)
         {
             if (securityKey == null) new ArgumentNullException(nameof(securityKey));
             if (issuer.IsNullOrEmpty()) new ArgumentNullException(nameof(issuer));
             if (audiences?.Count() < 1) throw new ArgumentException($"At least one audience is required.", nameof(audiences));
             if (claims?.Count() < 1) throw new ArgumentException($"At least one claim is required.", nameof(claims));
 
-            var header = new JwtHeader(new SigningCredentials(securityKey, algorithm));
-            x509CertificateSHA1Thumbprint = x509CertificateSHA1Thumbprint ?? GetX509CertificateSHA1Thumbprint(securityKey);
-            if(!x509CertificateSHA1Thumbprint.IsNullOrEmpty())
+            var key = securityKey is MSTokens.JsonWebKey jsonWebKey ? jsonWebKey.ToSecurityKey() : securityKey;
+            var header = new JwtHeader(new MSTokens.SigningCredentials(key, algorithm));
+            if (!typ.IsNullOrEmpty())
             {
-                header.Add(IdentityConstants.JwtHeaders.X509CertificateSHA1Thumbprint, x509CertificateSHA1Thumbprint);
+                header[IdentityConstants.JwtHeaders.Typ] = typ;
             }
 
             if (!issuedAt.HasValue)
@@ -69,33 +74,60 @@ namespace ITfoxtec.Identity.Tokens
             return new JwtSecurityToken(header, payload);
         }
 
+        // .NET 5.0 error, System.Security.Cryptography.RSA.Create() - System.PlatformNotSupportedException: System.Security.Cryptography.Algorithms is not supported on this platform.
+        // https://github.com/dotnet/aspnetcore/issues/26123
+        // https://github.com/dotnet/runtime/issues/40074
+
         /// <summary>
         /// Validate JWT token.
         /// </summary>
-        public static (ClaimsPrincipal, SecurityToken) ValidateToken(string token, string issuer, IEnumerable<JsonWebKey> issuerSigningKeys, string audience = null, bool validateAudience = true, bool validateLifetime = true, string nameClaimType = JwtClaimTypes.Subject, string roleClaimType = JwtClaimTypes.Role)
+        public static (ClaimsPrincipal, MSTokens.SecurityToken) ValidateToken(string token, string issuer, IEnumerable<JsonWebKey> issuerSigningKeys, string audience = null, bool validateAudience = true, bool validateLifetime = true,
+            string nameClaimType = JwtClaimTypes.Subject, string roleClaimType = JwtClaimTypes.Role
+#if NET50
+            , bool validateSigningKey = true
+#endif
+            )
         {
-            return ValidateToken(token, issuer, issuerSigningKeys.Select(k => k as SecurityKey), audience, validateAudience, validateLifetime, nameClaimType, roleClaimType);
+            return ValidateToken(token, issuer, issuerSigningKeys.ToMSJsonWebKeys(), audience: audience, validateAudience: validateAudience, validateLifetime: validateLifetime, nameClaimType: nameClaimType, roleClaimType: roleClaimType
+#if NET50
+                , validateSigningKey: validateSigningKey
+#endif
+                );
         }
 
         /// <summary>
         /// Validate JWT token.
         /// </summary>
-        public static (ClaimsPrincipal, SecurityToken) ValidateToken(string token, string issuer, IEnumerable<X509Certificate2> issuerSigningKeys, string audience = null, bool validateAudience = true, bool validateLifetime = true, string nameClaimType = JwtClaimTypes.Subject, string roleClaimType = JwtClaimTypes.Role)
+        public static (ClaimsPrincipal, MSTokens.SecurityToken) ValidateToken(string token, string issuer, IEnumerable<X509Certificate2> issuerSigningKeys, string audience = null, bool validateAudience = true, bool validateLifetime = true,
+            string nameClaimType = JwtClaimTypes.Subject, string roleClaimType = JwtClaimTypes.Role
+#if NET50
+            , bool validateSigningKey = true
+#endif
+            )
         {
-            return ValidateToken(token, issuer, issuerSigningKeys.Select(c => new X509SecurityKey(c)), audience, validateAudience, validateLifetime, nameClaimType, roleClaimType);
+            return ValidateToken(token, issuer, issuerSigningKeys.Select(c => new MSTokens.X509SecurityKey(c)), audience: audience, validateAudience: validateAudience, validateLifetime: validateLifetime, nameClaimType: nameClaimType, roleClaimType: roleClaimType
+#if NET50
+                , validateSigningKey: validateSigningKey
+#endif
+                );
         }
 
         /// <summary>
         /// Validate JWT token.
         /// </summary>
-        public static (ClaimsPrincipal, SecurityToken) ValidateToken(string token, string issuer, IEnumerable<SecurityKey> issuerSigningKeys, string audience = null, bool validateAudience = true, bool validateLifetime = true, string nameClaimType = JwtClaimTypes.Subject, string roleClaimType = JwtClaimTypes.Role)
+        public static (ClaimsPrincipal, MSTokens.SecurityToken) ValidateToken(string token, string issuer, IEnumerable<MSTokens.SecurityKey> issuerSigningKeys, string audience = null, bool validateAudience = true, bool validateLifetime = true,
+            string nameClaimType = JwtClaimTypes.Subject, string roleClaimType = JwtClaimTypes.Role
+#if NET50
+            , bool validateSigningKey = true
+#endif
+            )
         {
             if (token.IsNullOrEmpty()) new ArgumentNullException(nameof(token));
             if (issuer.IsNullOrEmpty()) new ArgumentNullException(nameof(issuer));
             if (issuerSigningKeys?.Count() < 1) throw new ArgumentException($"At least one key is required.", nameof(issuerSigningKeys));
             if (audience.IsNullOrEmpty()) new ArgumentNullException(nameof(audience));
 
-            var validationParameters = new TokenValidationParameters
+            var validationParameters = new MSTokens.TokenValidationParameters
             {
                 SaveSigninToken = true,
                 ValidIssuer = issuer,
@@ -107,8 +139,28 @@ namespace ITfoxtec.Identity.Tokens
                 RoleClaimType = roleClaimType,
             };
 
-            SecurityToken securityToken;
-            var claimsPrincipal = GetTokenHandler().ValidateToken(token, validationParameters, out securityToken);
+            MSTokens.SecurityToken securityToken = null;
+            ClaimsPrincipal claimsPrincipal = null;
+
+#if NET50
+            if (!validateSigningKey) 
+            {
+                var jwtSecurityToken = GetTokenHandler().ReadJwtToken(token);
+                claimsPrincipal = new ClaimsPrincipal(
+                    new ClaimsIdentity(jwtSecurityToken.Claims, "AuthenticationTypes.Federation", JwtClaimTypes.Subject, JwtClaimTypes.Role)
+                    { 
+                        BootstrapContext = token 
+                    });
+            }
+            else 
+            {
+#endif
+            claimsPrincipal = GetTokenHandler().ValidateToken(token, validationParameters, out securityToken);
+#if NET50
+            }
+#endif
+
+
             return (claimsPrincipal, securityToken);
         }
 
@@ -120,22 +172,6 @@ namespace ITfoxtec.Identity.Tokens
             if (token.IsNullOrEmpty()) new ArgumentNullException(nameof(token));
 
             return GetTokenHandler().ReadJwtToken(token);
-        }
-
-        private static string GetX509CertificateSHA1Thumbprint(SecurityKey securityKey)
-        {
-            if (securityKey is JsonWebKey && !(securityKey as JsonWebKey).X5t.IsNullOrEmpty())
-            {
-                return (securityKey as JsonWebKey).X5t;
-            }
-            else if (securityKey is X509SecurityKey && !(securityKey as X509SecurityKey).X5t.IsNullOrEmpty())
-            {
-                return (securityKey as X509SecurityKey).X5t;
-            }
-            else
-            {
-                return null;
-            }
         }
 
         private static JwtSecurityTokenHandler GetTokenHandler()
