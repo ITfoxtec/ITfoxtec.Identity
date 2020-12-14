@@ -9,7 +9,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CFA46973-0C9
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{D6B63CEA-1175-408E-94B6-4F374097424B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITfoxtec.Identity.UnitTest", "test\ITfoxtec.Identity.UnitTest\ITfoxtec.Identity.UnitTest.csproj", "{163DCB42-8DCC-4930-BB0C-C30B3BFEAEEB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITfoxtec.Identity.UnitTest", "test\ITfoxtec.Identity.UnitTest\ITfoxtec.Identity.UnitTest.csproj", "{163DCB42-8DCC-4930-BB0C-C30B3BFEAEEB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B80311BB-D49F-4952-B256-38F0EE5EF645}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
