@@ -8,11 +8,10 @@ using System.Threading.Tasks;
 namespace ITfoxtec.Identity.Discovery
 {
     /// <summary>
-    /// Call OIDC Discovery and cache result.
+    /// Call OIDC Discovery and cache result designed to be handled by a BackgroundService.
     /// </summary>
-    public class OidcDiscoveryHandler : OidcDiscoveryHandlerBase, IDisposable
+    public class OidcDiscoveryHandlerService : OidcDiscoveryHandlerBase
     {
-        private readonly CancellationTokenSource cleanUpCancellationTokenSource;
 #if NET || NETCORE
         private readonly IHttpClientFactory httpClientFactory;
 #else
@@ -28,7 +27,7 @@ namespace ITfoxtec.Identity.Discovery
         /// </summary>
         /// <param name="defaultOidcDiscoveryUri">The default OIDC Discovery Uri.</param>
         /// <param name="defaultExpiresIn">The default expires in seconds.</param>
-        public OidcDiscoveryHandler(
+        public OidcDiscoveryHandlerService(
 #if NET || NETCORE
             IHttpClientFactory httpClientFactory,
 #else
@@ -50,19 +49,16 @@ namespace ITfoxtec.Identity.Discovery
 #endif
             this.defaultOidcDiscoveryUri = defaultOidcDiscoveryUri;
             this.defaultExpiresIn = defaultExpiresIn;
-
-            cleanUpCancellationTokenSource = new CancellationTokenSource();
-            Task.Factory.StartNew(async () => { await CleanOldCacheItemsAsync(cleanUpCancellationTokenSource.Token); }, cleanUpCancellationTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
 
-        bool isDisposed = false;
-        public void Dispose()
+        /// <summary>
+        /// Should be used to clean old cache items.
+        /// </summary>
+        /// <param name="stoppingToken">CancellationToken triggered to stop.</param>
+        /// <returns>Returns long running task that cleans old cache items.</returns>
+        public async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            if (!isDisposed)
-            {
-                isDisposed = true;
-                cleanUpCancellationTokenSource.Cancel();
-            }
+            await CleanOldCacheItemsAsync(stoppingToken);
         }
     }
 }
