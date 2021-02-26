@@ -4,8 +4,6 @@ using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 
 namespace ITfoxtec.Identity
 {
@@ -99,7 +97,7 @@ namespace ITfoxtec.Identity
         }
 
         /// <summary>
-        /// Converts and add an object to a Dictionary<string, string>.
+        /// Converts and add an object to a Dictionary&lt;string, string&gt;.
         /// </summary>
         public static Dictionary<string, string> AddToDictionary(this Dictionary<string, string> list, object data)
         {
@@ -108,7 +106,7 @@ namespace ITfoxtec.Identity
         }
 
         /// <summary>
-        /// Converts and add an ResourceRequest object to a Dictionary<string, string>.
+        /// Converts and add an ResourceRequest object to a Dictionary&lt;string, string&gt;.
         /// </summary>
         public static Dictionary<string, string> AddToDictionary(this Dictionary<string, string> list, ResourceRequest resourceRequest)
         {
@@ -125,62 +123,6 @@ namespace ITfoxtec.Identity
                 }
             }
             return list;
-        }
-
-        /// <summary>
-        /// Converts a Dictionary<string, string> to a HTML Post page.
-        /// </summary>
-        public static string ToHtmlPostPage(this Dictionary<string, string> items, string url)
-        {
-            return string.Concat(HtmlPostPageList(items, url));
-        }
-
-        /// <summary>
-        /// Converts a Dictionary<string, string> to a HTML Post page.
-        /// </summary>
-        public static Task<string> ToHtmlPostPageAsync(this Dictionary<string, string> items, string url)
-        {
-            return Task.FromResult(ToHtmlPostPage(items, url));
-        }
-
-        private static IEnumerable<string> HtmlPostPageList(Dictionary<string, string> items, string url)
-        {
-            yield return
-$@"<!DOCTYPE html>
-<html lang=""en"">
-    <head>
-        <meta charset=""utf-8"" />
-        <meta http-equiv=""X-UA-Compatible"" content=""IE=edge"">
-        <title>OAuth 2.0</title>
-    </head>
-    <body onload=""document.forms[0].submit()"">
-        <noscript>
-            <p>
-                <strong>Note:</strong> Since your browser does not support JavaScript, 
-                you must press the Continue button once to proceed.
-            </p>
-        </noscript>
-        <form action=""{url}"" method=""post"">
-            <div>
-";
-
-            foreach (var item in items)
-            {
-                yield return
-$@"                <input type=""hidden"" name=""{item.Key}"" value=""{WebUtility.HtmlEncode(item.Value)}""/>
-";
-            }
-
-            yield return
-$@"            </div>
-            <noscript>
-                <div>
-                    <input type=""submit"" value=""Continue""/>
-                </div>
-            </noscript>
-        </form>
-    </body>
-</html>";
         }
     }
 }
