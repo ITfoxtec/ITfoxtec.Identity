@@ -81,8 +81,11 @@ namespace ITfoxtec.Identity
             if (isImplicitFlow && response.IdToken.IsNullOrEmpty()) throw new ArgumentNullException(nameof(response.IdToken), response.GetTypeName());
 
             response.IdToken.ValidateMaxLength(IdentityConstants.MessageLength.IdTokenMax, nameof(response.IdToken), response.GetTypeName());
-            response.AccessToken .ValidateMaxLength(IdentityConstants.MessageLength.AccessTokenMax, nameof(response.AccessToken), response.GetTypeName());
-            response.TokenType.ValidateMaxLength(IdentityConstants.MessageLength.TokenTypeMax, nameof(response.TokenType), response.GetTypeName());
+            response.AccessToken.ValidateMaxLength(IdentityConstants.MessageLength.AccessTokenMax, nameof(response.AccessToken), response.GetTypeName());
+            if (!isImplicitFlow || (isImplicitFlow && !response.AccessToken.IsNullOrEmpty()))
+            {
+                response.TokenType.ValidateMaxLength(IdentityConstants.MessageLength.TokenTypeMax, nameof(response.TokenType), response.GetTypeName());
+            }
         }
 
         /// <summary>
