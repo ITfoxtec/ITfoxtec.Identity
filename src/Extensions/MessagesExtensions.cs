@@ -76,13 +76,13 @@ namespace ITfoxtec.Identity
 
             (response as AuthorizationResponse).Validate(isImplicitFlow);
 
-            if ((!response.IdToken.IsNullOrEmpty() || !response.AccessToken.IsNullOrEmpty()) && response.TokenType.IsNullOrEmpty())
+            if (!response.AccessToken.IsNullOrEmpty() && response.TokenType.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(response.TokenType), response.GetTypeName());
             if (isImplicitFlow && response.IdToken.IsNullOrEmpty()) throw new ArgumentNullException(nameof(response.IdToken), response.GetTypeName());
 
             response.IdToken.ValidateMaxLength(IdentityConstants.MessageLength.IdTokenMax, nameof(response.IdToken), response.GetTypeName());
             response.AccessToken.ValidateMaxLength(IdentityConstants.MessageLength.AccessTokenMax, nameof(response.AccessToken), response.GetTypeName());
-            if (!isImplicitFlow || (isImplicitFlow && !response.AccessToken.IsNullOrEmpty()))
+            if (!response.TokenType.IsNullOrEmpty())
             {
                 response.TokenType.ValidateMaxLength(IdentityConstants.MessageLength.TokenTypeMax, nameof(response.TokenType), response.GetTypeName());
             }

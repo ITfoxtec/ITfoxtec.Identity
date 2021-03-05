@@ -20,7 +20,7 @@ namespace ITfoxtec.Identity.Messages
         public string AccessToken { get; set; }
 
         /// <summary>
-        /// REQUIRED. OAuth 2.0 Token Type value. The value MUST be Bearer or another token_type value that the Client has negotiated with the Authorization Server. 
+        /// REQUIRED if the response include Access Token else not included. OAuth 2.0 Token Type value. The value MUST be Bearer or another token_type value that the Client has negotiated with the Authorization Server. 
         /// </summary>
         [JsonProperty(PropertyName = "token_type")]
         public string TokenType { get; set; }
