@@ -473,7 +473,7 @@
             public const int AcrValuesMax = 100;
             public const int CodeMax = 2000;
             public const int GrantTypeMax = 50;
-            public const int SessionStatedMax = 2000;
+            public const int SessionStatedMax = 200;
 
             public const int ClientSecretMax = 2000;
             public const int UsernameMax = 2000;
