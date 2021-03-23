@@ -47,8 +47,8 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static string ToHtmlFragmentPage(this Dictionary<string, string> items, string url)
         {
-            var formUrl = QueryHelpers.AddQueryString(url, items).Replace('?', '#');
-            return string.Concat(HtmRedirectActionPageList(formUrl));
+            var redirectUrl = QueryHelpers.AddQueryString(url, items).Replace('?', '#');
+            return HtmRedirectActionPageList(redirectUrl);
         }
 
         /// <summary>
@@ -102,29 +102,21 @@ $@"            </div>
 </html>";
         }
 
-        private static IEnumerable<string> HtmRedirectActionPageList(string url)
+        private static string HtmRedirectActionPageList(string url)
         {
-            yield return
-@"<!DOCTYPE html>
+            return
+$@"<!DOCTYPE html>
 <html lang=""en"">
     <head>
         <meta charset=""utf-8"" />
-        <meta http-equiv=""X-UA-Compatible"" content=""IE=edge"" />";
-
-            yield return
-$@"        <meta http-equiv=""refresh"" content=""0;URL='{url}'"" />";
-
-            yield return
-@"        <title>OAuth 2.0</title>
+        <meta http-equiv=""X-UA-Compatible"" content=""IE=edge"" />
+        <meta http-equiv=""refresh"" content=""0;URL='{url}'"" />
+        <title>OAuth 2.0</title>
     </head>
     <body>
-        <p>";
-
-            yield return
-$@"            Please press <a href=""{url}"">here</a> to continue the proceed.";
-
-            yield return
-@"        </p>
+        <p>
+            Please press <a href=""{url}"">here</a> to continue the proceed.
+        </p>
     </body>
 </html>";
         }
