@@ -219,6 +219,23 @@ namespace ITfoxtec.Identity
         }
 
         /// <summary>
+        /// Is Valid OIDC Front-Channel Logout Request.
+        /// </summary>
+        public static void Validate(this FrontChannelLogoutRequest request)
+        {
+            if (request == null) new ArgumentNullException(nameof(request));
+
+            if (!request.Issuer.IsNullOrEmpty() || !request.SessionId.IsNullOrEmpty())
+            {
+                if (request.Issuer.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.Issuer), request.GetTypeName());
+                if (request.SessionId.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.SessionId), request.GetTypeName());
+            }
+
+            request.Issuer.ValidateMaxLength(IdentityConstants.MessageLength.IdTokenMax, nameof(request.Issuer), request.GetTypeName());
+            request.SessionId.ValidateMaxLength(IdentityConstants.MessageLength.SessionIdMax, nameof(request.SessionId), request.GetTypeName());
+        }
+
+        /// <summary>
         /// Is Valid Resource Indicators for OAuth 2.0 request.
         /// </summary>
         public static void Validate(this ResourceRequest request)
@@ -234,9 +251,7 @@ namespace ITfoxtec.Identity
                 if (resource.IsNullOrEmpty()) throw new ArgumentNullException($"{nameof(request.Resources)}[{count}]", request.GetTypeName());
                 resource.ValidateMaxLength(IdentityConstants.MessageLength.ResourceMax, $"{nameof(request.Resources)}[{count}]", request.GetTypeName());
                 count++;
-            }
-
-            
+            }            
         }
     }
 }
