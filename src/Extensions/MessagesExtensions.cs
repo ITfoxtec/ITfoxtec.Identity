@@ -197,9 +197,9 @@ namespace ITfoxtec.Identity
         }
 
         /// <summary>
-        /// Is Valid OIDC End Session Request.
+        /// Is Valid OIDC RP-Initiated Logout Request.
         /// </summary>
-        public static void Validate(this EndSessionRequest request)
+        public static void Validate(this RpInitiatedLogoutRequest request)
         {
             if (request == null) new ArgumentNullException(nameof(request));
 
@@ -209,9 +209,9 @@ namespace ITfoxtec.Identity
         }
 
         /// <summary>
-        /// Is Valid OIDC End Session Response.
+        /// Is Valid OIDC RP-Initiated Logout Response.
         /// </summary>
-        public static void Validate(this EndSessionResponse response)
+        public static void Validate(this RpInitiatedLogoutResponse response)
         {
             if (response == null) new ArgumentNullException(nameof(response));
 

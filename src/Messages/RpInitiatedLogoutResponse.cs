@@ -3,9 +3,9 @@
 namespace ITfoxtec.Identity.Messages
 {
     /// <summary>
-    /// OIDC End Session Response.
+    /// OIDC RP-Initiated Logout Response.
     /// </summary>
-    public class EndSessionResponse
+    public class RpInitiatedLogoutResponse
     {
         /// <summary>
         ///  OPTIONAL. Opaque value used by the RP to maintain state between the logout request and the callback to the endpoint specified by the post_logout_redirect_uri query parameter.

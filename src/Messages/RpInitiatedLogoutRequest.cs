@@ -3,9 +3,9 @@
 namespace ITfoxtec.Identity.Messages
 {
     /// <summary>
-    /// OIDC End Session Request.
+    /// OIDC RP-Initiated Logout Request.
     /// </summary>
-    public class EndSessionRequest
+    public class RpInitiatedLogoutRequest
     {
         /// <summary>
         /// RECOMMENDED. Previously issued ID Token passed to the logout endpoint as a hint about the End-User's current authenticated session with the Client. 
@@ -27,5 +27,12 @@ namespace ITfoxtec.Identity.Messages
         /// </summary>
         [JsonProperty(PropertyName = "state")]
         public string State { get; set; }
+
+        /// <summary>
+        /// OPTIONAL. End-User's preferred languages and scripts for the user interface, represented as a space-separated list of BCP47 [RFC5646] language tag values, ordered by preference. 
+        /// For instance, the value "fr-CA fr en" represents a preference for French as spoken in Canada, then French (without region), followed by English (without region).
+        /// </summary>
+        [JsonProperty(PropertyName = "ui_locales")]
+        public string UiLocales { get; set; }
     }
 }
