@@ -48,6 +48,19 @@ namespace ITfoxtec.Identity.Discovery
         public string JwksUri { get; set; }
 
         /// <summary>
+        /// OPTIONAL. Boolean value specifying whether the OP supports HTTP-based logout, with true indicating support. If omitted, the default value is false.
+        /// </summary>
+        [JsonProperty(PropertyName = "frontchannel_logout_supported")]
+        public bool FrontchannelLogoutSupported { get; set; }
+
+        /// <summary>
+        /// OPTIONAL. Boolean value specifying whether the OP can pass iss (issuer) and sid (session ID) query parameters to identify the RP session with the OP when 
+        /// the frontchannel_logout_uri is used. If supported, the sid Claim is also included in ID Tokens issued by the OP. If omitted, the default value is false.
+        /// </summary>
+        [JsonProperty(PropertyName = "frontchannel_logout_session_supported")]
+        public bool FrontchannelLogoutSessionSupported { get; set; }
+
+        /// <summary>
         /// RECOMMENDED. JSON array containing a list of the OAuth 2.0 [RFC6749] scope values that this server supports. The server MUST support the openid scope value. 
         /// Servers MAY choose not to advertise some supported scope values even when this parameter is used, although those defined in [OpenID.Core] SHOULD be listed, if supported.
         /// </summary>
@@ -94,18 +107,5 @@ namespace ITfoxtec.Identity.Discovery
           /// </summary>
         [JsonProperty(PropertyName = "code_challenge_methods_supported")]
         public IEnumerable<string> CodeChallengeMethodsSupported { get; set; }
-
-        /// <summary>
-        /// OPTIONAL. Boolean value specifying whether the OP supports HTTP-based logout, with true indicating support. If omitted, the default value is false.
-        /// </summary>
-        [JsonProperty(PropertyName = "frontchannel_logout_supported")]
-        public bool FrontchannelLogoutSupported { get; set; }
-
-        /// <summary>
-        /// OPTIONAL. Boolean value specifying whether the OP can pass iss (issuer) and sid (session ID) query parameters to identify the RP session with the OP when 
-        /// the frontchannel_logout_uri is used. If supported, the sid Claim is also included in ID Tokens issued by the OP. If omitted, the default value is false.
-        /// </summary>
-        [JsonProperty(PropertyName = "frontchannel_logout_session_supported")]
-        public bool FrontchannelLogoutSessionSupported { get; set; }
     }
 }
