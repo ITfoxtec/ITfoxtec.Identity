@@ -18,8 +18,8 @@ namespace ITfoxtec.Identity.Extensions
                 return null;
             }
 
-            var salt = RandomGenerator.GenerateBytes(16);
-            return $"{$"{clientId} {redirectUri.UrlToOrigin()} {sessionId} {salt}".Sha256HashBase64urlEncoded()}.{salt}";
+            var salt = RandomGenerator.Generate(16);
+            return $"{new [] { clientId, redirectUri.UrlToOrigin(), sessionId, salt }.ToSpaceList().Sha256HashBase64urlEncoded()}.{salt}";
         }
 
         /// <summary>
