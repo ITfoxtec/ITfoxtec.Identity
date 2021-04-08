@@ -71,10 +71,51 @@ namespace ITfoxtec.Identity
             {
                 throw new ArgumentException($"Invalid value, max length {maxLength}.", $"{paramName} at {className}");
             }
-        }        
+        }
 
         /// <summary>
-        /// Base64 url encode a string.
+        /// Convert URL to domain.
+        /// </summary>
+        public static string UrlToDomain(this string url)
+        {
+            if (string.IsNullOrEmpty(url))
+            {
+                return null;
+            }
+
+            var splitValue = url.Split('/');
+            if (splitValue.Count() > 2)
+            {
+                var domain = splitValue[2].ToLower();
+                return domain;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Convert domain to HTTPS origin.
+        /// </summary>
+        public static string DomainToOrigin(this string domain)
+        {
+            if (string.IsNullOrEmpty(domain))
+            {
+                return null;
+            }
+
+            return $"https://{domain}";
+        }
+
+        /// <summary>
+        /// Convert URL to HTTPS origin.
+        /// </summary>
+        public static string UrlToOrigin(this string url)
+        {
+            var domain = url.UrlToDomain();
+            return domain.DomainToOrigin();
+        }
+
+        /// <summary>
+        /// Base64 URL encode a string.
         /// </summary>
         public static string Base64UrlEncode(this string value)
         {
@@ -84,7 +125,7 @@ namespace ITfoxtec.Identity
         }
 
         /// <summary>
-        /// Base64 url decode a string.
+        /// Base64 URL decode a string.
         /// </summary>
         public static string Base64UrlDecode(this string value)
         {
@@ -114,24 +155,32 @@ namespace ITfoxtec.Identity
         }
 
         /// <summary>
-        /// Base64 url encoded SHA-256 hash. Code challenge method S256.
+        /// Base64 URL encoded SHA-256 hash. Code challenge method S256.
         /// </summary>
-        public static Task<string> Sha256HashBase64urlEncoded(this string value)
+        public static string Sha256HashBase64urlEncoded(this string value)
         {
             if (value == null) new ArgumentNullException(nameof(value));
         
             using (var sha = SHA256.Create())
             {
                 var hash = sha.ComputeHash(Encoding.ASCII.GetBytes(value));
-                return Task.FromResult(WebEncoders.Base64UrlEncode(hash));
+                return WebEncoders.Base64UrlEncode(hash);
             }
+        }
+
+        /// <summary>
+        /// Base64 URL encoded SHA-256 hash. Code challenge method S256.
+        /// </summary>
+        public static Task<string> Sha256HashBase64urlEncodedAsync(this string value)
+        {
+            return Task.FromResult(value.Sha256HashBase64urlEncoded());
         }
 
         /// <summary>
         /// Compute a base64url encoded left-most half of the hash of the octets of the ASCII representation of a value. 
         /// For instance, if the algorithm is RS256, hash the value with SHA-256, then take the left-most 128 bits and base64url encode them.
         /// </summary>
-        public static Task<string> LeftMostBase64urlEncodedHash(this string value, string algorithm)
+        public static string LeftMostBase64urlEncodedHash(this string value, string algorithm)
         {
             if (value == null) new ArgumentNullException(nameof(value));
             if (algorithm != IdentityConstants.Algorithms.Asymmetric.RS256) throw new NotSupportedException($"Algorithm {algorithm} not supported. Supports {IdentityConstants.Algorithms.Asymmetric.RS256}.");
@@ -139,8 +188,17 @@ namespace ITfoxtec.Identity
             using (var sha = SHA256.Create())
             {
                 var hash = sha.ComputeHash(Encoding.ASCII.GetBytes(value));
-                return Task.FromResult(WebEncoders.Base64UrlEncode(hash.Take(16).ToArray()));
+                return WebEncoders.Base64UrlEncode(hash.Take(16).ToArray());
             }
+        }
+
+        /// <summary>
+        /// Compute a base64url encoded left-most half of the hash of the octets of the ASCII representation of a value. 
+        /// For instance, if the algorithm is RS256, hash the value with SHA-256, then take the left-most 128 bits and base64url encode them.
+        /// </summary>
+        public static Task<string> LeftMostBase64urlEncodedHashAsync(this string value, string algorithm)
+        {
+            return Task.FromResult(value.LeftMostBase64urlEncodedHash(algorithm));
         }
     }
 }

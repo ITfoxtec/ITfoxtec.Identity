@@ -1,13 +1,12 @@
 ﻿using ITfoxtec.Identity.Messages;
 using System;
-using System.Linq;
 
 namespace ITfoxtec.Identity
 {
     /// <summary>
-    /// Extension methods for Messages.
+    /// Extension methods for message validation.
     /// </summary>
-    public static class MessagesExtensions
+    public static class ValidationExtensions
     {
         /// <summary>
         /// Is Valid OAuth 2.0 Authorization Request.
