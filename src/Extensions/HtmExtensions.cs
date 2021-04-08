@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 namespace ITfoxtec.Identity
 {
     /// <summary>
-    /// Extension methods for HTML form and redirect actions.
+    /// Extension methods for HTML form, redirect actions and iframe.
     /// </summary>
-    public static class HtmActionExtensions
+    public static class HtmExtensions
     {
         /// <summary>
         /// Converts a Dictionary&lt;string, string&gt; to a HTML form action post page.
@@ -43,22 +43,8 @@ namespace ITfoxtec.Identity
         }
 
         /// <summary>
-        /// Converts a Dictionary&lt;string, string&gt; to a HTML form action fragment page.
+        /// Converts a Dictionary&lt;string, string&gt; to a HTML form action page.
         /// </summary>
-        public static string ToHtmlFragmentPage(this Dictionary<string, string> items, string url, string title = "OAuth 2.0")
-        {
-            var redirectUrl = QueryHelpers.AddQueryString(url, items).Replace('?', '#');
-            return redirectUrl.HtmRedirectActionPage(title: title);
-        }
-
-        /// <summary>
-        /// Converts a Dictionary&lt;string, string&gt; to a HTML form action fragment page.
-        /// </summary>
-        public static Task<string> ToHtmlFragmentPageAsync(this Dictionary<string, string> items, string url, string title = "OAuth 2.0")
-        {
-            return Task.FromResult(ToHtmlFragmentPage(items, url, title: title));
-        }
-
         public static IEnumerable<string> HtmFormActionPageList(this Dictionary<string, string> items, string url, string method, string title = "OAuth 2.0")
         {
             yield return
@@ -102,6 +88,26 @@ $@"            </div>
 </html>";
         }
 
+        /// <summary>
+        /// Converts a Dictionary&lt;string, string&gt; to a HTML fragment redirect page.
+        /// </summary>
+        public static string ToHtmlFragmentPage(this Dictionary<string, string> items, string url, string title = "OAuth 2.0")
+        {
+            var redirectUrl = QueryHelpers.AddQueryString(url, items).Replace('?', '#');
+            return redirectUrl.HtmRedirectActionPage(title: title);
+        }
+
+        /// <summary>
+        /// Converts a Dictionary&lt;string, string&gt; to a HTML fragment redirect page.
+        /// </summary>
+        public static Task<string> ToHtmlFragmentPageAsync(this Dictionary<string, string> items, string url, string title = "OAuth 2.0")
+        {
+            return Task.FromResult(ToHtmlFragmentPage(items, url, title: title));
+        }
+
+        /// <summary>
+        /// URL to a HTML redirect page.
+        /// </summary>
         public static string HtmRedirectActionPage(this string url, string title = "OAuth 2.0")
         {
             return
@@ -114,6 +120,47 @@ $@"<!DOCTYPE html>
         <title>{title}</title>
     </head>
     <body>
+    </body>
+</html>";
+        }
+
+        /// <summary>
+        /// Converts URLs to a HTML iframe and redirect page.
+        /// </summary>
+        public static string ToHtmIframePage(this List<string> urls, string redirectUrl, string title = "OAuth 2.0")
+        {
+            return string.Concat(urls.ToHtmIframePageList(redirectUrl, title: title));
+        }
+
+        /// <summary>
+        /// URLs to a HTML iframe and redirect page.
+        /// </summary>
+        public static IEnumerable<string> ToHtmIframePageList(this List<string> urls, string redirectUrl, string title = "OAuth 2.0")
+        {
+            yield return
+$@"<!DOCTYPE html>
+<html lang=""en"">
+    <head>
+        <meta charset=""utf-8"" />
+        <meta http-equiv=""X-UA-Compatible"" content=""IE=edge"" />
+        <meta http-equiv=""refresh"" content=""0;URL='{redirectUrl}'"" />
+        <title>{title}</title>
+    </head>
+    <body>
+        <div>
+";
+            if (urls?.Count > 0)
+            {
+                foreach (var url in urls)
+                {
+                    yield return
+$@"            <iframe width=""0"" height=""0"" frameborder=""0"" src=""{url}""></iframe>
+";
+                }
+            }
+
+            yield return
+$@"        </div>
     </body>
 </html>";
         }
