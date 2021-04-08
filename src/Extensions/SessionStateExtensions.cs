@@ -1,7 +1,7 @@
 ﻿using ITfoxtec.Identity.Util;
 using System.Threading.Tasks;
 
-namespace ITfoxtec.Identity.Extensions
+namespace ITfoxtec.Identity
 {
     /// <summary>
     /// Session state extensions.
