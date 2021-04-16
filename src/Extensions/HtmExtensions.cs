@@ -138,13 +138,21 @@ $@"<!DOCTYPE html>
         public static IEnumerable<string> ToHtmIframePageList(this List<string> urls, string redirectUrl, string title = "OAuth 2.0")
         {
             yield return
-$@"<!DOCTYPE html>
+@"<!DOCTYPE html>
 <html lang=""en"">
     <head>
         <meta charset=""utf-8"" />
         <meta http-equiv=""X-UA-Compatible"" content=""IE=edge"" />
-        <meta http-equiv=""refresh"" content=""0;URL='{redirectUrl}'"" />
-        <title>{title}</title>
+";
+            if (!redirectUrl.IsNullOrEmpty()) 
+            { 
+                yield return
+$@"        <meta http-equiv=""refresh"" content=""0;URL='{redirectUrl}'"" />
+";
+            }
+
+            yield return
+$@"        <title>{title}</title>
     </head>
     <body>
         <div>
