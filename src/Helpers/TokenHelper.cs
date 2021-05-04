@@ -45,7 +45,7 @@ namespace ITfoxtec.Identity.Helpers
         /// <param name="redirectUri">The redirect Uri.</param>
         /// <param name="scope">The scope.</param>
         /// <returns>The access token and expires in.</returns>
-        public async Task<(string, int)> GetAccessTokenWithClientCredentialsAsync(string clientId, string clientSecret, string redirectUri, string scope = null)
+        public async Task<(string, int?)> GetAccessTokenWithClientCredentialsAsync(string clientId, string clientSecret, string redirectUri, string scope = null)
         {
             if (clientId.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientId));
             if (clientSecret.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientSecret));
@@ -72,7 +72,7 @@ namespace ITfoxtec.Identity.Helpers
         /// <param name="tokenEndpoint">The token endpoint.</param>
         /// <param name="tokenRequest">The token request.</param>
         /// <returns>The access token and expires in.</returns>
-        public async Task<(string, int)> GetAccessTokenWithClientCredentialsAsync<Treq>(string clientId, string clientSecret, string tokenEndpoint, Treq tokenRequest = null) where Treq : TokenRequest
+        public async Task<(string, int?)> GetAccessTokenWithClientCredentialsAsync<Treq>(string clientId, string clientSecret, string tokenEndpoint, Treq tokenRequest = null) where Treq : TokenRequest
         {
             if (clientId.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientId));
             if (clientSecret.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientSecret));

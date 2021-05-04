@@ -30,7 +30,7 @@ namespace ITfoxtec.Identity.Messages
         /// OPTIONAL. Expiration time of the Access Token in seconds since the response was generated.
         /// </summary>
         [JsonProperty(PropertyName = "expires_in")]
-        public int ExpiresIn { get; set; }
+        public int? ExpiresIn { get; set; }
 
         /// <summary>
         /// OPTIONAL. OAuth 2.0 refresh token.
