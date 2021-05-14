@@ -46,7 +46,7 @@ namespace ITfoxtec.Identity
         /// <summary>
         /// Converts a X509 Certificate to ITfoxtec JWK.
         /// </summary>
-        public static Task<JsonWebKey> ToFTJsonWebKeyAsync(this X509Certificate2 certificate, bool includePrivateKey = false)
+        public static JsonWebKey ToFTJsonWebKey(this X509Certificate2 certificate, bool includePrivateKey = false)
         {
             if (certificate == null) new ArgumentNullException(nameof(certificate));
 
@@ -72,13 +72,22 @@ namespace ITfoxtec.Identity
                 jwk.DQ = WebEncoders.Base64UrlEncode(parameters.DQ);
                 jwk.QI = WebEncoders.Base64UrlEncode(parameters.InverseQ);
             }
-            return Task.FromResult(jwk);
+            return jwk;
+        }
+
+        /// <summary>
+        /// Converts a X509 Certificate to ITfoxtec JWK.
+        /// </summary>
+        public static Task<JsonWebKey> ToFTJsonWebKeyAsync(this X509Certificate2 certificate, bool includePrivateKey = false)
+        {
+            var key = ToFTJsonWebKey(certificate, includePrivateKey);
+            return Task.FromResult(key);
         }
 
         /// <summary>
         /// Converts a X509 Certificate to Microsoft JWK.
         /// </summary>
-        public static Task<MSTokens.JsonWebKey> ToMSJsonWebKeyAsync(this X509Certificate2 certificate, bool includePrivateKey = false)
+        public static MSTokens.JsonWebKey ToMSJsonWebKey(this X509Certificate2 certificate, bool includePrivateKey = false)
         {
             if (certificate == null) new ArgumentNullException(nameof(certificate));
 
@@ -104,7 +113,16 @@ namespace ITfoxtec.Identity
                 jwk.DQ = WebEncoders.Base64UrlEncode(parameters.DQ);
                 jwk.QI = WebEncoders.Base64UrlEncode(parameters.InverseQ);
             }
-            return Task.FromResult(jwk);
+            return jwk;
+        }
+
+        /// <summary>
+        /// Converts a X509 Certificate to Microsoft JWK.
+        /// </summary>
+        public static Task<MSTokens.JsonWebKey> ToMSJsonWebKeyAsync(this X509Certificate2 certificate, bool includePrivateKey = false)
+        {
+            var key = ToMSJsonWebKey(certificate, includePrivateKey);
+            return Task.FromResult(key);
         }
     }
 }
