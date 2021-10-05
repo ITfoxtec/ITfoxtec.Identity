@@ -5,7 +5,7 @@ namespace ITfoxtec.Identity.Messages
     /// <summary>
     /// OAuth 2.0 Access Token Response and OIDC Token Response.
     /// </summary>
-    public class TokenResponse
+    public class TokenResponse : IErrorResponse
     {
         /// <summary>
         /// OIDC REQUIRED. OIDC ID Token value associated with the authenticated session.

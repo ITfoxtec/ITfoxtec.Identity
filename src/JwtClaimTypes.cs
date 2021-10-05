@@ -187,14 +187,22 @@
         #endregion
 
         #region Token Exchange claims
+        // RFC8693
+
         /// <summary>
-        /// The value of the "scope" claim is a JSON string containing a space-separated list of scopes associated with the token, in the format described in Section 3.3 of[RFC6749].
+        /// [RFC8693] Section 4.2. The value of the "scope" claim is a JSON string containing a space-separated list of scopes associated with the token, in the format described in Section 3.3 of[RFC6749].
         /// </summary>
         public const string Scope = "scope";
         /// <summary>
-        /// The "client_id" claim carries the client identifier of the OAuth 2.0 [RFC6749] client that requested the token.
+        /// [RFC8693] Section 4.3. The "client_id" claim carries the client identifier of the OAuth 2.0 [RFC6749] client that requested the token.
         /// </summary>
         public const string ClientId = "client_id";
+        /// <summary>
+        /// [RFC8693] Section 4.1. The "act" (actor) claim provides a means within a JWT to express that delegation has occurred and identify the acting party to whom authority has been delegated. 
+        /// The "act" claim value is a JSON object, and members in the JSON object are claims that identify the actor. The claims that make up the "act" claim identify and possibly provide 
+        /// additional information about the actor.
+        /// </summary>
+        public const string Actor = "act";
         #endregion
 
         #region Custom claims

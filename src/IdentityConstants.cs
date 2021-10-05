@@ -50,12 +50,21 @@
             public const string ClientCredentials = "client_credentials";
             public const string RefreshToken = "refresh_token";
             public const string Delegation = "delegation";
+            public const string TokenExchange = "urn:ietf:params:oauth:grant-type:token-exchange";
         }
 
         public static class CodeChallengeMethods
         {
             public const string Plain = "plain";
             public const string S256 = "S256";
+        }
+
+        public static class TokenTypeIdentifiers
+        {
+            public const string AccessToken = "urn:ietf:params:oauth:token-type:access_token";
+            public const string RefreshToken = "urn:ietf:params:oauth:token-type:refresh_token";
+            public const string IdToken = "urn:ietf:params:oauth:token-type:id_token";
+            public const string Saml2 = "urn:ietf:params:oauth:token-type:saml2";
         }
 
         public static class AuthorizationServerDisplay
@@ -462,17 +471,19 @@
             public const int ResourceMax = 500;
             public const int ResourceCountMin = 1;
             public const int ResourceCountMax = 50;
+            public const int AudienceMax = 300;
             public const int ScopeMax = 2000;
             public const int StateMax = 2000;
             public const int NonceMax = 2000;
             public const int TokenTypeMax = 50;
+            public const int TokenTypeIdentifierMax = 100;
             public const int DisplayMax = 50;
             public const int PromptMax = 50;
             public const int UiLocalesMax = 50;
             public const int LoginHintMax = 2000;
             public const int AcrValuesMax = 100;
             public const int CodeMax = 2000;
-            public const int GrantTypeMax = 50;
+            public const int GrantTypeMax = 100;
             public const int IssuerMax = 200;
             public const int SessionIdMax = 200;
             public const int SessionStatedMax = 200;
@@ -490,6 +501,7 @@
             public const int IdTokenMax = 50000;
             public const int RefreshTokenMax = 50000;
             public const int AssertionMax = 50000;
+            public const int GeneralTokenMax = 50000;
         }
     }
 }

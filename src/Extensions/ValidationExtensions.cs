@@ -160,6 +160,20 @@ namespace ITfoxtec.Identity
         }
 
         /// <summary>
+        /// Is Valid OAuth 2.0 client credentials.
+        /// </summary>
+        public static void Validate(this ClientIdAndCredentials clientIdAndCredentials)
+        {
+            if (clientIdAndCredentials == null) new ArgumentNullException(nameof(clientIdAndCredentials));
+
+            if (clientIdAndCredentials.ClientId.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientIdAndCredentials.ClientId), clientIdAndCredentials.GetTypeName());
+            if (clientIdAndCredentials.ClientSecret.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientIdAndCredentials.ClientSecret), clientIdAndCredentials.GetTypeName());
+
+            clientIdAndCredentials.ClientId.ValidateMaxLength(IdentityConstants.MessageLength.ClientIdMax, nameof(clientIdAndCredentials.ClientId), clientIdAndCredentials.GetTypeName());
+            clientIdAndCredentials.ClientSecret.ValidateMaxLength(IdentityConstants.MessageLength.ClientSecretMax, nameof(clientIdAndCredentials.ClientSecret), clientIdAndCredentials.GetTypeName());
+        }
+
+        /// <summary>
         /// Is Valid OAuth 2.0 Code Challenge Secret.
         /// </summary>
         public static void Validate(this CodeChallengeSecret codeChallengeSecret)
@@ -251,6 +265,51 @@ namespace ITfoxtec.Identity
                 resource.ValidateMaxLength(IdentityConstants.MessageLength.ResourceMax, $"{nameof(request.Resources)}[{count}]", request.GetTypeName());
                 count++;
             }            
+        }
+
+        /// <summary>
+        /// Is Valid OAuth 2.0 Token Exchange Request.
+        /// </summary>
+        public static void Validate(this TokenExchangeRequest request)
+        {
+            if (request == null) new ArgumentNullException(nameof(request));
+
+            if (request.GrantType.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.GrantType), request.GetTypeName());
+            if (request.SubjectToken.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.SubjectToken), request.GetTypeName());
+            if (request.SubjectTokenType.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.SubjectTokenType), request.GetTypeName());
+
+            request.GrantType.ValidateMaxLength(IdentityConstants.MessageLength.GrantTypeMax, nameof(request.GrantType), request.GetTypeName());
+            request.Resource.ValidateMaxLength(IdentityConstants.MessageLength.ResourceMax, nameof(request.Resource), request.GetTypeName());
+            request.Audience.ValidateMaxLength(IdentityConstants.MessageLength.AudienceMax, nameof(request.Audience), request.GetTypeName());
+            request.Scope.ValidateMaxLength(IdentityConstants.MessageLength.ScopeMax, nameof(request.Scope), request.GetTypeName());
+            request.RequestedTokenType.ValidateMaxLength(IdentityConstants.MessageLength.TokenTypeIdentifierMax, nameof(request.RequestedTokenType), request.GetTypeName());
+            request.SubjectToken.ValidateMaxLength(IdentityConstants.MessageLength.GeneralTokenMax, nameof(request.SubjectToken), request.GetTypeName());
+            request.SubjectTokenType.ValidateMaxLength(IdentityConstants.MessageLength.TokenTypeIdentifierMax, nameof(request.SubjectTokenType), request.GetTypeName());
+            request.ActorToken.ValidateMaxLength(IdentityConstants.MessageLength.GeneralTokenMax, nameof(request.ActorToken), request.GetTypeName());
+            request.ActorTokenType.ValidateMaxLength(IdentityConstants.MessageLength.TokenTypeIdentifierMax, nameof(request.ActorTokenType), request.GetTypeName());
+        }
+
+        /// <summary>
+        /// Is Valid OAuth 2.0 Token Exchange Response.
+        /// </summary>
+        public static void Validate(this TokenExchangeResponse response)
+        {
+            if (response == null) new ArgumentNullException(nameof(response));
+
+            if (!response.Error.IsNullOrEmpty())
+            {
+                throw new ResponseErrorException(response.Error, $"{response.GetTypeName()}, {response.ErrorDescription}");
+            }
+
+            if (response.AccessToken.IsNullOrEmpty()) throw new ArgumentNullException(nameof(response.AccessToken), response.GetTypeName());
+            if (response.IssuedTokenType.IsNullOrEmpty()) throw new ArgumentNullException(nameof(response.IssuedTokenType), response.GetTypeName());
+            if (response.TokenType.IsNullOrEmpty()) throw new ArgumentNullException(nameof(response.TokenType), response.GetTypeName());
+
+            response.AccessToken.ValidateMaxLength(IdentityConstants.MessageLength.AccessTokenMax, nameof(response.AccessToken), response.GetTypeName());
+            response.IssuedTokenType.ValidateMaxLength(IdentityConstants.MessageLength.TokenTypeIdentifierMax, nameof(response.IssuedTokenType), response.GetTypeName());
+            response.TokenType.ValidateMaxLength(IdentityConstants.MessageLength.TokenTypeMax, nameof(response.TokenType), response.GetTypeName());
+            response.Scope.ValidateMaxLength(IdentityConstants.MessageLength.ScopeMax, nameof(response.Scope), response.GetTypeName());
+            response.RefreshToken.ValidateMaxLength(IdentityConstants.MessageLength.RefreshTokenMax, nameof(response.RefreshToken), response.GetTypeName());
         }
     }
 }
