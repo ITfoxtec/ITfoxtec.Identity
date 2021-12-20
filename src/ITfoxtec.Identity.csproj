@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net5.0;netcoreapp3.1;netcoreapp3.0;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net5.0;netcoreapp3.1;netcoreapp3.0;netstandard2.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Anders Revsgaard</Authors>
     <Company>ITfoxtec</Company>
@@ -11,19 +11,42 @@
     <PackageTitle>ITfoxtec Identity</PackageTitle>   
     <Description>OAuth 2.0 and OpenID Connect components.
     
+      Support .NET 6.0 
       Support .NET 5.0 
       Support .NET Core 3.0 and 3.1 
       Support .NET Standard 2.0</Description>
     <PackageTags>OAuth 2.0 OpenID Connect OIDC</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <Version>2.4.2</Version>
+    <Version>2.5.0</Version>
     <PackageIconUrl>https://itfoxtec.com/favicon.ico</PackageIconUrl>
-    <AssemblyVersion>2.4.2.0</AssemblyVersion>
-    <FileVersion>2.4.2.0</FileVersion>
+    <AssemblyVersion>2.5.0.0</AssemblyVersion>
+    <FileVersion>2.5.0.0</FileVersion>
     <RepositoryUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0'">
+    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.0" />
+  </ItemGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0'">
+    <DefineConstants>NET60;NET</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0|AnyCPU'">
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591;1573</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591;1573</NoWarn>
+  </PropertyGroup>
+	
   <ItemGroup Condition=" '$(TargetFramework)' == 'net5.0'">
     <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.1" />

@@ -88,6 +88,7 @@ namespace ITfoxtec.Identity.UnitTest
             Assert.NotNull(securityToken);
         }
 
+        /* .NET 5.0
         [Fact]
         public async Task MSCreateAndNotValidateTest()
         {
@@ -121,6 +122,7 @@ namespace ITfoxtec.Identity.UnitTest
             Assert.True(claimsPrincipal?.Claims?.Count() > 1);
             Assert.Null(securityToken);
         }
+        */
 
         [Fact]
         public async Task MSCreateAndOidcDiscoveryValidateTest()
