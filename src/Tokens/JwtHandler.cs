@@ -74,58 +74,35 @@ namespace ITfoxtec.Identity.Tokens
             return new JwtSecurityToken(header, payload);
         }
 
-        // .NET 5.0 error, System.Security.Cryptography.RSA.Create() - System.PlatformNotSupportedException: System.Security.Cryptography.Algorithms is not supported on this platform.
-        // https://github.com/dotnet/aspnetcore/issues/26123
-        // https://github.com/dotnet/runtime/issues/40074
-
         /// <summary>
         /// Validate JWT token.
         /// </summary>
         public static (ClaimsPrincipal, MSTokens.SecurityToken) ValidateToken(string token, string issuer, IEnumerable<JsonWebKey> issuerSigningKeys, string audience = null, bool validateAudience = true, bool validateLifetime = true,
-            string nameClaimType = JwtClaimTypes.Subject, string roleClaimType = JwtClaimTypes.Role
-#if NET50
-            , bool validateSigningKey = true
-#endif
-            )
+            string nameClaimType = JwtClaimTypes.Subject, string roleClaimType = JwtClaimTypes.Role)
         {
-            return ValidateToken(token, issuer, issuerSigningKeys.ToMSJsonWebKeys(), audience: audience, validateAudience: validateAudience, validateLifetime: validateLifetime, nameClaimType: nameClaimType, roleClaimType: roleClaimType
-#if NET50
-                , validateSigningKey: validateSigningKey
-#endif
-                );
+            return ValidateToken(token, issuer, issuerSigningKeys.ToMSJsonWebKeys(), audience: audience, validateAudience: validateAudience, validateLifetime: validateLifetime, nameClaimType: nameClaimType, roleClaimType: roleClaimType);
         }
 
         /// <summary>
         /// Validate JWT token.
         /// </summary>
         public static (ClaimsPrincipal, MSTokens.SecurityToken) ValidateToken(string token, string issuer, IEnumerable<X509Certificate2> issuerSigningKeys, string audience = null, bool validateAudience = true, bool validateLifetime = true,
-            string nameClaimType = JwtClaimTypes.Subject, string roleClaimType = JwtClaimTypes.Role
-#if NET50
-            , bool validateSigningKey = true
-#endif
-            )
+            string nameClaimType = JwtClaimTypes.Subject, string roleClaimType = JwtClaimTypes.Role)
         {
-            return ValidateToken(token, issuer, issuerSigningKeys.Select(c => new MSTokens.X509SecurityKey(c)), audience: audience, validateAudience: validateAudience, validateLifetime: validateLifetime, nameClaimType: nameClaimType, roleClaimType: roleClaimType
-#if NET50
-                , validateSigningKey: validateSigningKey
-#endif
-                );
+            return ValidateToken(token, issuer, issuerSigningKeys.Select(c => new MSTokens.X509SecurityKey(c)), audience: audience, validateAudience: validateAudience, validateLifetime: validateLifetime, nameClaimType: nameClaimType, roleClaimType: roleClaimType);
         }
 
         /// <summary>
         /// Validate JWT token.
         /// </summary>
         public static (ClaimsPrincipal, MSTokens.SecurityToken) ValidateToken(string token, string issuer, IEnumerable<MSTokens.SecurityKey> issuerSigningKeys, string audience = null, bool validateAudience = true, bool validateLifetime = true,
-            string nameClaimType = JwtClaimTypes.Subject, string roleClaimType = JwtClaimTypes.Role
-#if NET50
-            , bool validateSigningKey = true
-#endif
-            )
+            string nameClaimType = JwtClaimTypes.Subject, string roleClaimType = JwtClaimTypes.Role)
         {
             if (token.IsNullOrEmpty()) new ArgumentNullException(nameof(token));
             if (issuer.IsNullOrEmpty()) new ArgumentNullException(nameof(issuer));
             if (issuerSigningKeys?.Count() < 1) throw new ArgumentException($"At least one key is required.", nameof(issuerSigningKeys));
             if (audience.IsNullOrEmpty()) new ArgumentNullException(nameof(audience));
+
 
             var validationParameters = new MSTokens.TokenValidationParameters
             {
@@ -139,29 +116,25 @@ namespace ITfoxtec.Identity.Tokens
                 RoleClaimType = roleClaimType,
             };
 
-            MSTokens.SecurityToken securityToken = null;
-            ClaimsPrincipal claimsPrincipal = null;
-
-#if NET50
-            if (!validateSigningKey) 
-            {
-                var jwtSecurityToken = GetTokenHandler().ReadJwtToken(token);
-                claimsPrincipal = new ClaimsPrincipal(
-                    new ClaimsIdentity(jwtSecurityToken.Claims, "AuthenticationTypes.Federation", JwtClaimTypes.Subject, JwtClaimTypes.Role)
-                    { 
-                        BootstrapContext = token 
-                    });
-            }
-            else 
-            {
-#endif
-            claimsPrincipal = GetTokenHandler().ValidateToken(token, validationParameters, out securityToken);
-#if NET50
-            }
-#endif
-
-
+            var claimsPrincipal = GetTokenHandler().ValidateToken(token, validationParameters, out var securityToken);
             return (claimsPrincipal, securityToken);
+        }
+
+        /// <summary>
+        /// Read JWT token claims.
+        /// </summary>
+        public static ClaimsPrincipal ReadTokenClaims(string token)
+        {
+            if (token.IsNullOrEmpty()) new ArgumentNullException(nameof(token));
+
+            var jwtSecurityToken = GetTokenHandler().ReadJwtToken(token);
+            var claimsPrincipal = new ClaimsPrincipal(
+                new ClaimsIdentity(jwtSecurityToken.Claims, "AuthenticationTypes.Federation", JwtClaimTypes.Subject, JwtClaimTypes.Role)
+                {
+                    BootstrapContext = token
+                });
+
+            return claimsPrincipal;
         }
 
         /// <summary>
