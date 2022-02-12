@@ -48,7 +48,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static JsonWebKey ToFTJsonWebKey(this X509Certificate2 certificate, bool includePrivateKey = false)
         {
-            if (certificate == null) new ArgumentNullException(nameof(certificate));
+            if (certificate == null) throw new ArgumentNullException(nameof(certificate));
 
             var jwk = new JsonWebKey();
             jwk.Kty = MSTokens.JsonWebAlgorithmsKeyTypes.RSA;
@@ -89,7 +89,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static MSTokens.JsonWebKey ToMSJsonWebKey(this X509Certificate2 certificate, bool includePrivateKey = false)
         {
-            if (certificate == null) new ArgumentNullException(nameof(certificate));
+            if (certificate == null) throw new ArgumentNullException(nameof(certificate));
 
             var jwk = new MSTokens.JsonWebKey();
             jwk.Kty = MSTokens.JsonWebAlgorithmsKeyTypes.RSA;

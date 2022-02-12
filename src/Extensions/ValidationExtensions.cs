@@ -13,7 +13,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static void Validate(this AuthorizationRequest request)
         {
-            if (request == null) new ArgumentNullException(nameof(request));
+            if (request == null) throw new ArgumentNullException(nameof(request));
 
             if (request.ResponseType.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.ResponseType), request.GetTypeName());
             if (request.ClientId.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.ClientId), request.GetTypeName());
@@ -31,7 +31,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static void Validate(this AuthenticationRequest request, bool isImplicitFlow = false)
         {
-            if (request == null) new ArgumentNullException(nameof(request));
+            if (request == null) throw new ArgumentNullException(nameof(request));
 
             (request as AuthorizationRequest).Validate();
 
@@ -53,7 +53,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static void Validate(this AuthorizationResponse response, bool isImplicitFlow = false)
         {
-            if (response == null) new ArgumentNullException(nameof(response));
+            if (response == null) throw new ArgumentNullException(nameof(response));
 
             if (!response.Error.IsNullOrEmpty())
             {
@@ -71,7 +71,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static void Validate(this AuthenticationResponse response, bool isImplicitFlow = false)
         {
-            if (response == null) new ArgumentNullException(nameof(response));
+            if (response == null) throw new ArgumentNullException(nameof(response));
 
             (response as AuthorizationResponse).Validate(isImplicitFlow);
 
@@ -92,7 +92,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static void Validate(this TokenRequest request)
         {
-            if (request == null) new ArgumentNullException(nameof(request));
+            if (request == null) throw new ArgumentNullException(nameof(request));
 
             if (request.GrantType.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.GrantType), request.GetTypeName());
 
@@ -129,7 +129,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static void Validate(this TokenResponse response, bool isOidc = false)
         {
-            if (response == null) new ArgumentNullException(nameof(response));
+            if (response == null) throw new ArgumentNullException(nameof(response));
 
             if (!response.Error.IsNullOrEmpty())
             {
@@ -152,7 +152,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static void Validate(this ClientCredentials clientCredentials)
         {
-            if (clientCredentials == null) new ArgumentNullException(nameof(clientCredentials));
+            if (clientCredentials == null) throw new ArgumentNullException(nameof(clientCredentials));
 
             if (clientCredentials.ClientSecret.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientCredentials.ClientSecret), clientCredentials.GetTypeName());
 
@@ -164,7 +164,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static void Validate(this ClientIdAndCredentials clientIdAndCredentials)
         {
-            if (clientIdAndCredentials == null) new ArgumentNullException(nameof(clientIdAndCredentials));
+            if (clientIdAndCredentials == null) throw new ArgumentNullException(nameof(clientIdAndCredentials));
 
             if (clientIdAndCredentials.ClientId.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientIdAndCredentials.ClientId), clientIdAndCredentials.GetTypeName());
             if (clientIdAndCredentials.ClientSecret.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientIdAndCredentials.ClientSecret), clientIdAndCredentials.GetTypeName());
@@ -178,7 +178,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static void Validate(this CodeChallengeSecret codeChallengeSecret)
         {
-            if (codeChallengeSecret == null) new ArgumentNullException(nameof(codeChallengeSecret));
+            if (codeChallengeSecret == null) throw new ArgumentNullException(nameof(codeChallengeSecret));
 
             if (codeChallengeSecret.CodeChallenge.IsNullOrEmpty()) throw new ArgumentNullException(nameof(codeChallengeSecret.CodeChallenge), codeChallengeSecret.GetTypeName());
 
@@ -191,7 +191,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static void Validate(this CodeVerifierSecret codeVerifierSecret)
         {
-            if (codeVerifierSecret == null) new ArgumentNullException(nameof(codeVerifierSecret));
+            if (codeVerifierSecret == null) throw new ArgumentNullException(nameof(codeVerifierSecret));
 
             if (codeVerifierSecret.CodeVerifier.IsNullOrEmpty()) throw new ArgumentNullException(nameof(codeVerifierSecret.CodeVerifier), codeVerifierSecret.GetTypeName());
 
@@ -204,7 +204,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static void Validate(this SessionResponse response)
         {
-            if (response == null) new ArgumentNullException(nameof(response));
+            if (response == null) throw new ArgumentNullException(nameof(response));
 
             response.SessionState.ValidateMaxLength(IdentityConstants.MessageLength.SessionStatedMax, nameof(response.SessionState), response.GetTypeName());
         }
@@ -214,7 +214,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static void Validate(this RpInitiatedLogoutRequest request)
         {
-            if (request == null) new ArgumentNullException(nameof(request));
+            if (request == null) throw new ArgumentNullException(nameof(request));
 
             request.IdTokenHint.ValidateMaxLength(IdentityConstants.MessageLength.IdTokenMax, nameof(request.IdTokenHint), request.GetTypeName());
             request.PostLogoutRedirectUri.ValidateMaxLength(IdentityConstants.MessageLength.RedirectUriMax, nameof(request.PostLogoutRedirectUri), request.GetTypeName());
@@ -226,7 +226,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static void Validate(this RpInitiatedLogoutResponse response)
         {
-            if (response == null) new ArgumentNullException(nameof(response));
+            if (response == null) throw new ArgumentNullException(nameof(response));
 
             response.State.ValidateMaxLength(IdentityConstants.MessageLength.StateMax, nameof(response.State), response.GetTypeName());
         }
@@ -236,7 +236,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static void Validate(this FrontChannelLogoutRequest request)
         {
-            if (request == null) new ArgumentNullException(nameof(request));
+            if (request == null) throw new ArgumentNullException(nameof(request));
 
             if (!request.Issuer.IsNullOrEmpty() || !request.SessionId.IsNullOrEmpty())
             {
@@ -253,7 +253,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static void Validate(this ResourceRequest request)
         {
-            if (request == null) new ArgumentNullException(nameof(request));
+            if (request == null) throw new ArgumentNullException(nameof(request));
 
             request.Resources.ValidateMinListLength(IdentityConstants.MessageLength.ResourceCountMin, nameof(request.Resources), request.GetTypeName());
             request.Resources.ValidateMaxListLength(IdentityConstants.MessageLength.ResourceCountMax, nameof(request.Resources), request.GetTypeName());
@@ -272,7 +272,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static void Validate(this TokenExchangeRequest request)
         {
-            if (request == null) new ArgumentNullException(nameof(request));
+            if (request == null) throw new ArgumentNullException(nameof(request));
 
             if (request.GrantType.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.GrantType), request.GetTypeName());
             if (request.SubjectToken.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.SubjectToken), request.GetTypeName());
@@ -294,7 +294,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static void Validate(this TokenExchangeResponse response)
         {
-            if (response == null) new ArgumentNullException(nameof(response));
+            if (response == null) throw new ArgumentNullException(nameof(response));
 
             if (!response.Error.IsNullOrEmpty())
             {
