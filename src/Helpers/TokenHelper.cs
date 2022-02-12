@@ -97,17 +97,18 @@ namespace ITfoxtec.Identity.Helpers
 
             using (var response = await httpClient.SendAsync(request))
             {
-                var result = await response.Content.ReadAsStringAsync();
-
-                var tokenResponse = result.ToObject<TokenResponse>();
-                tokenResponse.Validate();
-
-                if (tokenResponse.AccessToken.IsNullOrEmpty())
+                try
                 {
-                    throw new ResponseException($"Error getting access token with client credentials. StatusCode={response.StatusCode}");
-                }
+                    var result = await response.Content.ReadAsStringAsync();
 
-                return (tokenResponse.AccessToken, tokenResponse.ExpiresIn);
+                    var tokenResponse = result.ToObject<TokenResponse>();
+                    tokenResponse.Validate();
+                    return (tokenResponse.AccessToken, tokenResponse.ExpiresIn);
+                }
+                catch (Exception ex)
+                {
+                    throw new ResponseException($"Error getting access token with client credentials. StatusCode={response.StatusCode}", ex);
+                }
             }
         }
     }

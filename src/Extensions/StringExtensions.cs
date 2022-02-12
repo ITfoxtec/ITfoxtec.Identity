@@ -119,7 +119,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static string Base64UrlEncode(this string value)
         {
-            if (value == null) new ArgumentNullException(nameof(value));
+            if (value == null) throw new ArgumentNullException(nameof(value));
 
             return WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(value));
         }
@@ -129,7 +129,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static string Base64UrlDecode(this string value)
         {
-            if (value == null) new ArgumentNullException(nameof(value));
+            if (value == null) throw new ArgumentNullException(nameof(value));
 
             return Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(value));
         }
@@ -139,7 +139,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static string Base64Encode(this string value)
         {
-            if (value == null) new ArgumentNullException(nameof(value));
+            if (value == null) throw new ArgumentNullException(nameof(value));
 
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(value));
         }
@@ -149,7 +149,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static string Base64Decode(this string value)
         {
-            if (value == null) new ArgumentNullException(nameof(value));
+            if (value == null) throw new ArgumentNullException(nameof(value));
 
             return Encoding.UTF8.GetString(Convert.FromBase64String(value));
         }
@@ -159,7 +159,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static string Sha256HashBase64urlEncoded(this string value)
         {
-            if (value == null) new ArgumentNullException(nameof(value));
+            if (value == null) throw new ArgumentNullException(nameof(value));
         
             using (var sha = SHA256.Create())
             {
@@ -182,7 +182,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static string LeftMostBase64urlEncodedHash(this string value, string algorithm)
         {
-            if (value == null) new ArgumentNullException(nameof(value));
+            if (value == null) throw new ArgumentNullException(nameof(value));
             if (algorithm != IdentityConstants.Algorithms.Asymmetric.RS256) throw new NotSupportedException($"Algorithm {algorithm} not supported. Supports {IdentityConstants.Algorithms.Asymmetric.RS256}.");
 
             using (var sha = SHA256.Create())

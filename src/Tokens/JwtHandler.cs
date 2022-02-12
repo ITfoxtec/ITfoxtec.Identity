@@ -47,8 +47,8 @@ namespace ITfoxtec.Identity.Tokens
         public static JwtSecurityToken CreateToken(MSTokens.SecurityKey securityKey, string issuer, IEnumerable<string> audiences, IEnumerable<Claim> claims, DateTimeOffset? issuedAt = null, int beforeIn = 60, int expiresIn = 3600,
             string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256, string typ = IdentityConstants.JwtHeaders.MediaTypes.Jwt)
         {
-            if (securityKey == null) new ArgumentNullException(nameof(securityKey));
-            if (issuer.IsNullOrEmpty()) new ArgumentNullException(nameof(issuer));
+            if (securityKey == null) throw new ArgumentNullException(nameof(securityKey));
+            if (issuer.IsNullOrEmpty()) throw new ArgumentNullException(nameof(issuer));
             if (audiences?.Count() < 1) throw new ArgumentException($"At least one audience is required.", nameof(audiences));
             if (claims?.Count() < 1) throw new ArgumentException($"At least one claim is required.", nameof(claims));
 
@@ -98,10 +98,10 @@ namespace ITfoxtec.Identity.Tokens
         public static (ClaimsPrincipal, MSTokens.SecurityToken) ValidateToken(string token, string issuer, IEnumerable<MSTokens.SecurityKey> issuerSigningKeys, string audience = null, bool validateAudience = true, bool validateLifetime = true,
             string nameClaimType = JwtClaimTypes.Subject, string roleClaimType = JwtClaimTypes.Role)
         {
-            if (token.IsNullOrEmpty()) new ArgumentNullException(nameof(token));
-            if (issuer.IsNullOrEmpty()) new ArgumentNullException(nameof(issuer));
+            if (token.IsNullOrEmpty()) throw new ArgumentNullException(nameof(token));
+            if (issuer.IsNullOrEmpty()) throw new ArgumentNullException(nameof(issuer));
             if (issuerSigningKeys?.Count() < 1) throw new ArgumentException($"At least one key is required.", nameof(issuerSigningKeys));
-            if (audience.IsNullOrEmpty()) new ArgumentNullException(nameof(audience));
+            if (audience.IsNullOrEmpty()) throw new ArgumentNullException(nameof(audience));
 
 
             var validationParameters = new MSTokens.TokenValidationParameters
@@ -125,7 +125,7 @@ namespace ITfoxtec.Identity.Tokens
         /// </summary>
         public static ClaimsPrincipal ReadTokenClaims(string token)
         {
-            if (token.IsNullOrEmpty()) new ArgumentNullException(nameof(token));
+            if (token.IsNullOrEmpty()) throw new ArgumentNullException(nameof(token));
 
             var jwtSecurityToken = GetTokenHandler().ReadJwtToken(token);
             var claimsPrincipal = new ClaimsPrincipal(
@@ -142,7 +142,7 @@ namespace ITfoxtec.Identity.Tokens
         /// </summary>
         public static JwtSecurityToken ReadToken(string token)
         {
-            if (token.IsNullOrEmpty()) new ArgumentNullException(nameof(token));
+            if (token.IsNullOrEmpty()) throw new ArgumentNullException(nameof(token));
 
             return GetTokenHandler().ReadJwtToken(token);
         }
