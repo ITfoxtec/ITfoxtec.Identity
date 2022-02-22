@@ -481,7 +481,7 @@
             public const int PromptMax = 50;
             public const int UiLocalesMax = 50;
             public const int LoginHintMax = 2000;
-            public const int AcrValuesMax = 100;
+            public const int AcrValuesMax = 1000;
             public const int CodeMax = 2000;
             public const int GrantTypeMax = 100;
             public const int IssuerMax = 200;
