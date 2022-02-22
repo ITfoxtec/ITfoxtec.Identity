@@ -64,7 +64,7 @@ namespace ITfoxtec.Identity.Messages
         public string LoginHint { get; set; }
 
         /// <summary>
-        /// OPTIONAL. Requested Authentication Context Class Reference values.Space-separated string that specifies the acr values that the Authorization Server is being requested 
+        /// OPTIONAL. Requested Authentication Context Class Reference values. Space-separated string that specifies the acr values that the Authorization Server is being requested 
         /// to use for processing this Authentication Request, with the values appearing in order of preference.
         /// </summary>
         [JsonProperty(PropertyName = "acr_values")]
