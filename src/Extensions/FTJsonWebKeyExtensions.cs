@@ -164,16 +164,7 @@ namespace ITfoxtec.Identity
 
             if (jwk.X5c?.Count() <= 0) throw new ArgumentNullException(nameof(jwk.X5c), jwk.GetTypeName());
 
-            var certificate = new X509Certificate2(Convert.FromBase64String(jwk.X5c.First()));
-            if (!jwk.X5t.IsNullOrEmpty())
-            {
-                if (jwk.X5t != WebEncoders.Base64UrlEncode(certificate.GetCertHash()))
-                {
-                    throw new Exception("X.509 certificate SHA-1 thumbprint do not match certificate.");
-                }
-            }
-
-            return certificate;
+            return new X509Certificate2(Convert.FromBase64String(jwk.X5c.First()));
         }
     }
 }
