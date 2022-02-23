@@ -55,8 +55,8 @@ namespace ITfoxtec.Identity
 
             var securityKey = new MSTokens.X509SecurityKey(certificate);
             jwk.X5c = new List<string> { Convert.ToBase64String(certificate.RawData) };
-            jwk.X5t = WebEncoders.Base64UrlEncode(certificate.GetCertHash());
-            jwk.Kid = jwk.X5t;
+            jwk.X5t = certificate.Thumbprint;
+            jwk.Kid = WebEncoders.Base64UrlEncode(certificate.GetCertHash());
 
             var parameters = (securityKey.PublicKey as RSA).ExportParameters(false);
             jwk.N = WebEncoders.Base64UrlEncode(parameters.Modulus);
@@ -96,8 +96,8 @@ namespace ITfoxtec.Identity
 
             var securityKey = new MSTokens.X509SecurityKey(certificate);
             jwk.X5c.Add(Convert.ToBase64String(certificate.RawData));
-            jwk.X5t = WebEncoders.Base64UrlEncode(certificate.GetCertHash());
-            jwk.Kid = jwk.X5t;
+            jwk.X5t = certificate.Thumbprint;
+            jwk.Kid = WebEncoders.Base64UrlEncode(certificate.GetCertHash());
 
             var parameters = (securityKey.PublicKey as RSA).ExportParameters(false);
             jwk.N = WebEncoders.Base64UrlEncode(parameters.Modulus);

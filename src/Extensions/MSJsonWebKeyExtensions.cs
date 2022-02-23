@@ -148,9 +148,9 @@ namespace ITfoxtec.Identity
             var certificate = new X509Certificate2(Convert.FromBase64String(jwk.X5c.First()));
             if (!jwk.X5t.IsNullOrEmpty())
             {
-                if (!jwk.X5t.Equals(WebEncoders.Base64UrlEncode(certificate.GetCertHash()), StringComparison.OrdinalIgnoreCase))
+                if (!jwk.X5t.Equals(certificate.Thumbprint, StringComparison.OrdinalIgnoreCase))
                 {
-                    throw new Exception("X.509 certificate SHA-1 thumbprint 'x5t' do not match certificate thumbprint.");
+                    throw new Exception($"X.509 certificate x5t SHA-1 thumbprint '{jwk.X5t}' do not match certificate thumbprint '{certificate.Thumbprint}'.");
                 }
             }
 
