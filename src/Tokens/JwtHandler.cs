@@ -101,7 +101,7 @@ namespace ITfoxtec.Identity.Tokens
             if (token.IsNullOrEmpty()) throw new ArgumentNullException(nameof(token));
             if (issuer.IsNullOrEmpty()) throw new ArgumentNullException(nameof(issuer));
             if (issuerSigningKeys?.Count() < 1) throw new ArgumentException($"At least one key is required.", nameof(issuerSigningKeys));
-            if (audience.IsNullOrEmpty()) throw new ArgumentNullException(nameof(audience));
+            if (validateAudience && audience.IsNullOrEmpty()) throw new ArgumentNullException(nameof(audience));
 
 
             var validationParameters = new MSTokens.TokenValidationParameters
