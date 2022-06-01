@@ -23,6 +23,5 @@ namespace ITfoxtec.Identity.Util
             randomNumberGenerator.GetNonZeroBytes(bytes);
             return bytes;
         }
-
     }
 }
