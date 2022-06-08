@@ -38,33 +38,23 @@ namespace ITfoxtec.Identity.Helpers
         }
 
         /// <summary>
-        /// Get access token with client credentials.
+        /// Get access token with client credential grant.
         /// </summary>
         /// <param name="clientId">The client id.</param>
         /// <param name="clientSecret">The client secret.</param>
-        /// <param name="redirectUri">The redirect Uri.</param>
         /// <param name="scope">The scope.</param>
         /// <returns>The access token and expires in.</returns>
-        public async Task<(string, int?)> GetAccessTokenWithClientCredentialsAsync(string clientId, string clientSecret, string redirectUri, string scope = null)
+        public async Task<(string, int?)> GetAccessTokenWithClientCredentialGrantAsync(string clientId, string clientSecret, string scope = null)
         {
             if (clientId.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientId));
             if (clientSecret.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientSecret));
-            if (redirectUri.IsNullOrEmpty()) throw new ArgumentNullException(nameof(redirectUri));
 
             var tokenEndpoint = (await oidcDiscoveryHandler.GetOidcDiscoveryAsync()).TokenEndpoint;
-            var accessTokenRequest = new TokenRequest
-            {
-                RedirectUri = redirectUri,
-            };
-            if (!scope.IsNullOrEmpty())
-            {
-                accessTokenRequest.Scope = scope;
-            }
-            return await GetAccessTokenWithClientCredentialsAsync(clientId, clientSecret, tokenEndpoint, accessTokenRequest);
+            return await GetAccessTokenWithClientCredentialGrantAsync(clientId, clientSecret, tokenEndpoint, scope.IsNullOrEmpty() ? null : new TokenRequest { Scope = scope });
         }
 
         /// <summary>
-        /// Get access token with client credentials.
+        /// Get access token with client credential grant.
         /// </summary>
         /// <typeparam name="Treq">Of the type TokenRequest.</typeparam>
         /// <param name="clientId">The client id.</param>
@@ -72,7 +62,7 @@ namespace ITfoxtec.Identity.Helpers
         /// <param name="tokenEndpoint">The token endpoint.</param>
         /// <param name="tokenRequest">The token request.</param>
         /// <returns>The access token and expires in.</returns>
-        public async Task<(string, int?)> GetAccessTokenWithClientCredentialsAsync<Treq>(string clientId, string clientSecret, string tokenEndpoint, Treq tokenRequest = null) where Treq : TokenRequest
+        public async Task<(string, int?)> GetAccessTokenWithClientCredentialGrantAsync<Treq>(string clientId, string clientSecret, string tokenEndpoint, Treq tokenRequest = null) where Treq : TokenRequest
         {
             if (clientId.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientId));
             if (clientSecret.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientSecret));
