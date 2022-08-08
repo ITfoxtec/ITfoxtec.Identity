@@ -395,6 +395,7 @@
             /// The "kid" (key ID) header parameter is a hint indicating which specific key owned by the signer should be used to validate the signature. This allows signers to explicitly 
             /// signal a change of key to recipients. Omitting this parameter is equivalent to setting it to an empty string. The interpretation of the contents of the "kid" parameter is 
             /// unspecified. This header parameter is OPTIONAL.
+            /// When used with a JWK, the "kid" value is used to match a JWK "kid" parameter value.
             /// </summary>
             public const string Kid = "kid";
 

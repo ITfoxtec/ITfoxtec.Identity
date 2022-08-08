@@ -18,34 +18,34 @@ namespace ITfoxtec.Identity.Tokens
         /// Create and sign JWT token.
         /// </summary>
         public static JwtSecurityToken CreateToken(MSTokens.SecurityKey securityKey, string issuer, string audience, IEnumerable<Claim> claims, DateTimeOffset? issuedAt = null, int beforeIn = 60, int expiresIn = 3600, 
-            string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256, string typ = IdentityConstants.JwtHeaders.MediaTypes.Jwt)
+            string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256, string kid = null, string typ = IdentityConstants.JwtHeaders.MediaTypes.Jwt)
         {
-            return CreateToken(securityKey, issuer, new[] { audience }, claims, issuedAt: issuedAt, beforeIn: beforeIn, expiresIn: expiresIn, algorithm: algorithm, typ: typ);
+            return CreateToken(securityKey, issuer, new[] { audience }, claims, issuedAt: issuedAt, beforeIn: beforeIn, expiresIn: expiresIn, algorithm: algorithm, kid: kid, typ: typ);
         }
 
         /// <summary>
         /// Create and sign JWT token.
         /// </summary>
         public static JwtSecurityToken CreateToken(JsonWebKey jsonWebKey, string issuer, IEnumerable<string> audiences, IEnumerable<Claim> claims, DateTimeOffset? issuedAt = null, int beforeIn = 60, int expiresIn = 3600,
-            string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256, string typ = IdentityConstants.JwtHeaders.MediaTypes.Jwt)
+            string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256, string kid = null, string typ = IdentityConstants.JwtHeaders.MediaTypes.Jwt)
         {
-            return CreateToken(jsonWebKey.ToSecurityKey(), issuer, audiences , claims, issuedAt: issuedAt, beforeIn: beforeIn, expiresIn: expiresIn, algorithm: algorithm, typ: typ);
+            return CreateToken(jsonWebKey.ToSecurityKey(), issuer, audiences , claims, issuedAt: issuedAt, beforeIn: beforeIn, expiresIn: expiresIn, algorithm: algorithm, kid: kid, typ: typ);
         }
 
         /// <summary>
         /// Create and sign JWT token.
         /// </summary>
         public static JwtSecurityToken CreateToken(X509Certificate2 certificate, string issuer, IEnumerable<string> audiences, IEnumerable<Claim> claims, DateTimeOffset? issuedAt = null, int beforeIn = 60, int expiresIn = 3600, 
-            string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256, string typ = IdentityConstants.JwtHeaders.MediaTypes.Jwt)
+            string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256, string kid = null, string typ = IdentityConstants.JwtHeaders.MediaTypes.Jwt)
         {
-            return CreateToken(new MSTokens.X509SecurityKey(certificate), issuer, audiences, claims, issuedAt: issuedAt, beforeIn: beforeIn, expiresIn: expiresIn, algorithm: algorithm, typ: typ);
+            return CreateToken(new MSTokens.X509SecurityKey(certificate), issuer, audiences, claims, issuedAt: issuedAt, beforeIn: beforeIn, expiresIn: expiresIn, algorithm: algorithm, kid: kid, typ: typ);
         }
 
         /// <summary>
         /// Create and sign JWT token.
         /// </summary>
         public static JwtSecurityToken CreateToken(MSTokens.SecurityKey securityKey, string issuer, IEnumerable<string> audiences, IEnumerable<Claim> claims, DateTimeOffset? issuedAt = null, int beforeIn = 60, int expiresIn = 3600,
-            string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256, string typ = IdentityConstants.JwtHeaders.MediaTypes.Jwt)
+            string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256, string kid = null, string typ = IdentityConstants.JwtHeaders.MediaTypes.Jwt)
         {
             if (securityKey == null) throw new ArgumentNullException(nameof(securityKey));
             if (issuer.IsNullOrEmpty()) throw new ArgumentNullException(nameof(issuer));
@@ -54,6 +54,10 @@ namespace ITfoxtec.Identity.Tokens
 
             var key = securityKey is MSTokens.JsonWebKey jsonWebKey ? jsonWebKey.ToSecurityKey() : securityKey;
             var header = new JwtHeader(new MSTokens.SigningCredentials(key, algorithm));
+            if (!kid.IsNullOrEmpty())
+            {
+                header[IdentityConstants.JwtHeaders.Kid] = kid;
+            }
             if (!typ.IsNullOrEmpty())
             {
                 header[IdentityConstants.JwtHeaders.Typ] = typ;
