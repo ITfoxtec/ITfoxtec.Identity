@@ -54,6 +54,10 @@ namespace ITfoxtec.Identity.Tokens
 
             var key = securityKey is MSTokens.JsonWebKey jsonWebKey ? jsonWebKey.ToSecurityKey() : securityKey;
             var header = new JwtHeader(new MSTokens.SigningCredentials(key, algorithm));
+            if (kid.IsNullOrEmpty() && !key.KeyId.IsNullOrEmpty())
+            {
+                kid = key.KeyId;
+            }
             if (!kid.IsNullOrEmpty())
             {
                 header[IdentityConstants.JwtHeaders.Kid] = kid;
