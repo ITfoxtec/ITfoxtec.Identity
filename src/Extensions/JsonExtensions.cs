@@ -13,10 +13,6 @@ namespace ITfoxtec.Identity
     {
         private static readonly IContractResolver defaultResolver = JsonSerializer.CreateDefault().ContractResolver;
 
-#if NET50 || NETCORE31 || NETCORE30 || NETSTANDARD2
-        JsonConvert.DefaultSettings = () => new JsonSerializerSettings { MaxDepth = 128 };
-#endif
-
         /// <summary>
         /// JsonSerializer with indented format.
         /// </summary>

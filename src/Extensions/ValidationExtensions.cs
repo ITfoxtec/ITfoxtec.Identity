@@ -234,13 +234,13 @@ namespace ITfoxtec.Identity
         /// <summary>
         /// Is Valid OIDC Front-Channel Logout Request.
         /// </summary>
-        public static void Validate(this FrontChannelLogoutRequest request)
+        public static void Validate(this FrontChannelLogoutRequest request, bool acceptEmptyIssuer = false)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             if (!request.Issuer.IsNullOrEmpty() || !request.SessionId.IsNullOrEmpty())
             {
-                if (request.Issuer.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.Issuer), request.GetTypeName());
+                if (!acceptEmptyIssuer && request.Issuer.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.Issuer), request.GetTypeName());
                 if (request.SessionId.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.SessionId), request.GetTypeName());
             }
 
