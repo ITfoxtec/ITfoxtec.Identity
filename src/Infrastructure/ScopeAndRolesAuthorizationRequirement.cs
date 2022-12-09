@@ -23,7 +23,7 @@ namespace ITfoxtec.Identity.Infrastructure
         }
 
         /// <summary>
-        /// List of scope and roles pairs. One or more scope and roles links must match.
+        /// List of scope and roles pairs. One or more scope and role link must match.
         /// </summary>
         public IEnumerable<ScopeAndRoles> AllowedScopeRolesList { get; }
 
