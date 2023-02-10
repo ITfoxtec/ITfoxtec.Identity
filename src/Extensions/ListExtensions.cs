@@ -1,4 +1,5 @@
 ﻿using ITfoxtec.Identity.Messages;
+using ITfoxtec.Identity.Util;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using System;
@@ -123,6 +124,17 @@ namespace ITfoxtec.Identity
                 }
             }
             return list;
+        }
+
+        public static void Shuffle<T>(this IList<T> list)
+        {
+            if (list == null) throw new ArgumentNullException(nameof(list));
+            int n = list.Count;
+            while (n > 1)
+            {
+                int k = RandomGenerator.GenerateNumber(n--);
+                (list[n], list[k]) = (list[k], list[n]);
+            }
         }
     }
 }
