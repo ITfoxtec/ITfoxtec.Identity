@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.WebUtilities;
+﻿using ITfoxtec.Identity.Util;
+using Microsoft.AspNetCore.WebUtilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -200,5 +201,21 @@ namespace ITfoxtec.Identity
         {
             return Task.FromResult(value.LeftMostBase64urlEncodedHash(algorithm));
         }
+
+        /// <summary>
+        /// Combines the URL base and the relative URL into one, consolidating the '/' between them
+        /// </summary>
+        /// <param name="baseUrl">Base URL that will be combined</param>
+        /// <param name="relativeUrl">The relative path to combine</param>
+        /// <returns>The merged URL</returns>
+        public static string CombineUrl(this string baseUrl, string relativeUrl) => UrlCombine.Combine(baseUrl, relativeUrl);
+
+        /// <summary>
+        /// Combines the URL base and the array of relative URLs into one, consolidating the '/' between them
+        /// </summary>
+        /// <param name="baseUrl">Base URL that will be combined</param>
+        /// <param name="relativeUrls">The array of relative paths to combine</param>
+        /// <returns>The merged URL</returns>
+        public static string CombineUrl(this string baseUrl, params string[] relativeUrls) => UrlCombine.Combine(baseUrl, relativeUrls);
     }
 }
