@@ -483,7 +483,7 @@
             public const int UiLocalesMax = 50;
             public const int LoginHintMax = 2000;
             public const int AcrValuesMax = 1000;
-            public const int CodeMax = 2000;
+            public const int CodeMax = 4000;
             public const int GrantTypeMax = 100;
             public const int IssuerMax = 200;
             public const int SessionIdMax = 200;
