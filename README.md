@@ -1,10 +1,9 @@
 # ITfoxtec.Identity
 ITfoxtec Identity implement OAuth 2.0 and OpenID Connect 1.0.
 
+* **Support .NET 7.0**
 * **Support .NET 6.0**
 * **Support .NET 5.0**
-* **Support .NET Core 3.0 and 3.1**
-* **Support .NET Standard 2.0**
 
 > You can use the [JWT tool](https://www.foxids.com/tools/Jwt) to decode tokens and create self-signed certificates with the [certificate tool](https://www.foxids.com/tools/Certificate).
 
