@@ -67,6 +67,19 @@
             public const string Saml2 = "urn:ietf:params:oauth:token-type:saml2";
         }
 
+        public static class ClientAuthenticationMethods
+        {
+            public const string ClientSecretBasic = "client_secret_basic";
+            public const string ClientSecretPost = "client_secret_post";
+            public const string ClientSecretJwt = "client_secret_jwt";
+            public const string PrivateKeyJwt = "private_key_jwt";
+        }
+
+        public static class ClientAssertionTypes
+        {
+            public const string JwtBearer = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
+        }
+
         public static class AuthorizationServerDisplay
         {
             /// <summary>
@@ -412,12 +425,12 @@
                 /// <summary>
                 /// JWT media type.
                 /// </summary>
-                public const string Jwt = "jwt";
+                public const string Jwt = "JWT";
 
                 /// <summary>
                 /// Access token JWT media type.
                 /// </summary>
-                public const string AtJwt = "at+jwt";
+                public const string AtJwt = "at+JWT";
             }
         }
 
