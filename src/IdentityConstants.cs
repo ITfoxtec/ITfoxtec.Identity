@@ -52,6 +52,14 @@
             public const string Delegation = "delegation";
             public const string TokenExchange = "urn:ietf:params:oauth:grant-type:token-exchange";
         }
+        
+        public static class TokenEndpointAuthMethods
+        {
+            public const string ClientSecretPost = "client_secret_post";
+            public const string ClientSecretBasic = "client_secret_basic";
+            public const string ClientSecretJwt = "client_secret_jwt";
+            public const string PrivateKeyJwt = "private_key_jwt";
+        }
 
         public static class CodeChallengeMethods
         {

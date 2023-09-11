@@ -8,7 +8,6 @@ using ITfoxtec.Identity.Models;
 using System.Security.Claims;
 using ITfoxtec.Identity.Tokens;
 using System.Collections.Generic;
-using System.Diagnostics.SymbolStore;
 using System.Security.Cryptography.X509Certificates;
 
 namespace ITfoxtec.Identity.Helpers
