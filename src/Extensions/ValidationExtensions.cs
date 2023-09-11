@@ -174,6 +174,19 @@ namespace ITfoxtec.Identity
         }
 
         /// <summary>
+        /// Is Valid OAuth 2.0 client assertion credentials.
+        /// </summary>
+        public static void Validate(this ClientAssertionCredentials clientAssertionCredentials)
+        {
+            if (clientAssertionCredentials == null) throw new ArgumentNullException(nameof(clientAssertionCredentials));
+
+            if (clientAssertionCredentials.ClientAssertionType.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientAssertionCredentials.ClientAssertionType), clientAssertionCredentials.GetTypeName());
+            if (clientAssertionCredentials.ClientAssertion.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientAssertionCredentials.ClientAssertion), clientAssertionCredentials.GetTypeName());
+
+            clientAssertionCredentials.ClientAssertion.ValidateMaxLength(IdentityConstants.MessageLength.AssertionMax, nameof(clientAssertionCredentials.ClientAssertion), clientAssertionCredentials.GetTypeName());
+        }
+
+        /// <summary>
         /// Is Valid OAuth 2.0 Code Challenge Secret.
         /// </summary>
         public static void Validate(this CodeChallengeSecret codeChallengeSecret)
