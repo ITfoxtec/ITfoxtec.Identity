@@ -49,7 +49,6 @@
             public const string Password = "password";
             public const string ClientCredentials = "client_credentials";
             public const string RefreshToken = "refresh_token";
-            public const string Delegation = "delegation";
             public const string TokenExchange = "urn:ietf:params:oauth:grant-type:token-exchange";
         }
         
@@ -519,10 +518,9 @@
             public const int CodeVerifierMin = 43;
             public const int CodeVerifierMax = 128;
 
-            public const int AccessTokenMax = 50000;
-            public const int IdTokenMax = 50000;
-            public const int RefreshTokenMax = 50000;
-            public const int AssertionMax = 50000;
+            public const int AccessTokenMax = GeneralTokenMax;
+            public const int IdTokenMax = GeneralTokenMax;
+            public const int RefreshTokenMax = GeneralTokenMax;
             public const int GeneralTokenMax = 50000;
         }
     }
