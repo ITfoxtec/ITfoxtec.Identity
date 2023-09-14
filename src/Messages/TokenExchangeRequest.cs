@@ -13,6 +13,18 @@ namespace ITfoxtec.Identity.Messages
         }
 
         /// <summary>
+        ///  OPTIONAL. A URI that indicates the target service or resource where the client intends to use the requested security token.
+        /// </summary>
+        [JsonProperty(PropertyName = "resource")]
+        public string Resource { get; set; }
+
+        /// <summary>
+        /// OPTIONAL. The logical name of the target service where the client intends to use the requested security token.
+        /// </summary>
+        [JsonProperty(PropertyName = "audience")]
+        public string Audience { get; set; }
+
+        /// <summary>
         /// OPTIONAL. An identifier, as described in Section 3, for the type of the requested security token.
         /// </summary>
         [JsonProperty(PropertyName = "requested_token_type")]
