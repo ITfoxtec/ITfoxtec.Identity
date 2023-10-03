@@ -60,7 +60,6 @@ namespace ITfoxtec.Identity.Helpers
                 tokenRequest = new Treq();
             }
 
-            tokenRequest.GrantType = IdentityConstants.GrantTypes.ClientCredentials;
             if (tokenRequest is TokenRequest tr)
             {
                 tr.ClientId = clientId;
