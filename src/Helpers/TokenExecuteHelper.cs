@@ -95,7 +95,18 @@ namespace ITfoxtec.Identity.Helpers
                     var result = await response.Content.ReadAsStringAsync();
 
                     var tokenResponse = result.ToObject<Tres>();
-                    tokenResponse.Validate();
+                    if (tokenResponse is TokenResponse vtr)
+                    {
+                        vtr.Validate();
+                    }
+                    else if (tokenResponse is TokenExchangeResponse vter)
+                    {
+                        vter.Validate();
+                    }
+                    else
+                    {
+                        throw new NotSupportedException($"Token response type '{tokenResponse.GetType()}' not supported.");
+                    }
                     return tokenResponse;
                 }
                 catch (Exception ex)
@@ -194,7 +205,18 @@ namespace ITfoxtec.Identity.Helpers
                     var result = await response.Content.ReadAsStringAsync();
 
                     var tokenResponse = result.ToObject<Tres>();
-                    tokenResponse.Validate();
+                    if (tokenResponse is TokenResponse vtr)
+                    {
+                        vtr.Validate();
+                    }
+                    else if (tokenResponse is TokenExchangeResponse vter)
+                    {
+                        vter.Validate();
+                    }
+                    else
+                    {
+                        throw new NotSupportedException($"Token response type '{tokenResponse.GetType()}' not supported.");
+                    }
                     return tokenResponse;
                 }
                 catch (Exception ex)

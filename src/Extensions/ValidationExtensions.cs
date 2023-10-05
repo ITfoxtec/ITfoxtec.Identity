@@ -9,22 +9,6 @@ namespace ITfoxtec.Identity
     public static class ValidationExtensions
     {
         /// <summary>
-        /// Is Valid OAuth 2.0 token base request.
-        /// </summary>
-        public static void Validate(this TokenBaseRequest request)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <summary>
-        /// Is Valid OAuth 2.0 token base response.
-        /// </summary>
-        public static void Validate(this TokenBaseResponse response)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <summary>
         /// Is Valid OAuth 2.0 Authorization Request.
         /// </summary>
         public static void Validate(this AuthorizationRequest request)
