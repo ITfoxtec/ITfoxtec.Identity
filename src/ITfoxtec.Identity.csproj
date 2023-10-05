@@ -2,6 +2,8 @@
 	<PropertyGroup>
 		<TargetFrameworks>net7.0;net6.0;net5.0</TargetFrameworks>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<Authors>Anders Revsgaard</Authors>
 		<Company>ITfoxtec</Company>
 		<PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
@@ -18,10 +20,10 @@
 		</Description>
 		<PackageTags>OAuth 2.0 OpenID Connect OIDC</PackageTags>
 		<NeutralLanguage>en-US</NeutralLanguage>
-		<Version>2.5.32</Version>
+		<Version>2.5.33</Version>
 		<PackageIconUrl>https://itfoxtec.com/favicon.ico</PackageIconUrl>
-		<AssemblyVersion>2.5.32</AssemblyVersion>
-		<FileVersion>2.5.32</FileVersion>
+		<AssemblyVersion>2.5.33</AssemblyVersion>
+		<FileVersion>2.5.33</FileVersion>
 		<PackageProjectUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
