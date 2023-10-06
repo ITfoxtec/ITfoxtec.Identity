@@ -69,14 +69,14 @@ namespace ITfoxtec.Identity.Helpers
             var nameValueCollection = tokenRequest.ToDictionary();
             if (tokenRequest is TokenRequest)
             {
-                nameValueCollection.AddToDictionary(new ClientCredentials
+                nameValueCollection = nameValueCollection.AddToDictionary(new ClientCredentials
                 {
                     ClientSecret = clientSecret,
                 });
             }
             else
             {
-                nameValueCollection.AddToDictionary(new ClientIdAndCredentials
+                nameValueCollection = nameValueCollection.AddToDictionary(new ClientIdAndCredentials
                 {
                     ClientId = clientId,
                     ClientSecret = clientSecret,
