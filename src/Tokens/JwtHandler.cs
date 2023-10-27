@@ -29,6 +29,7 @@ namespace ITfoxtec.Identity.Tokens
         public static JwtSecurityToken CreateToken(JsonWebKey jsonWebKey, string issuer, IEnumerable<string> audiences, IEnumerable<Claim> claims, DateTimeOffset? issuedAt = null, int beforeIn = 60, int expiresIn = 3600,
             string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256, string typ = IdentityConstants.JwtHeaders.MediaTypes.Jwt)
         {
+            if (jsonWebKey == null) throw new ArgumentNullException(nameof(jsonWebKey));
             return CreateToken(jsonWebKey.ToSecurityKey(), issuer, audiences, claims, issuedAt: issuedAt, beforeIn: beforeIn, expiresIn: expiresIn, algorithm: algorithm, typ: typ);
         }
 
@@ -38,6 +39,7 @@ namespace ITfoxtec.Identity.Tokens
         public static JwtSecurityToken CreateToken(X509Certificate2 certificate, string issuer, IEnumerable<string> audiences, IEnumerable<Claim> claims, DateTimeOffset? issuedAt = null, int beforeIn = 60, int expiresIn = 3600,
             string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256, string typ = IdentityConstants.JwtHeaders.MediaTypes.Jwt)
         {
+            if (certificate == null) throw new ArgumentNullException(nameof(certificate));
             return CreateToken(new MSTokens.X509SecurityKey(certificate), issuer, audiences, claims, issuedAt: issuedAt, beforeIn: beforeIn, expiresIn: expiresIn, algorithm: algorithm, typ: typ);
         }
 

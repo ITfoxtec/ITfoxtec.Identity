@@ -108,15 +108,10 @@ namespace ITfoxtec.Identity
             {
                 if (request.ClientId.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.ClientId), request.GetTypeName());
             }
-            else if (request.GrantType == IdentityConstants.GrantTypes.Delegation)
-            {
-                if (request.Assertion.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.Assertion), request.GetTypeName());
-            }
 
             request.GrantType.ValidateMaxLength(IdentityConstants.MessageLength.GrantTypeMax, nameof(request.GrantType), request.GetTypeName());
             request.Code.ValidateMaxLength(IdentityConstants.MessageLength.CodeMax, nameof(request.Code), request.GetTypeName());
             request.RefreshToken.ValidateMaxLength(IdentityConstants.MessageLength.RefreshTokenMax, nameof(request.RefreshToken), request.GetTypeName());
-            request.Assertion.ValidateMaxLength(IdentityConstants.MessageLength.AssertionMax, nameof(request.Assertion), request.GetTypeName());
             request.RedirectUri.ValidateMaxLength(IdentityConstants.MessageLength.RedirectUriMax, nameof(request.RedirectUri), request.GetTypeName());
             request.ClientId.ValidateMaxLength(IdentityConstants.MessageLength.ClientIdMax, nameof(request.ClientId), request.GetTypeName());
             request.Scope.ValidateMaxLength(IdentityConstants.MessageLength.ScopeMax, nameof(request.Scope), request.GetTypeName());
@@ -171,6 +166,19 @@ namespace ITfoxtec.Identity
 
             clientIdAndCredentials.ClientId.ValidateMaxLength(IdentityConstants.MessageLength.ClientIdMax, nameof(clientIdAndCredentials.ClientId), clientIdAndCredentials.GetTypeName());
             clientIdAndCredentials.ClientSecret.ValidateMaxLength(IdentityConstants.MessageLength.ClientSecretMax, nameof(clientIdAndCredentials.ClientSecret), clientIdAndCredentials.GetTypeName());
+        }
+
+        /// <summary>
+        /// Is Valid OAuth 2.0 client assertion credentials.
+        /// </summary>
+        public static void Validate(this ClientAssertionCredentials clientAssertionCredentials)
+        {
+            if (clientAssertionCredentials == null) throw new ArgumentNullException(nameof(clientAssertionCredentials));
+
+            if (clientAssertionCredentials.ClientAssertionType.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientAssertionCredentials.ClientAssertionType), clientAssertionCredentials.GetTypeName());
+            if (clientAssertionCredentials.ClientAssertion.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientAssertionCredentials.ClientAssertion), clientAssertionCredentials.GetTypeName());
+
+            clientAssertionCredentials.ClientAssertion.ValidateMaxLength(IdentityConstants.MessageLength.GeneralTokenMax, nameof(clientAssertionCredentials.ClientAssertion), clientAssertionCredentials.GetTypeName());
         }
 
         /// <summary>
@@ -277,6 +285,11 @@ namespace ITfoxtec.Identity
             if (request.GrantType.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.GrantType), request.GetTypeName());
             if (request.SubjectToken.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.SubjectToken), request.GetTypeName());
             if (request.SubjectTokenType.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.SubjectTokenType), request.GetTypeName());
+
+            if (request.GrantType != IdentityConstants.GrantTypes.TokenExchange)
+            {
+                throw new ArgumentException($"Invalid {nameof(request.GrantType)}, required to be '{IdentityConstants.GrantTypes.TokenExchange}'.", request.GetTypeName());
+            }
 
             request.GrantType.ValidateMaxLength(IdentityConstants.MessageLength.GrantTypeMax, nameof(request.GrantType), request.GetTypeName());
             request.Resource.ValidateMaxLength(IdentityConstants.MessageLength.ResourceMax, nameof(request.Resource), request.GetTypeName());

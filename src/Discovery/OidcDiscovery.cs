@@ -96,6 +96,20 @@ namespace ITfoxtec.Identity.Discovery
         public IEnumerable<string> IdTokenSigningAlgValuesSupported { get; set; }
 
         /// <summary>
+        /// OPTIONAL. JSON array containing a list of Client Authentication methods supported by this Token Endpoint. The options are client_secret_post, client_secret_basic, 
+        /// client_secret_jwt, and private_key_jwt, as described in Section 9 of OpenID Connect Core 1.0 [OpenID.Core]. Other authentication methods MAY be defined by extensions. 
+        /// </summary>
+        [JsonProperty(PropertyName = "token_endpoint_auth_methods_supported")]
+        public IEnumerable<string> TokenEndpointAuthMethodsSupported { get; set; }
+
+        /// <summary>
+        /// OPTIONAL. JSON array containing a list of the JWS signing algorithms (alg values) supported by the Token Endpoint for the signature on the JWT [JWT] used to authenticate 
+        /// the Client at the Token Endpoint for the private_key_jwt and client_secret_jwt authentication methods. Servers SHOULD support RS256. The value none MUST NOT be used.
+        /// </summary>
+        [JsonProperty(PropertyName = "token_endpoint_auth_signing_alg_values_supported")]
+        public IEnumerable<string> TokenEndpointAuthSigningAlgValuesSupported { get; set; }
+
+        /// <summary>
         /// RECOMMENDED. JSON array containing a list of the Claim Names of the Claims that the OpenID Provider MAY be able to supply values for. Note that for privacy or other 
         /// reasons, this might not be an exhaustive list.
         /// </summary>

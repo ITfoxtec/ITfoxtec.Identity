@@ -5,19 +5,18 @@ namespace ITfoxtec.Identity.Messages
     /// <summary>
     /// OAuth 2.0 [RFC8693] Token Exchange Request.
     /// </summary>
-    public class TokenExchangeRequest
+    public class TokenExchangeRequest : TokenBaseRequest
     {
-        /// <summary>
-        /// REQUIRED. The value "urn:ietf:params:oauth:grant-type:token-exchange" indicates that a token exchange is being performed.
-        /// </summary>
-        [JsonProperty(PropertyName = "grant_type")]
-        public string GrantType { get; set; } = IdentityConstants.GrantTypes.TokenExchange;
+        public TokenExchangeRequest()
+        {
+            GrantType = IdentityConstants.GrantTypes.TokenExchange;
+        }
 
         /// <summary>
         ///  OPTIONAL. A URI that indicates the target service or resource where the client intends to use the requested security token.
         /// </summary>
         [JsonProperty(PropertyName = "resource")]
-        public string Resource { get; set; } 
+        public string Resource { get; set; }
 
         /// <summary>
         /// OPTIONAL. The logical name of the target service where the client intends to use the requested security token.
@@ -26,14 +25,8 @@ namespace ITfoxtec.Identity.Messages
         public string Audience { get; set; }
 
         /// <summary>
-        /// OPTIONAL. A list of space-delimited, case-sensitive strings, as defined in Section 3.3 of[RFC6749].
-        /// </summary>
-        [JsonProperty(PropertyName = "scope")]
-        public string Scope { get; set; }
-
-        /// <summary>
         /// OPTIONAL. An identifier, as described in Section 3, for the type of the requested security token.
-          /// </summary>
+        /// </summary>
         [JsonProperty(PropertyName = "requested_token_type")]
         public string RequestedTokenType { get; set; }
 
