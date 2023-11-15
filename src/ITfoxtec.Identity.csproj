@@ -21,10 +21,10 @@
 		</Description>
 		<PackageTags>OAuth 2.0 OpenID Connect OIDC</PackageTags>
 		<NeutralLanguage>en-US</NeutralLanguage>
-		<Version>2.5.40</Version>
+		<Version>2.5.41.4</Version>
 		<PackageIconUrl>https://itfoxtec.com/favicon.ico</PackageIconUrl>
-		<AssemblyVersion>2.5.40</AssemblyVersion>
-		<FileVersion>2.5.40</FileVersion>
+		<AssemblyVersion>2.5.41.4</AssemblyVersion>
+		<FileVersion>2.5.41.4</FileVersion>
 		<PackageProjectUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
@@ -53,10 +53,10 @@
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0'">
 		<PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="7.0.13" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="7.0.12" />
 		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.33.0" />
 	</ItemGroup>
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'net7.0'">
 		<DefineConstants>NET70;NET</DefineConstants>
@@ -74,10 +74,10 @@
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0'">
 		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.24" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.1" />
 		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.33.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.1" />
 	</ItemGroup>
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0'">
 		<DefineConstants>NET60;NET</DefineConstants>
