@@ -14,11 +14,6 @@ namespace ITfoxtec.Identity.Helpers
     /// </summary>
     public class TokenHelper : TokenExecuteHelper
     {
-#if NET || NETCORE
-        private readonly IHttpClientFactory httpClientFactory;
-#else
-        private readonly HttpClient httpClient;
-#endif
         private readonly OidcDiscoveryHandler oidcDiscoveryHandler;
 
         /// <summary>
@@ -37,11 +32,6 @@ namespace ITfoxtec.Identity.Helpers
             httpClient)
 #endif
         {
-#if NET || NETCORE
-            this.httpClientFactory = httpClientFactory;
-#else
-            this.httpClient = httpClient;
-#endif
             this.oidcDiscoveryHandler = oidcDiscoveryHandler;
         }
 

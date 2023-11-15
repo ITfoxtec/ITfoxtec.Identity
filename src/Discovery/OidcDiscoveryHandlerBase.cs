@@ -19,7 +19,7 @@ namespace ITfoxtec.Identity.Discovery
 #else
         private readonly HttpClient httpClient;
 #endif
-        private readonly string defaultOidcDiscoveryUri;
+        private string defaultOidcDiscoveryUri;
         private readonly int defaultExpiresIn;
         private ConcurrentDictionary<string, (OidcDiscovery, DateTimeOffset)> oidcDiscoveryCache = new ConcurrentDictionary<string, (OidcDiscovery, DateTimeOffset)>();
         private ConcurrentDictionary<string, (JsonWebKeySet, DateTimeOffset)> jsonWebKeySetCache = new ConcurrentDictionary<string, (JsonWebKeySet, DateTimeOffset)>();
@@ -95,6 +95,15 @@ namespace ITfoxtec.Identity.Discovery
                     Debug.WriteLine($"OidcDiscoveryHandler clean failed. {ex}");
                 }
             }
+        }
+
+        /// <summary>
+        /// Set the default OIDC Discovery Uri.
+        /// </summary>
+        /// <param name="oidcDiscoveryUri">The OIDC Discovery Uri.</param>
+        public void SetDefaultOidcDiscoveryUri(string oidcDiscoveryUri)
+        {
+            defaultOidcDiscoveryUri = oidcDiscoveryUri; 
         }
 
         /// <summary>
