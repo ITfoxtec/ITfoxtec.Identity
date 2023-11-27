@@ -43,7 +43,7 @@ namespace ITfoxtec.Identity
             request.Display.ValidateMaxLength(IdentityConstants.MessageLength.DisplayMax, nameof(request.Display), request.GetTypeName());
             request.Prompt.ValidateMaxLength(IdentityConstants.MessageLength.PromptMax, nameof(request.Prompt), request.GetTypeName());
             request.UiLocales.ValidateMaxLength(IdentityConstants.MessageLength.UiLocalesMax, nameof(request.UiLocales), request.GetTypeName());
-            request.IdTokenHint.ValidateMaxLength(IdentityConstants.MessageLength.IdTokenMax, nameof(request.IdTokenHint), request.GetTypeName());
+            request.IdTokenHint.ValidateMaxLength(IdentityConstants.MessageLength.TokenMax, nameof(request.IdTokenHint), request.GetTypeName());
             request.LoginHint.ValidateMaxLength(IdentityConstants.MessageLength.LoginHintMax, nameof(request.LoginHint), request.GetTypeName());
             request.AcrValues.ValidateMaxLength(IdentityConstants.MessageLength.AcrValuesMax, nameof(request.AcrValues), request.GetTypeName());
         }
@@ -79,8 +79,8 @@ namespace ITfoxtec.Identity
                 throw new ArgumentNullException(nameof(response.TokenType), response.GetTypeName());
             if (isImplicitFlow && response.IdToken.IsNullOrEmpty()) throw new ArgumentNullException(nameof(response.IdToken), response.GetTypeName());
 
-            response.IdToken.ValidateMaxLength(IdentityConstants.MessageLength.IdTokenMax, nameof(response.IdToken), response.GetTypeName());
-            response.AccessToken.ValidateMaxLength(IdentityConstants.MessageLength.AccessTokenMax, nameof(response.AccessToken), response.GetTypeName());
+            response.IdToken.ValidateMaxLength(IdentityConstants.MessageLength.TokenMax, nameof(response.IdToken), response.GetTypeName());
+            response.AccessToken.ValidateMaxLength(IdentityConstants.MessageLength.TokenMax, nameof(response.AccessToken), response.GetTypeName());
             if (!response.TokenType.IsNullOrEmpty())
             {
                 response.TokenType.ValidateMaxLength(IdentityConstants.MessageLength.TokenTypeMax, nameof(response.TokenType), response.GetTypeName());
@@ -111,7 +111,7 @@ namespace ITfoxtec.Identity
 
             request.GrantType.ValidateMaxLength(IdentityConstants.MessageLength.GrantTypeMax, nameof(request.GrantType), request.GetTypeName());
             request.Code.ValidateMaxLength(IdentityConstants.MessageLength.CodeMax, nameof(request.Code), request.GetTypeName());
-            request.RefreshToken.ValidateMaxLength(IdentityConstants.MessageLength.RefreshTokenMax, nameof(request.RefreshToken), request.GetTypeName());
+            request.RefreshToken.ValidateMaxLength(IdentityConstants.MessageLength.TokenMax, nameof(request.RefreshToken), request.GetTypeName());
             request.RedirectUri.ValidateMaxLength(IdentityConstants.MessageLength.RedirectUriMax, nameof(request.RedirectUri), request.GetTypeName());
             request.ClientId.ValidateMaxLength(IdentityConstants.MessageLength.ClientIdMax, nameof(request.ClientId), request.GetTypeName());
             request.Scope.ValidateMaxLength(IdentityConstants.MessageLength.ScopeMax, nameof(request.Scope), request.GetTypeName());
@@ -135,10 +135,10 @@ namespace ITfoxtec.Identity
             if (response.TokenType.IsNullOrEmpty()) throw new ArgumentNullException(nameof(response.TokenType), response.GetTypeName());
             if (isOidc && response.IdToken.IsNullOrEmpty()) throw new ArgumentNullException(nameof(response.IdToken), response.GetTypeName());
 
-            response.IdToken.ValidateMaxLength(IdentityConstants.MessageLength.IdTokenMax, nameof(response.IdToken), response.GetTypeName());
-            response.AccessToken.ValidateMaxLength(IdentityConstants.MessageLength.AccessTokenMax, nameof(response.AccessToken), response.GetTypeName());
+            response.IdToken.ValidateMaxLength(IdentityConstants.MessageLength.TokenMax, nameof(response.IdToken), response.GetTypeName());
+            response.AccessToken.ValidateMaxLength(IdentityConstants.MessageLength.TokenMax, nameof(response.AccessToken), response.GetTypeName());
             response.TokenType.ValidateMaxLength(IdentityConstants.MessageLength.TokenTypeMax, nameof(response.TokenType), response.GetTypeName());
-            response.RefreshToken.ValidateMaxLength(IdentityConstants.MessageLength.RefreshTokenMax, nameof(response.RefreshToken), response.GetTypeName());
+            response.RefreshToken.ValidateMaxLength(IdentityConstants.MessageLength.TokenMax, nameof(response.RefreshToken), response.GetTypeName());
             response.Scope.ValidateMaxLength(IdentityConstants.MessageLength.ScopeMax, nameof(response.Scope), response.GetTypeName());
         }
 
@@ -178,7 +178,7 @@ namespace ITfoxtec.Identity
             if (clientAssertionCredentials.ClientAssertionType.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientAssertionCredentials.ClientAssertionType), clientAssertionCredentials.GetTypeName());
             if (clientAssertionCredentials.ClientAssertion.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientAssertionCredentials.ClientAssertion), clientAssertionCredentials.GetTypeName());
 
-            clientAssertionCredentials.ClientAssertion.ValidateMaxLength(IdentityConstants.MessageLength.GeneralTokenMax, nameof(clientAssertionCredentials.ClientAssertion), clientAssertionCredentials.GetTypeName());
+            clientAssertionCredentials.ClientAssertion.ValidateMaxLength(IdentityConstants.MessageLength.TokenMax, nameof(clientAssertionCredentials.ClientAssertion), clientAssertionCredentials.GetTypeName());
         }
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace ITfoxtec.Identity
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            request.IdTokenHint.ValidateMaxLength(IdentityConstants.MessageLength.IdTokenMax, nameof(request.IdTokenHint), request.GetTypeName());
+            request.IdTokenHint.ValidateMaxLength(IdentityConstants.MessageLength.TokenMax, nameof(request.IdTokenHint), request.GetTypeName());
             request.PostLogoutRedirectUri.ValidateMaxLength(IdentityConstants.MessageLength.RedirectUriMax, nameof(request.PostLogoutRedirectUri), request.GetTypeName());
             request.State.ValidateMaxLength(IdentityConstants.MessageLength.StateMax, nameof(request.State), request.GetTypeName());
         }
@@ -252,7 +252,7 @@ namespace ITfoxtec.Identity
                 if (request.SessionId.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.SessionId), request.GetTypeName());
             }
 
-            request.Issuer.ValidateMaxLength(IdentityConstants.MessageLength.IdTokenMax, nameof(request.Issuer), request.GetTypeName());
+            request.Issuer.ValidateMaxLength(IdentityConstants.MessageLength.TokenMax, nameof(request.Issuer), request.GetTypeName());
             request.SessionId.ValidateMaxLength(IdentityConstants.MessageLength.SessionIdMax, nameof(request.SessionId), request.GetTypeName());
         }
 
@@ -296,9 +296,9 @@ namespace ITfoxtec.Identity
             request.Audience.ValidateMaxLength(IdentityConstants.MessageLength.AudienceMax, nameof(request.Audience), request.GetTypeName());
             request.Scope.ValidateMaxLength(IdentityConstants.MessageLength.ScopeMax, nameof(request.Scope), request.GetTypeName());
             request.RequestedTokenType.ValidateMaxLength(IdentityConstants.MessageLength.TokenTypeIdentifierMax, nameof(request.RequestedTokenType), request.GetTypeName());
-            request.SubjectToken.ValidateMaxLength(IdentityConstants.MessageLength.GeneralTokenMax, nameof(request.SubjectToken), request.GetTypeName());
+            request.SubjectToken.ValidateMaxLength(IdentityConstants.MessageLength.TokenMax, nameof(request.SubjectToken), request.GetTypeName());
             request.SubjectTokenType.ValidateMaxLength(IdentityConstants.MessageLength.TokenTypeIdentifierMax, nameof(request.SubjectTokenType), request.GetTypeName());
-            request.ActorToken.ValidateMaxLength(IdentityConstants.MessageLength.GeneralTokenMax, nameof(request.ActorToken), request.GetTypeName());
+            request.ActorToken.ValidateMaxLength(IdentityConstants.MessageLength.TokenMax, nameof(request.ActorToken), request.GetTypeName());
             request.ActorTokenType.ValidateMaxLength(IdentityConstants.MessageLength.TokenTypeIdentifierMax, nameof(request.ActorTokenType), request.GetTypeName());
         }
 
@@ -318,11 +318,11 @@ namespace ITfoxtec.Identity
             if (response.IssuedTokenType.IsNullOrEmpty()) throw new ArgumentNullException(nameof(response.IssuedTokenType), response.GetTypeName());
             if (response.TokenType.IsNullOrEmpty()) throw new ArgumentNullException(nameof(response.TokenType), response.GetTypeName());
 
-            response.AccessToken.ValidateMaxLength(IdentityConstants.MessageLength.AccessTokenMax, nameof(response.AccessToken), response.GetTypeName());
+            response.AccessToken.ValidateMaxLength(IdentityConstants.MessageLength.TokenMax, nameof(response.AccessToken), response.GetTypeName());
             response.IssuedTokenType.ValidateMaxLength(IdentityConstants.MessageLength.TokenTypeIdentifierMax, nameof(response.IssuedTokenType), response.GetTypeName());
             response.TokenType.ValidateMaxLength(IdentityConstants.MessageLength.TokenTypeMax, nameof(response.TokenType), response.GetTypeName());
             response.Scope.ValidateMaxLength(IdentityConstants.MessageLength.ScopeMax, nameof(response.Scope), response.GetTypeName());
-            response.RefreshToken.ValidateMaxLength(IdentityConstants.MessageLength.RefreshTokenMax, nameof(response.RefreshToken), response.GetTypeName());
+            response.RefreshToken.ValidateMaxLength(IdentityConstants.MessageLength.TokenMax, nameof(response.RefreshToken), response.GetTypeName());
         }
     }
 }
