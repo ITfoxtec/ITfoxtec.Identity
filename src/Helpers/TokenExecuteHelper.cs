@@ -17,9 +17,9 @@ namespace ITfoxtec.Identity.Helpers
     public class TokenExecuteHelper
     {
 #if NET || NETCORE
-        private readonly IHttpClientFactory httpClientFactory;
+        protected readonly IHttpClientFactory httpClientFactory;
 #else
-        private readonly HttpClient httpClient;
+        protected readonly HttpClient httpClient;
 #endif
 
         /// <summary>
