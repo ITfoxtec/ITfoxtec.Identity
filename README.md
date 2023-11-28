@@ -1,6 +1,7 @@
 # ITfoxtec.Identity
 ITfoxtec Identity implement OAuth 2.0 and OpenID Connect 1.0.
 
+* **Support .NET 8.0**
 * **Support .NET 7.0**
 * **Support .NET 6.0**
 * **Support .NET 5.0**
