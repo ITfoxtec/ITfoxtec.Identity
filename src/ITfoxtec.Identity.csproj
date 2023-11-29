@@ -21,10 +21,10 @@
 		</Description>
 		<PackageTags>OAuth 2.0 OpenID Connect OIDC</PackageTags>
 		<NeutralLanguage>en-US</NeutralLanguage>
-		<Version>2.5.41.5</Version>
+		<Version>2.5.42.0</Version>
 		<PackageIconUrl>https://itfoxtec.com/favicon.ico</PackageIconUrl>
-		<AssemblyVersion>2.5.41.5</AssemblyVersion>
-		<FileVersion>2.5.41.5</FileVersion>
+		<AssemblyVersion>2.5.42.0</AssemblyVersion>
+		<FileVersion>2.5.42.0</FileVersion>
 		<PackageProjectUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
@@ -41,7 +41,6 @@
 		<DefineConstants>NET80;NET</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0|AnyCPU'">
-		<DebugType>pdbonly</DebugType>
 		<DebugSymbols>true</DebugSymbols>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>$(NoWarn);1591;1573</NoWarn>
@@ -62,7 +61,6 @@
 		<DefineConstants>NET70;NET</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0|AnyCPU'">
-		<DebugType>pdbonly</DebugType>
 		<DebugSymbols>true</DebugSymbols>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>$(NoWarn);1591;1573</NoWarn>
@@ -83,7 +81,6 @@
 		<DefineConstants>NET60;NET</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0|AnyCPU'">
-		<DebugType>pdbonly</DebugType>
 		<DebugSymbols>true</DebugSymbols>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>$(NoWarn);1591;1573</NoWarn>
@@ -105,7 +102,6 @@
 		<DefineConstants>NET50;NET</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net5.0|AnyCPU'">
-		<DebugType>pdbonly</DebugType>
 		<DebugSymbols>true</DebugSymbols>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>$(NoWarn);1591;1573</NoWarn>
