@@ -96,7 +96,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="5.0.1" />
 		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.34.0" />
 	</ItemGroup>
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'net5.0'">
 		<DefineConstants>NET50;NET</DefineConstants>
