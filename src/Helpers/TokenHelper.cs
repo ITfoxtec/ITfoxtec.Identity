@@ -19,22 +19,10 @@ namespace ITfoxtec.Identity.Helpers
         /// <summary>
         /// Constructor.
         /// </summary>
-        public TokenHelper(
-#if NET || NETCORE
-            IHttpClientFactory httpClientFactory,
-#else
-            HttpClient httpClient,
-#endif
-            OidcDiscoveryHandler oidcDiscoveryHandler) : base (
-#if NET || NETCORE
-            httpClientFactory)
-#else
-            httpClient)
-#endif
+        public TokenHelper(IHttpClientFactory httpClientFactory, OidcDiscoveryHandler oidcDiscoveryHandler) : base(httpClientFactory)
         {
             this.oidcDiscoveryHandler = oidcDiscoveryHandler;
         }
-
 
         /// <summary>
         /// Get access token with client credential grant.

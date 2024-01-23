@@ -40,7 +40,7 @@ namespace ITfoxtec.Identity
         public static RSAParameters ToRsaParameters(this JsonWebKey jwk, bool includePrivateParameters = false)
         {
             if (jwk == null) throw new ArgumentNullException(nameof(jwk));
-            if (jwk.Kty != MSTokens.JsonWebAlgorithmsKeyTypes.RSA) throw new NotSupportedException($"Only key type '{MSTokens.JsonWebAlgorithmsKeyTypes.RSA }' supported.");
+            if (jwk.Kty != MSTokens.JsonWebAlgorithmsKeyTypes.RSA) throw new NotSupportedException($"Only key type '{MSTokens.JsonWebAlgorithmsKeyTypes.RSA}' supported.");
 
             if (jwk.N.IsNullOrEmpty()) throw new ArgumentNullException(nameof(jwk.N), jwk.GetTypeName());
             if (jwk.E.IsNullOrEmpty()) throw new ArgumentNullException(nameof(jwk.E), jwk.GetTypeName());
@@ -78,7 +78,7 @@ namespace ITfoxtec.Identity
         public static MSTokens.JsonWebKey ToMSJsonWebKey(this JsonWebKey jwk, bool includePrivateKey = false)
         {
             if (jwk == null) throw new ArgumentNullException(nameof(jwk));
-            if (jwk.Kty != MSTokens.JsonWebAlgorithmsKeyTypes.RSA) throw new NotSupportedException($"Only key type '{MSTokens.JsonWebAlgorithmsKeyTypes.RSA }' supported.");
+            if (jwk.Kty != MSTokens.JsonWebAlgorithmsKeyTypes.RSA) throw new NotSupportedException($"Only key type '{MSTokens.JsonWebAlgorithmsKeyTypes.RSA}' supported.");
 
             if (jwk.N.IsNullOrEmpty()) throw new ArgumentNullException(nameof(jwk.N), jwk.GetTypeName());
             if (jwk.E.IsNullOrEmpty()) throw new ArgumentNullException(nameof(jwk.E), jwk.GetTypeName());
@@ -144,7 +144,6 @@ namespace ITfoxtec.Identity
             return false;
         }
 
-#if NET || NETCORE
         /// <summary>
         /// Converts a JWK to RSA.
         /// </summary>
@@ -152,7 +151,6 @@ namespace ITfoxtec.Identity
         {
             return RSA.Create(jwk.ToRsaParameters(includePrivateParameters));
         }
-#endif
 
         /// <summary>
         /// Converts a JWK to public X509Certificate.
@@ -160,7 +158,7 @@ namespace ITfoxtec.Identity
         public static X509Certificate2 ToX509Certificate(this JsonWebKey jwk)
         {
             if (jwk == null) throw new ArgumentNullException(nameof(jwk));
-            if (jwk.Kty != MSTokens.JsonWebAlgorithmsKeyTypes.RSA) throw new NotSupportedException($"Key type '{jwk.Kty}' not supported. Only key type '{MSTokens.JsonWebAlgorithmsKeyTypes.RSA }' supported.");
+            if (jwk.Kty != MSTokens.JsonWebAlgorithmsKeyTypes.RSA) throw new NotSupportedException($"Key type '{jwk.Kty}' not supported. Only key type '{MSTokens.JsonWebAlgorithmsKeyTypes.RSA}' supported.");
 
             if (jwk.X5c?.Count() <= 0) throw new ArgumentNullException(nameof(jwk.X5c), jwk.GetTypeName());
 

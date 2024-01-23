@@ -14,11 +14,7 @@ namespace ITfoxtec.Identity.Discovery
     /// </summary>
     public abstract class OidcDiscoveryHandlerBase
     {
-#if NET || NETCORE
         private readonly IHttpClientFactory httpClientFactory;
-#else
-        private readonly HttpClient httpClient;
-#endif
         private string defaultOidcDiscoveryUri;
         private readonly int defaultExpiresIn;
         private ConcurrentDictionary<string, (OidcDiscovery, DateTimeOffset)> oidcDiscoveryCache = new ConcurrentDictionary<string, (OidcDiscovery, DateTimeOffset)>();
@@ -29,19 +25,9 @@ namespace ITfoxtec.Identity.Discovery
         /// </summary>
         /// <param name="defaultOidcDiscoveryUri">The default OIDC Discovery Uri.</param>
         /// <param name="defaultExpiresIn">The default expires in seconds.</param>
-        public OidcDiscoveryHandlerBase(
-#if NET || NETCORE
-            IHttpClientFactory httpClientFactory,
-#else
-            HttpClient httpClient,
-#endif
-            string defaultOidcDiscoveryUri = null, int defaultExpiresIn = 3600)
+        public OidcDiscoveryHandlerBase(IHttpClientFactory httpClientFactory, string defaultOidcDiscoveryUri = null, int defaultExpiresIn = 3600)
         {
-#if NET || NETCORE
             this.httpClientFactory = httpClientFactory;
-#else
-            this.httpClient = httpClient;
-#endif
             this.defaultOidcDiscoveryUri = defaultOidcDiscoveryUri;
             this.defaultExpiresIn = defaultExpiresIn;
         }
@@ -62,7 +48,7 @@ namespace ITfoxtec.Identity.Discovery
                         (_, var oidcDiscoveryValidUntil) = item.Value;
                         if (oidcDiscoveryValidUntil < olderThenUtcNow)
                         {
-                            if(!oidcDiscoveryCache.TryRemove(item.Key, out _)) 
+                            if (!oidcDiscoveryCache.TryRemove(item.Key, out _))
                             {
                                 Debug.WriteLine($"OidcDiscoveryHandler unable to remove key '{item.Key}' from oidcDiscoveryCache.");
                             }
@@ -75,7 +61,7 @@ namespace ITfoxtec.Identity.Discovery
                         (_, var jsonWebKeySetValidUntil) = item.Value;
                         if (jsonWebKeySetValidUntil < olderThenUtcNow)
                         {
-                            if(!jsonWebKeySetCache.TryRemove(item.Key, out _))
+                            if (!jsonWebKeySetCache.TryRemove(item.Key, out _))
                             {
                                 Debug.WriteLine($"OidcDiscoveryHandler unable to remove key '{item.Key}' from jsonWebKeySetCache.");
                             }
@@ -103,7 +89,7 @@ namespace ITfoxtec.Identity.Discovery
         /// <param name="oidcDiscoveryUri">The OIDC Discovery Uri.</param>
         public void SetDefaultOidcDiscoveryUri(string oidcDiscoveryUri)
         {
-            defaultOidcDiscoveryUri = oidcDiscoveryUri; 
+            defaultOidcDiscoveryUri = oidcDiscoveryUri;
         }
 
         /// <summary>
@@ -118,20 +104,17 @@ namespace ITfoxtec.Identity.Discovery
             oidcDiscoveryUri = oidcDiscoveryUri ?? defaultOidcDiscoveryUri;
             expiresIn = expiresIn ?? defaultExpiresIn;
 
-            if(!refreshCache && oidcDiscoveryCache.ContainsKey(oidcDiscoveryUri))
+            if (!refreshCache && oidcDiscoveryCache.ContainsKey(oidcDiscoveryUri))
             {
                 (var oidcDiscovery, var oidcDiscoveryValidUntil) = oidcDiscoveryCache[oidcDiscoveryUri];
-                if(oidcDiscoveryValidUntil >= DateTimeOffset.UtcNow)
+                if (oidcDiscoveryValidUntil >= DateTimeOffset.UtcNow)
                 {
                     return oidcDiscovery;
                 }
             }
 
             var request = new HttpRequestMessage(HttpMethod.Get, oidcDiscoveryUri);
-#if NET || NETCORE
-            var httpClient = httpClientFactory.CreateClient();
-#endif
-            using (var response = await httpClient.SendAsync(request))
+            using (var response = await httpClientFactory.CreateClient().SendAsync(request))
             {
                 // Handle the response
                 switch (response.StatusCode)
@@ -179,10 +162,7 @@ namespace ITfoxtec.Identity.Discovery
 
             var oidcDiscovery = await GetOidcDiscoveryAsync(oidcDiscoveryUri, expiresIn);
             var request = new HttpRequestMessage(HttpMethod.Get, oidcDiscovery.JwksUri);
-#if NET || NETCORE
-            var httpClient = httpClientFactory.CreateClient();
-#endif
-            using (var response = await httpClient.SendAsync(request))
+            using (var response = await httpClientFactory.CreateClient().SendAsync(request))
             {
                 // Handle the response
                 switch (response.StatusCode)
