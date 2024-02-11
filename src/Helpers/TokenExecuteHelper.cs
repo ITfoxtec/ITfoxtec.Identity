@@ -16,27 +16,14 @@ namespace ITfoxtec.Identity.Helpers
     /// </summary>
     public class TokenExecuteHelper
     {
-#if NET || NETCORE
         protected readonly IHttpClientFactory httpClientFactory;
-#else
-        protected readonly HttpClient httpClient;
-#endif
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public TokenExecuteHelper(
-#if NET || NETCORE
-            IHttpClientFactory httpClientFactory)
-#else
-            HttpClient httpClient)
-#endif
+        public TokenExecuteHelper(IHttpClientFactory httpClientFactory)
         {
-#if NET || NETCORE
             this.httpClientFactory = httpClientFactory;
-#else
-            this.httpClient = httpClient;
-#endif
         }
 
         /// <summary>
@@ -83,12 +70,7 @@ namespace ITfoxtec.Identity.Helpers
                 });
             }
             request.Content = new FormUrlEncodedContent(nameValueCollection);
-
-#if NET || NETCORE
-            var httpClient = httpClientFactory.CreateClient();
-#endif
-
-            using (var response = await httpClient.SendAsync(request))
+            using (var response = await httpClientFactory.CreateClient().SendAsync(request))
             {
                 try
                 {
@@ -164,7 +146,7 @@ namespace ITfoxtec.Identity.Helpers
             if (securityClientKey == null) throw new ArgumentNullException(nameof(securityClientKey));
             if (clientId.IsNullOrEmpty()) throw new ArgumentNullException(nameof(clientId));
             if (tokenEndpoint.IsNullOrEmpty()) throw new ArgumentNullException(nameof(tokenEndpoint));
-            
+
             if (tokenRequest == null)
             {
                 tokenRequest = new Treq();
@@ -194,11 +176,7 @@ namespace ITfoxtec.Identity.Helpers
             var nameValueCollection = tokenRequest.ToDictionary().AddToDictionary(clientAssertionCredentials);
             request.Content = new FormUrlEncodedContent(nameValueCollection);
 
-#if NET || NETCORE
-            var httpClient = httpClientFactory.CreateClient();
-#endif
-
-            using (var response = await httpClient.SendAsync(request))
+            using (var response = await httpClientFactory.CreateClient().SendAsync(request))
             {
                 try
                 {

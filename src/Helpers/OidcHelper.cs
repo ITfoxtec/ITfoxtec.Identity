@@ -11,32 +11,17 @@ namespace ITfoxtec.Identity.Helpers
 {
     public class OidcHelper
     {
-#if NET || NETCORE
         private readonly IHttpClientFactory httpClientFactory;
-#else
-        private readonly HttpClient httpClient;
-#endif
         private readonly OidcDiscoveryHandler oidcDiscoveryHandler;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public OidcHelper(
-#if NET || NETCORE
-            IHttpClientFactory httpClientFactory,
-#else
-            HttpClient httpClient,
-#endif
-            OidcDiscoveryHandler oidcDiscoveryHandler)
+        public OidcHelper(IHttpClientFactory httpClientFactory, OidcDiscoveryHandler oidcDiscoveryHandler)
         {
-#if NET || NETCORE
             this.httpClientFactory = httpClientFactory;
-#else
-            this.httpClient = httpClient;
-#endif
             this.oidcDiscoveryHandler = oidcDiscoveryHandler;
         }
-
 
         public async Task<ClaimsPrincipal> ValidateOidcWithUserInfoEndpoint(string idToken, string accessToken, string nonce = null)
         {
@@ -87,7 +72,7 @@ namespace ITfoxtec.Identity.Helpers
 
                 throw new SecurityException($"User Info endpoint error. URL '{userInfoEndpoint}', StatusCode '{response.StatusCode}'{wwwAuthenticateError}.");
             }
-        } 
+        }
 
     }
 }
