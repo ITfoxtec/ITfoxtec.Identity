@@ -134,7 +134,7 @@ namespace ITfoxtec.Identity.Discovery
                         return oidcDiscovery;
 
                     default:
-                        throw new Exception($"Error, Status Code OK expected. StatusCode={response.StatusCode}. OidcDiscoveryUri='{oidcDiscoveryUri}'.");
+                        throw new Exception($"Error, Status Code OK expected. StatusCode={response.StatusCode}. Invalid or unable do call OidcDiscoveryUri='{oidcDiscoveryUri}'.");
                 }
             }
         }
@@ -182,7 +182,7 @@ namespace ITfoxtec.Identity.Discovery
                         return jsonWebKeySet;
 
                     default:
-                        throw new Exception($"Error, Status Code OK expected. StatusCode={response.StatusCode}. OidcDiscoveryJwksUri='{oidcDiscovery.JwksUri}'.");
+                        throw new Exception($"Error, Status Code OK expected. StatusCode={response.StatusCode}. Invalid or unable do call OidcDiscoveryJwksUri='{oidcDiscovery.JwksUri}'.");
                 }
             }
         }
