@@ -79,25 +79,25 @@ namespace ITfoxtec.Identity.Tokens
         /// <summary>
         /// Validate JWT token.
         /// </summary>
-        public static (ClaimsPrincipal, MSTokens.SecurityToken) ValidateToken(string token, string issuer, IEnumerable<JsonWebKey> issuerSigningKeys, string audience = null, bool validateAudience = true, bool validateLifetime = true,
+        public static (ClaimsPrincipal, MSTokens.SecurityToken) ValidateToken(string token, string issuer, IEnumerable<JsonWebKey> issuerSigningKeys, string audience = null, bool validateIssuer = true, bool validateAudience = true, bool validateLifetime = true,
             string nameClaimType = JwtClaimTypes.Subject, string roleClaimType = JwtClaimTypes.Role)
         {
-            return ValidateToken(token, issuer, issuerSigningKeys.ToMSJsonWebKeys(), audience: audience, validateAudience: validateAudience, validateLifetime: validateLifetime, nameClaimType: nameClaimType, roleClaimType: roleClaimType);
+            return ValidateToken(token, issuer, issuerSigningKeys.ToMSJsonWebKeys(), audience: audience, validateIssuer: validateIssuer, validateAudience: validateAudience, validateLifetime: validateLifetime, nameClaimType: nameClaimType, roleClaimType: roleClaimType);
         }
 
         /// <summary>
         /// Validate JWT token.
         /// </summary>
-        public static (ClaimsPrincipal, MSTokens.SecurityToken) ValidateToken(string token, string issuer, IEnumerable<X509Certificate2> issuerSigningKeys, string audience = null, bool validateAudience = true, bool validateLifetime = true,
+        public static (ClaimsPrincipal, MSTokens.SecurityToken) ValidateToken(string token, string issuer, IEnumerable<X509Certificate2> issuerSigningKeys, string audience = null, bool validateIssuer = true, bool validateAudience = true, bool validateLifetime = true,
             string nameClaimType = JwtClaimTypes.Subject, string roleClaimType = JwtClaimTypes.Role)
         {
-            return ValidateToken(token, issuer, issuerSigningKeys.Select(c => new MSTokens.X509SecurityKey(c)), audience: audience, validateAudience: validateAudience, validateLifetime: validateLifetime, nameClaimType: nameClaimType, roleClaimType: roleClaimType);
+            return ValidateToken(token, issuer, issuerSigningKeys.Select(c => new MSTokens.X509SecurityKey(c)), audience: audience, validateIssuer: validateIssuer, validateAudience: validateAudience, validateLifetime: validateLifetime, nameClaimType: nameClaimType, roleClaimType: roleClaimType);
         }
 
         /// <summary>
         /// Validate JWT token.
         /// </summary>
-        public static (ClaimsPrincipal, MSTokens.SecurityToken) ValidateToken(string token, string issuer, IEnumerable<MSTokens.SecurityKey> issuerSigningKeys, string audience = null, bool validateAudience = true, bool validateLifetime = true,
+        public static (ClaimsPrincipal, MSTokens.SecurityToken) ValidateToken(string token, string issuer, IEnumerable<MSTokens.SecurityKey> issuerSigningKeys, string audience = null, bool validateIssuer = true, bool validateAudience = true, bool validateLifetime = true,
             string nameClaimType = JwtClaimTypes.Subject, string roleClaimType = JwtClaimTypes.Role)
         {
             if (token.IsNullOrEmpty()) throw new ArgumentNullException(nameof(token));
@@ -112,6 +112,7 @@ namespace ITfoxtec.Identity.Tokens
                 ValidIssuer = issuer,
                 IssuerSigningKeys = issuerSigningKeys,
                 ValidAudience = audience,
+                ValidateIssuer = validateIssuer,
                 ValidateAudience = validateAudience,
                 ValidateLifetime = validateLifetime,
                 NameClaimType = nameClaimType,
