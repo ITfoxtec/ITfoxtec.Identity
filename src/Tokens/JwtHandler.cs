@@ -101,10 +101,9 @@ namespace ITfoxtec.Identity.Tokens
             string nameClaimType = JwtClaimTypes.Subject, string roleClaimType = JwtClaimTypes.Role)
         {
             if (token.IsNullOrEmpty()) throw new ArgumentNullException(nameof(token));
-            if (issuer.IsNullOrEmpty()) throw new ArgumentNullException(nameof(issuer));
+            if (validateIssuer && issuer.IsNullOrEmpty()) throw new ArgumentNullException(nameof(issuer));
             if (issuerSigningKeys?.Count() < 1) throw new ArgumentException($"At least one key is required.", nameof(issuerSigningKeys));
             if (validateAudience && audience.IsNullOrEmpty()) throw new ArgumentNullException(nameof(audience));
-
 
             var validationParameters = new MSTokens.TokenValidationParameters
             {
