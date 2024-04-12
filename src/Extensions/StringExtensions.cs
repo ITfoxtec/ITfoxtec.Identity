@@ -96,7 +96,7 @@ namespace ITfoxtec.Identity
         /// <summary>
         /// Convert domain to origin.
         /// </summary>
-        public static string DomainToOrigin(this string domain, bool scheme)
+        public static string DomainToOrigin(this string domain, string scheme)
         {
             if (string.IsNullOrEmpty(domain))
             {
