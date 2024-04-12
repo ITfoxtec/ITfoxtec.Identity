@@ -94,25 +94,40 @@ namespace ITfoxtec.Identity
         }
 
         /// <summary>
-        /// Convert domain to HTTPS origin.
+        /// Convert domain to origin.
         /// </summary>
-        public static string DomainToOrigin(this string domain)
+        public static string DomainToOrigin(this string domain, bool scheme)
         {
             if (string.IsNullOrEmpty(domain))
             {
                 return null;
             }
 
-            return $"https://{domain}";
+            return $"{scheme}://{domain}";
         }
 
         /// <summary>
-        /// Convert URL to HTTPS origin.
+        /// Convert URL to origin.
         /// </summary>
         public static string UrlToOrigin(this string url)
         {
-            var domain = url.UrlToDomain();
-            return domain.DomainToOrigin();
+            if (string.IsNullOrEmpty(url))
+            {
+                return null;
+            }
+
+            string[] splitScema = url.ToLower().Split("://");
+            if (splitScema.Count() > 1)
+            {
+                string[] splitDomain = splitScema[1].Split('/');
+                if (splitDomain.Count() >= 1)
+                {
+                    return $"{splitScema[0]}://{splitDomain[0]}";
+
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
