@@ -84,12 +84,17 @@ namespace ITfoxtec.Identity
                 return null;
             }
 
-            var splitValue = url.Split('/');
-            if (splitValue.Count() > 2)
+            string[] splitScema = url.ToLower().Split("://");
+            if (splitScema.Count() > 1)
             {
-                var domain = splitValue[2].ToLower();
-                return domain;
+                string[] splitDomain = splitScema[1].Split(new[] { '/', '?', '&', '#' });
+                if (splitDomain.Count() >= 1)
+                {
+                    return splitDomain[0];
+
+                }
             }
+
             return null;
         }
 
@@ -119,7 +124,7 @@ namespace ITfoxtec.Identity
             string[] splitScema = url.ToLower().Split("://");
             if (splitScema.Count() > 1)
             {
-                string[] splitDomain = splitScema[1].Split('/');
+                string[] splitDomain = splitScema[1].Split(new []{ '/', '?', '&', '#' });
                 if (splitDomain.Count() >= 1)
                 {
                     return $"{splitScema[0]}://{splitDomain[0]}";
