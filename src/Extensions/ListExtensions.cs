@@ -126,6 +126,7 @@ namespace ITfoxtec.Identity
             return list;
         }
 
+#if !NETSTANDARD
         public static void Shuffle<T>(this IList<T> list)
         {
             if (list == null) throw new ArgumentNullException(nameof(list));
@@ -136,5 +137,6 @@ namespace ITfoxtec.Identity
                 (list[n], list[k]) = (list[k], list[n]);
             }
         }
+#endif
     }
 }

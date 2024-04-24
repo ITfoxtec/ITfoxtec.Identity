@@ -125,6 +125,7 @@ namespace ITfoxtec.Identity
             return jwkResult;
         }
 
+#if !NETSTANDARD
         /// <summary>
         /// Converts a JWK to RSA.
         /// </summary>
@@ -132,6 +133,7 @@ namespace ITfoxtec.Identity
         {
             return RSA.Create(jwk.ToRsaParameters(includePrivateParameters));
         }
+#endif
 
         /// <summary>
         /// Converts a JWK to public X509Certificate.

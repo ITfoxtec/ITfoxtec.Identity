@@ -1,4 +1,5 @@
-﻿using ITfoxtec.Identity.Util;
+﻿#if !NETSTANDARD
+using ITfoxtec.Identity.Util;
 using System.Threading.Tasks;
 
 namespace ITfoxtec.Identity
@@ -31,3 +32,4 @@ namespace ITfoxtec.Identity
         }
     }
 }
+#endif

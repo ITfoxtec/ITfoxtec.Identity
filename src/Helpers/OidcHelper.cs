@@ -57,20 +57,22 @@ namespace ITfoxtec.Identity.Helpers
 
             var client = httpClientFactory.CreateClient();
             client.SetAuthorizationHeaderBearer(accessToken);
-            using var response = await client.GetAsync(userInfoEndpoint);
-            if (response.IsSuccessStatusCode)
+            using (var response = await client.GetAsync(userInfoEndpoint))
             {
-                return;
-            }
-            else
-            {
-                var wwwAuthenticateError = string.Empty;
-                if (response.Headers?.WwwAuthenticate?.Count() > 0)
+                if (response.IsSuccessStatusCode)
                 {
-                    wwwAuthenticateError = $", WWWAuthenticateError '{string.Join(", ", response.Headers.WwwAuthenticate)}'";
+                    return;
                 }
+                else
+                {
+                    var wwwAuthenticateError = string.Empty;
+                    if (response.Headers?.WwwAuthenticate?.Count() > 0)
+                    {
+                        wwwAuthenticateError = $", WWWAuthenticateError '{string.Join(", ", response.Headers.WwwAuthenticate)}'";
+                    }
 
-                throw new SecurityException($"User Info endpoint error. URL '{userInfoEndpoint}', StatusCode '{response.StatusCode}'{wwwAuthenticateError}.");
+                    throw new SecurityException($"User Info endpoint error. URL '{userInfoEndpoint}', StatusCode '{response.StatusCode}'{wwwAuthenticateError}.");
+                }
             }
         }
 

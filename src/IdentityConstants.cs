@@ -1,6 +1,4 @@
-﻿using Microsoft.IdentityModel.Tokens;
-
-namespace ITfoxtec.Identity
+﻿namespace ITfoxtec.Identity
 {
     public static class IdentityConstants
     {
@@ -520,7 +518,11 @@ namespace ITfoxtec.Identity
             public const int CodeVerifierMin = 43;
             public const int CodeVerifierMax = 128;
 
-            public const int TokenMax = TokenValidationParameters.DefaultMaximumTokenSizeInBytes;
+#if !NETSTANDARD
+            public const int TokenMax = Microsoft.IdentityModel.Tokens.TokenValidationParameters.DefaultMaximumTokenSizeInBytes;
+#else
+            public const int TokenMax = 1024 * 250;
+#endif
         }
     }
 }

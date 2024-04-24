@@ -18,6 +18,7 @@ namespace ITfoxtec.Identity.Util
             return WebEncoders.Base64UrlEncode(GenerateBytes(length));
         }
 
+#if !NETSTANDARD
         /// <summary>
         /// Generate a simple password which consists of lower and upper case letters (without the letters o and O), numbers (without the number 0) and the special characters '@#%&!'.
         /// The password include at lease 3 of the 4 categories lower case letters, upper case letters, numbers and special characters.
@@ -75,6 +76,7 @@ namespace ITfoxtec.Identity.Util
             }
             return result.ToString();
         }
+#endif
 
         public static byte[] GenerateBytes(int length)
         {
@@ -83,11 +85,11 @@ namespace ITfoxtec.Identity.Util
             return bytes;
         }
 
+#if !NETSTANDARD
         public static int GenerateNumber(int toExclusive)
         {
             return RandomNumberGenerator.GetInt32(toExclusive);
         }
-
-
+#endif
     }
 }
