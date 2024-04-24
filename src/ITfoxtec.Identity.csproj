@@ -101,7 +101,6 @@
 		<DefineConstants>NETSTANDARD2;NETSTANDARD</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-		<DebugType>pdbonly</DebugType>
 		<DebugSymbols>true</DebugSymbols>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>$(NoWarn);1591;1573</NoWarn>
