@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.WebUtilities;
+﻿#if !NETSTANDARD
+using Microsoft.AspNetCore.WebUtilities;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -174,3 +175,4 @@ $@"        </div>
         }
     }
 }
+#endif

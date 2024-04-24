@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿#if !NETSTANDARD
+using Microsoft.AspNetCore.Authorization;
 using ITfoxtec.Identity.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -70,3 +71,4 @@ namespace ITfoxtec.Identity
         }
     }
 }
+#endif

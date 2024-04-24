@@ -74,6 +74,7 @@ namespace ITfoxtec.Identity
             }
         }
 
+#if !NETSTANDARD
         /// <summary>
         /// Convert URL to domain.
         /// </summary>
@@ -124,7 +125,7 @@ namespace ITfoxtec.Identity
             string[] splitScema = url.ToLower().Split("://");
             if (splitScema.Count() > 1)
             {
-                string[] splitDomain = splitScema[1].Split(new []{ '/', '?', '&', '#' });
+                string[] splitDomain = splitScema[1].Split(new[] { '/', '?', '&', '#' });
                 if (splitDomain.Count() >= 1)
                 {
                     return $"{splitScema[0]}://{splitDomain[0]}";
@@ -134,6 +135,7 @@ namespace ITfoxtec.Identity
 
             return null;
         }
+#endif
 
         /// <summary>
         /// Base64 URL encode a string.
