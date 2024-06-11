@@ -40,7 +40,8 @@ namespace ITfoxtec.Identity.Tokens
             string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256, string typ = IdentityConstants.JwtHeaders.MediaTypes.Jwt)
         {
             if (certificate == null) throw new ArgumentNullException(nameof(certificate));
-            return CreateToken(new MSTokens.X509SecurityKey(certificate), issuer, audiences, claims, issuedAt: issuedAt, beforeIn: beforeIn, expiresIn: expiresIn, algorithm: algorithm, typ: typ);
+            var publicKey = certificate.ToFTJsonWebKey();
+            return CreateToken(new MSTokens.X509SecurityKey(certificate, publicKey.Kid), issuer, audiences, claims, issuedAt: issuedAt, beforeIn: beforeIn, expiresIn: expiresIn, algorithm: algorithm, typ: typ);
         }
 
         /// <summary>
