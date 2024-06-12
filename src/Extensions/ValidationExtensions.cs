@@ -57,7 +57,7 @@ namespace ITfoxtec.Identity
 
             if (!response.Error.IsNullOrEmpty())
             {
-                throw new ResponseErrorException(response.Error, $"{response.GetTypeName()}{(response.ErrorDescription.IsNullOrEmpty() ? string.Empty : $", {response.ErrorDescription}")}.");
+                throw new ResponseErrorException(response.Error, $"{response.GetTypeName()}{(response.ErrorDescription.IsNullOrEmpty() ? "." : $", {response.ErrorDescription}")}");
             }
 
             if (!isImplicitFlow && response.Code.IsNullOrEmpty()) throw new ArgumentNullException(nameof(response.Code), response.GetTypeName());
