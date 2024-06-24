@@ -225,6 +225,30 @@ namespace ITfoxtec.Identity
         }
 
         /// <summary>
+        /// Encode OAuth defined application/x-www-form-urlencoded Media Type
+        /// </summary>
+        public static string OAuthUrlEncode(this string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return null;
+            }
+            return Uri.EscapeDataString(value).Replace("%20", "+");
+        }
+
+        /// <summary>
+        /// Dencode OAuth defined application/x-www-form-urlencoded Media Type
+        /// </summary>
+        public static string OAuthUrlDencode(this string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return null;
+            }
+            return Uri.UnescapeDataString(value.Replace("+", "%20"));
+        }
+
+        /// <summary>
         /// Combines the URL base and the relative URL into one, consolidating the '/' between them
         /// </summary>
         /// <param name="baseUrl">Base URL that will be combined</param>

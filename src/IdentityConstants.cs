@@ -25,6 +25,11 @@
             public const string IdToken = "id_token";
         }
 
+        public static class BasicAuthentication
+        {
+            public const string Basic = "Basic";
+        }
+
         public static class TokenTypes
         {
             public const string Bearer = "Bearer";

@@ -71,10 +71,35 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static string GetAuthorizationHeaderBearer(this IEnumerable<KeyValuePair<string, StringValues>> items)
         {
-            var bearerHeader = items.Where(h => h.Key.Equals(HeaderNames.Authorization, StringComparison.Ordinal)).Select(h => h.Value.FirstOrDefault()).FirstOrDefault();
-            if(bearerHeader?.StartsWith($"{IdentityConstants.TokenTypes.Bearer} ", StringComparison.Ordinal) == true)
+            return items.GetAuthorizationHeader(IdentityConstants.TokenTypes.Bearer);
+        }
+
+        /// <summary>
+        /// Get authorization header client credential basic from a IEnumerable&lt;KeyValuePair&lt;string, StringValues&gt;&gt;.
+        /// </summary>
+        public static (string clientId, string clientSecret) GetAuthorizationHeaderBasic(this IEnumerable<KeyValuePair<string, StringValues>> items)
+        {
+            var value = items.GetAuthorizationHeader(IdentityConstants.BasicAuthentication.Basic);
+            if (!value.IsNullOrEmpty())
             {
-                return bearerHeader.Substring(IdentityConstants.TokenTypes.Bearer.Length + 1);
+                var valueSplit = value.Base64Decode()?.Split(':');
+                if (valueSplit?.Count() == 2)
+                {
+                    return (valueSplit[0].OAuthUrlDencode(), valueSplit[1].OAuthUrlDencode());
+                }
+            }
+            return (null, null);
+        }
+
+        /// <summary>
+        /// Get authorization header from a IEnumerable&lt;KeyValuePair&lt;string, StringValues&gt;&gt;.
+        /// </summary>
+        public static string GetAuthorizationHeader(this IEnumerable<KeyValuePair<string, StringValues>> items, string scheme)
+        {
+            var bearerHeader = items.Where(h => h.Key.Equals(HeaderNames.Authorization, StringComparison.Ordinal)).Select(h => h.Value.FirstOrDefault()).FirstOrDefault();
+            if (bearerHeader?.StartsWith($"{scheme} ", StringComparison.Ordinal) == true)
+            {
+                return bearerHeader.Substring(scheme.Length + 1);
             }
             return null;
         }
