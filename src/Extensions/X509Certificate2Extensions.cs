@@ -51,14 +51,16 @@ namespace ITfoxtec.Identity
         {
             if (certificate == null) throw new ArgumentNullException(nameof(certificate));
 
-            var jwk = new JsonWebKey();
-            jwk.Kty = MSTokens.JsonWebAlgorithmsKeyTypes.RSA;
+            var jwk = new JsonWebKey
+            {
+                Kty = MSTokens.JsonWebAlgorithmsKeyTypes.RSA,
+                Kid = WebEncoders.Base64UrlEncode(certificate.GetCertHash()),
+                X5c = new List<string> { Convert.ToBase64String(certificate.RawData) }
+            };
+            jwk.X5t = jwk.Kid;
+            jwk.X5tS256 = certificate.GetCertificateX5tS256();
 
             var securityKey = new MSTokens.X509SecurityKey(certificate);
-            jwk.X5c = new List<string> { Convert.ToBase64String(certificate.RawData) };
-            jwk.X5t = certificate.Thumbprint;
-            jwk.Kid = WebEncoders.Base64UrlEncode(certificate.GetCertHash());
-
             var parameters = (securityKey.PublicKey as RSA).ExportParameters(false);
             jwk.N = WebEncoders.Base64UrlEncode(parameters.Modulus);
             jwk.E = WebEncoders.Base64UrlEncode(parameters.Exponent);
@@ -77,6 +79,30 @@ namespace ITfoxtec.Identity
         }
 
         /// <summary>
+        /// X.509 certificate SHA-256 thumbprint. A base64url-encoded SHA-256 thumbprint (a.k.a. digest) of the DER encoding of an X.509 certificate [RFC5280]. 
+        /// </summary>
+        public static string GetCertificateX5tS256(this X509Certificate2 certificate)
+        {
+            if (certificate == null) throw new ArgumentNullException(nameof(certificate));
+
+            return GetCertificateX5tS256(certificate.RawData);
+        }
+
+        /// <summary>
+        /// X.509 certificate SHA-256 thumbprint. A base64url-encoded SHA-256 thumbprint (a.k.a. digest) of the DER encoding of an X.509 certificate [RFC5280]. 
+        /// </summary>
+        public static string GetCertificateX5tS256(this byte[] certificate)
+        {
+            if (certificate == null) throw new ArgumentNullException(nameof(certificate));
+
+            using (var sha = SHA256.Create())
+            {
+                var hash = sha.ComputeHash(certificate);
+                return WebEncoders.Base64UrlEncode(hash);
+            }
+        }
+
+        /// <summary>
         /// Converts a X509 Certificate to ITfoxtec JWK.
         /// </summary>
         public static Task<JsonWebKey> ToFTJsonWebKeyAsync(this X509Certificate2 certificate, bool includePrivateKey = false)
@@ -92,14 +118,16 @@ namespace ITfoxtec.Identity
         {
             if (certificate == null) throw new ArgumentNullException(nameof(certificate));
 
-            var jwk = new MSTokens.JsonWebKey();
-            jwk.Kty = MSTokens.JsonWebAlgorithmsKeyTypes.RSA;
+            var jwk = new MSTokens.JsonWebKey
+            {
+                Kty = MSTokens.JsonWebAlgorithmsKeyTypes.RSA,
+                Kid = WebEncoders.Base64UrlEncode(certificate.GetCertHash())
+            };
+            jwk.X5c.Add(Convert.ToBase64String(certificate.RawData));
+            jwk.X5t = jwk.Kid;
+            jwk.X5tS256 = certificate.GetCertificateX5tS256();
 
             var securityKey = new MSTokens.X509SecurityKey(certificate);
-            jwk.X5c.Add(Convert.ToBase64String(certificate.RawData));
-            jwk.X5t = certificate.Thumbprint;
-            jwk.Kid = WebEncoders.Base64UrlEncode(certificate.GetCertHash());
-
             var parameters = (securityKey.PublicKey as RSA).ExportParameters(false);
             jwk.N = WebEncoders.Base64UrlEncode(parameters.Modulus);
             jwk.E = WebEncoders.Base64UrlEncode(parameters.Exponent);

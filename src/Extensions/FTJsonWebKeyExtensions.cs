@@ -22,8 +22,9 @@ namespace ITfoxtec.Identity
             var publicKey = new JsonWebKey
             {
                 Kty = jwk.Kty,
-                X5t = jwk.X5t,
                 Kid = jwk.Kid,
+                X5t = jwk.X5t,
+                X5tS256 = jwk.X5tS256,
                 N = jwk.N,
                 E = jwk.E
             };
@@ -106,8 +107,9 @@ namespace ITfoxtec.Identity
                 }
             }
 
-            jwkResult.X5t = jwk.X5t;
             jwkResult.Kid = jwk.Kid;
+            jwkResult.X5t = jwk.X5t;
+            jwkResult.X5tS256 = jwk.X5tS256;
 
             jwkResult.N = jwk.N;
             jwkResult.E = jwk.E;

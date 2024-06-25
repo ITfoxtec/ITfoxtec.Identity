@@ -66,7 +66,7 @@ namespace ITfoxtec.Identity.Models
         public string X5t { get; set; }
 
         /// <summary>
-        /// The "x5t" (X.509 certificate SHA-256 thumbprint) parameter is a base64url-encoded SHA-1 thumbprint (a.k.a. digest) of the DER encoding of an X.509 certificate [RFC5280]. 
+        /// The "x5t" (X.509 certificate SHA-256 thumbprint) parameter is a base64url-encoded SHA-256 thumbprint (a.k.a. digest) of the DER encoding of an X.509 certificate [RFC5280]. 
         /// Use of this member is OPTIONAL.
         /// </summary>
         [JsonProperty(PropertyName = "x5t#S256")]

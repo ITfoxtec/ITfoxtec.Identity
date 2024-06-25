@@ -107,8 +107,18 @@ namespace ITfoxtec.Identity
                 }
             }
 
-            jwkResult.X5t = jwk.X5t;
             jwkResult.Kid = jwk.Kid;
+            jwkResult.X5t = jwk.Kid;
+
+            var certificate = jwk.X5c?.FirstOrDefault();
+            if (certificate != null)
+            {
+                jwkResult.X5tS256 = Convert.FromBase64String(certificate).GetCertificateX5tS256();
+            }
+            else
+            {
+                jwkResult.X5tS256 = jwk.X5tS256;
+            }
 
             jwkResult.N = jwk.N;
             jwkResult.E = jwk.E;
