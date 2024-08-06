@@ -14,6 +14,7 @@ namespace ITfoxtec.Identity
     /// </summary>
     public static class X509Certificate2Extensions
     {
+#if !NETSTANDARD
         /// <summary>
         /// Create self-signed certificate with subject name. .
         /// </summary>
@@ -56,6 +57,7 @@ namespace ITfoxtec.Identity
             var now = DateTimeOffset.UtcNow;
             return subjectName.CreateSelfSignedCertificateAsync(now.AddSeconds(-5), expiry.HasValue ? now.Add(expiry.Value) : now.AddYears(1));
         }
+#endif
 
         /// <summary>
         /// Converts a X509 Certificate to ITfoxtec JWK.
