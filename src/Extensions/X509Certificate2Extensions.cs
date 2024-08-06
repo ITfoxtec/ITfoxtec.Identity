@@ -14,14 +14,19 @@ namespace ITfoxtec.Identity
     /// </summary>
     public static class X509Certificate2Extensions
     {
-
 #if !NETSTANDARD
         /// <summary>
         /// Create self-signed certificate with subject name. .
         /// </summary>
         /// <param name="subjectName">Certificate subject name, example: "CN=my-certificate, O=some-organisation".</param>
-        /// <param name="expiry">Certificate expiry, default 365 days.</param>
-        public static Task<X509Certificate2> CreateSelfSignedCertificateAsync(this string subjectName, TimeSpan? expiry = null)
+        /// <param name="notBefore">
+        ///   The oldest date and time where this certificate is considered valid.
+        ///   Typically <see cref="DateTimeOffset.UtcNow"/>, plus or minus a few seconds.
+        /// </param>
+        /// <param name="notAfter">
+        ///   The date and time where this certificate is no longer considered valid.
+        /// </param>
+        public static Task<X509Certificate2> CreateSelfSignedCertificateAsync(this string subjectName, DateTimeOffset notBefore, DateTimeOffset notAfter)
         {
             using (var rsa = RSA.Create(2048))
             {
@@ -38,9 +43,19 @@ namespace ITfoxtec.Identity
                         X509KeyUsageFlags.DigitalSignature | X509KeyUsageFlags.KeyEncipherment | X509KeyUsageFlags.DataEncipherment | X509KeyUsageFlags.KeyAgreement,
                         false));
 
-                var now = DateTimeOffset.UtcNow;
-                return Task.FromResult(certRequest.CreateSelfSigned(now.AddDays(-1), now.Add(expiry ?? TimeSpan.FromDays(365))));
+                return Task.FromResult(certRequest.CreateSelfSigned(notBefore, notAfter));
             }
+        }
+
+        /// <summary>
+        /// Create self-signed certificate with subject name. .
+        /// </summary>
+        /// <param name="subjectName">Certificate subject name, example: "CN=my-certificate, O=some-organisation".</param>
+        /// <param name="expiry">Certificate expiry, default 1 year.</param>
+        public static Task<X509Certificate2> CreateSelfSignedCertificateAsync(this string subjectName, TimeSpan? expiry = null)
+        {
+            var now = DateTimeOffset.UtcNow;
+            return subjectName.CreateSelfSignedCertificateAsync(now.AddSeconds(-5), expiry.HasValue ? now.Add(expiry.Value) : now.AddYears(1));
         }
 #endif
 
