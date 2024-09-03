@@ -12,7 +12,7 @@ namespace ITfoxtec.Identity
     /// <summary>
     /// Extension methods for ITfoxtec JsonWebKey.
     /// </summary>
-    public static class JsonWebKeyExtensions
+    public static class FTJsonWebKeyExtensions
     {
         /// <summary>
         /// Get public JWK.
