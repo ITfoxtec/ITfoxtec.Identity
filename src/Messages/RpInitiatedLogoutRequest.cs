@@ -15,6 +15,12 @@ namespace ITfoxtec.Identity.Messages
         public string IdTokenHint { get; set; }
 
         /// <summary>
+        /// OPTIONAL. OAuth 2.0 Client Identifier valid at the Authorization Server.
+        /// </summary>
+        [JsonProperty(PropertyName = "client_id")]
+        public string ClientId { get; set; }
+
+        /// <summary>
         /// OPTIONAL. URL to which the RP is requesting that the End-User's User Agent be redirected after a logout has been performed. The value MUST have been 
         /// previously registered with the OP.
         /// </summary>
