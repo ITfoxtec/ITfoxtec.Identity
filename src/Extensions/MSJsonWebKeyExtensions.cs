@@ -22,15 +22,40 @@ namespace ITfoxtec.Identity
             var publicKey = new JsonWebKey
             {
                 Kty = jwk.Kty,
-                X5t = jwk.X5t,
+                Use = jwk.Use,
                 Kid = jwk.Kid,
-                N = jwk.N,
-                E = jwk.E
+                Alg = jwk.Alg,
             };
+
             if (jwk.X5c?.Count() > 0)
             {
                 publicKey.X5c.Add(jwk.X5c.First());
             }
+
+            publicKey.X5t = jwk.Kid;
+
+            var certificate = jwk.X5c?.FirstOrDefault();
+            if (certificate != null)
+            {
+                publicKey.X5tS256 = Convert.FromBase64String(certificate).GetCertificateX5tS256();
+            }
+            else
+            {
+                publicKey.X5tS256 = jwk.X5tS256;
+            }
+
+            if (jwk.Kty == JsonWebAlgorithmsKeyTypes.RSA)
+            {
+                publicKey.N = jwk.N;
+                publicKey.E = jwk.E;
+            }
+            else if (jwk.Kty == JsonWebAlgorithmsKeyTypes.EllipticCurve)
+            {
+                publicKey.Crv = jwk.Crv;
+                publicKey.X = jwk.X;
+                publicKey.Y = jwk.Y;
+            }
+
             return publicKey;
         }
 
@@ -78,10 +103,22 @@ namespace ITfoxtec.Identity
         public static FTModels.JsonWebKey ToFTJsonWebKey(this JsonWebKey jwk, bool includePrivateKey = false)
         {
             if (jwk == null) throw new ArgumentNullException(nameof(jwk));
-            if (jwk.Kty != JsonWebAlgorithmsKeyTypes.RSA) throw new NotSupportedException($"Only key type '{JsonWebAlgorithmsKeyTypes.RSA}' supported.");
 
-            if (jwk.N.IsNullOrEmpty()) throw new ArgumentNullException(nameof(jwk.N), jwk.GetTypeName());
-            if (jwk.E.IsNullOrEmpty()) throw new ArgumentNullException(nameof(jwk.E), jwk.GetTypeName());
+            if (jwk.Kty == JsonWebAlgorithmsKeyTypes.RSA)
+            {
+                if (jwk.N.IsNullOrEmpty()) throw new ArgumentNullException(nameof(jwk.N), jwk.GetTypeName());
+                if (jwk.E.IsNullOrEmpty()) throw new ArgumentNullException(nameof(jwk.E), jwk.GetTypeName());
+            }
+            else if (jwk.Kty == JsonWebAlgorithmsKeyTypes.EllipticCurve)
+            {
+                if (jwk.Crv.IsNullOrEmpty()) throw new ArgumentNullException(nameof(jwk.Crv), jwk.GetTypeName());
+                if (jwk.X.IsNullOrEmpty()) throw new ArgumentNullException(nameof(jwk.X), jwk.GetTypeName());
+                if (jwk.Y.IsNullOrEmpty()) throw new ArgumentNullException(nameof(jwk.Y), jwk.GetTypeName());
+            }
+            else
+            {
+                throw new NotSupportedException($"Key type '{jwk.Kty}' not supported.");
+            }
 
             var jwkResult = new FTModels.JsonWebKey();
             jwkResult.Kty = jwk.Kty;
@@ -95,7 +132,9 @@ namespace ITfoxtec.Identity
                 }
             }
 
+            jwkResult.Kid = jwk.Kid;
             jwkResult.Alg = jwk.Alg;
+
             jwkResult.X5u = jwk.X5u;
 
             if (jwk.X5c?.Count > 0)
@@ -107,7 +146,6 @@ namespace ITfoxtec.Identity
                 }
             }
 
-            jwkResult.Kid = jwk.Kid;
             jwkResult.X5t = jwk.Kid;
 
             var certificate = jwk.X5c?.FirstOrDefault();
@@ -120,17 +158,33 @@ namespace ITfoxtec.Identity
                 jwkResult.X5tS256 = jwk.X5tS256;
             }
 
-            jwkResult.N = jwk.N;
-            jwkResult.E = jwk.E;
-
-            if (includePrivateKey && !jwk.D.IsNullOrEmpty() && !jwk.P.IsNullOrEmpty() && !jwk.Q.IsNullOrEmpty() && !jwk.DP.IsNullOrEmpty() && !jwk.DQ.IsNullOrEmpty() && !jwk.QI.IsNullOrEmpty())
+            if (jwk.Kty == JsonWebAlgorithmsKeyTypes.RSA)
             {
-                jwkResult.D = jwk.D;
-                jwkResult.P = jwk.P;
-                jwkResult.Q = jwk.Q;
-                jwkResult.DP = jwk.DP;
-                jwkResult.DQ = jwk.DQ;
-                jwkResult.QI = jwk.QI;
+                jwkResult.N = jwk.N;
+                jwkResult.E = jwk.E;
+            }
+            else if (jwk.Kty == JsonWebAlgorithmsKeyTypes.EllipticCurve)
+            {
+                jwkResult.Crv = jwk.Crv;
+                jwkResult.X = jwk.X;
+                jwkResult.Y = jwk.Y;
+            }
+
+            if (includePrivateKey)
+            {
+                if (jwk.Kty == JsonWebAlgorithmsKeyTypes.RSA && !jwk.D.IsNullOrEmpty() && !jwk.P.IsNullOrEmpty() && !jwk.Q.IsNullOrEmpty() && !jwk.DP.IsNullOrEmpty() && !jwk.DQ.IsNullOrEmpty() && !jwk.QI.IsNullOrEmpty())
+                {
+                    jwkResult.D = jwk.D;
+                    jwkResult.P = jwk.P;
+                    jwkResult.Q = jwk.Q;
+                    jwkResult.DP = jwk.DP;
+                    jwkResult.DQ = jwk.DQ;
+                    jwkResult.QI = jwk.QI;
+                }
+                else if (jwk.Kty == JsonWebAlgorithmsKeyTypes.EllipticCurve && !jwk.D.IsNullOrEmpty())
+                {
+                    jwkResult.D = jwk.D;
+                }
             }
             return jwkResult;
         }
@@ -151,9 +205,8 @@ namespace ITfoxtec.Identity
         public static X509Certificate2 ToX509Certificate(this JsonWebKey jwk)
         {
             if (jwk == null) throw new ArgumentNullException(nameof(jwk));
-            if (jwk.Kty != JsonWebAlgorithmsKeyTypes.RSA) throw new NotSupportedException($"Key type '{jwk.Kty}' not supported. Only key type '{JsonWebAlgorithmsKeyTypes.RSA}' supported.");
 
-            if (jwk.X5c?.Count() <= 0) throw new ArgumentNullException(nameof(jwk.X5c), jwk.GetTypeName());
+            if (!(jwk.X5c?.Count() > 0)) throw new ArgumentNullException(nameof(jwk.X5c), jwk.GetTypeName());
 
             return new X509Certificate2(Convert.FromBase64String(jwk.X5c.First()));
         }
