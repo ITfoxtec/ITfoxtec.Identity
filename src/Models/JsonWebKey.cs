@@ -125,5 +125,26 @@ namespace ITfoxtec.Identity.Models
         /// </summary>
         [JsonProperty(PropertyName = "qi")]
         public string QI { get; set; }
+
+        /// <summary>
+        /// The crv member identifies the cryptographic curve used with the key. Values defined by this specification are P-256, P-384 and P-521. Additional crv values MAY 
+        /// be used, provided they are understood by implementations using that Elliptic Curve key. The crv value is case sensitive.
+        /// </summary>
+        [JsonProperty(PropertyName = "crv")]
+        public string Crv { get; set; }
+
+        /// <summary>
+        /// The x member contains the x coordinate for the elliptic curve point. It is represented as the base64url encoding of the coordinate's big endian representation.
+        /// </summary>
+        [JsonProperty(PropertyName = "x")]
+        public string X { get; set; }
+
+        /// <summary>
+        /// The y member contains the y coordinate for the elliptic curve point. It is represented as the base64url encoding of the coordinate's big endian representation.
+        /// </summary>
+        [JsonProperty(PropertyName = "y")]
+        public string Y { get; set; }
+
+
     }
 }
