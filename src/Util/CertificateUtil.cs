@@ -8,16 +8,28 @@ namespace ITfoxtec.Identity.Util
 {
     public static class CertificateUtil
     {
+#if NETSTANDARD || NET60 || NET70 || NET80
         public static X509Certificate2 Load(string path)
         {
-            if (path.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(path));
+            if (string.IsNullOrWhiteSpace(path)) throw new ArgumentNullException(nameof(path));
 
-#if NETSTANDARD || NET60 || NET70 || NET80
             return new X509Certificate2(path);
-#else
-            return X509CertificateLoader.LoadCertificateFromFile(path);
-#endif
         }
+#else
+        public static X509Certificate2 Load(string path, bool loadPkcs12 = false)
+        {
+            if (string.IsNullOrWhiteSpace(path)) throw new ArgumentNullException(nameof(path));
+
+            if(loadPkcs12)
+            {
+                return X509CertificateLoader.LoadPkcs12FromFile(path, null);
+            }
+            else
+            {
+                return X509CertificateLoader.LoadCertificateFromFile(path);
+            }
+        }
+#endif
 
         public static X509Certificate2 Load(string path, string password)
         {

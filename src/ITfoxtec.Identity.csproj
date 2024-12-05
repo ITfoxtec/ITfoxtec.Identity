@@ -22,10 +22,10 @@
 		</Description>
 		<PackageTags>OAuth 2.0 OpenID Connect OIDC</PackageTags>
 		<NeutralLanguage>en-US</NeutralLanguage>
-		<Version>2.12.1</Version>
+		<Version>2.13.6</Version>
 		<PackageIconUrl>https://itfoxtec.com/favicon.ico</PackageIconUrl>
-		<AssemblyVersion>2.12.1</AssemblyVersion>
-		<FileVersion>2.12.1</FileVersion>
+		<AssemblyVersion>2.13.6</AssemblyVersion>
+		<FileVersion>2.13.6</FileVersion>
 		<PackageProjectUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>

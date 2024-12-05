@@ -1,8 +1,6 @@
-﻿#if !NETSTANDARD
-using Microsoft.AspNetCore.WebUtilities;
+﻿using Microsoft.AspNetCore.WebUtilities;
 using System.Collections.Generic;
 using System.Net;
-using System.Threading.Tasks;
 
 namespace ITfoxtec.Identity
 {
@@ -12,117 +10,77 @@ namespace ITfoxtec.Identity
     public static class HtmExtensions
     {
         /// <summary>
-        /// Converts a Dictionary&lt;string, string&gt; to a HTML form action post page.
+        /// Converts URL and Dictionary&lt;string, string&gt; to a HTML form action post page.
         /// </summary>
-        public static string ToHtmlPostPage(this Dictionary<string, string> items, string url, string title = "OAuth 2.0")
+        public static string ToHtmlPostPage(this string url, Dictionary<string, string> items)
         {
-            return string.Concat(items.HtmFormActionPageList(url, "post", title: title));
+            return string.Concat(url.HtmFormActionPageList(items));
         }
 
         /// <summary>
-        /// Converts a Dictionary&lt;string, string&gt; to a HTML form action post page.
+        /// Converts URL and Dictionary&lt;string, string&gt; to a HTML form action page.
         /// </summary>
-        public static Task<string> ToHtmlPostPageAsync(this Dictionary<string, string> items, string url, string title = "OAuth 2.0")
-        {
-            return Task.FromResult(ToHtmlPostPage(items, url, title: title));
-        }
-
-        /// <summary>
-        /// Converts a Dictionary&lt;string, string&gt; to a HTML form action get page.
-        /// </summary>
-        public static string ToHtmlGetPage(this Dictionary<string, string> items, string url, string title = "OAuth 2.0")
-        {
-            return string.Concat(items.HtmFormActionPageList(url, "get", title: title));
-        }
-
-        /// <summary>
-        /// Converts a Dictionary&lt;string, string&gt; to a HTML form action get page.
-        /// </summary>
-        public static Task<string> ToHtmlGetPageAsync(this Dictionary<string, string> items, string url, string title = "OAuth 2.0")
-        {
-            return Task.FromResult(ToHtmlGetPage(items, url, title: title));
-        }
-
-        /// <summary>
-        /// Converts a Dictionary&lt;string, string&gt; to a HTML form action page.
-        /// </summary>
-        public static IEnumerable<string> HtmFormActionPageList(this Dictionary<string, string> items, string url, string method, string title = "OAuth 2.0")
+        private static IEnumerable<string> HtmFormActionPageList(this string url, Dictionary<string, string> items)
         {
             yield return
 $@"<!DOCTYPE html>
 <html lang=""en"">
-    <head>
-        <meta charset=""utf-8"" />
-        <meta http-equiv=""X-UA-Compatible"" content=""IE=edge"" />
-        <title>{title}</title>
-    </head>
-    <body onload=""document.forms[0].submit()"">
-        <noscript>
-            <p>
-                <strong>Note:</strong> Since your browser does not support JavaScript, 
-                you must press the Continue button once to proceed.
-            </p>
-        </noscript>
-        <form action=""{url}"" method=""{method}"">
-            <div>
+<head>
+    <meta charset=""utf-8"" />
+    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+</head>
+<body>
+    <noscript>
+        <p>
+            <strong>Note:</strong> Since your browser does not support JavaScript, 
+            you must press the Continue button once to proceed.
+        </p>
+    </noscript>
+    <form action=""{url}"" method=""post"">
+        <div>
 ";
 
-            if (items?.Count > 0)
+        if (items?.Count > 0)
+        {
+            foreach (var item in items)
             {
-                foreach (var item in items)
-                {
-                    yield return
-    $@"                <input type=""hidden"" name=""{item.Key}"" value=""{WebUtility.HtmlEncode(item.Value)}""/>
+                yield return
+$@"            <input type=""hidden"" name=""{item.Key}"" value=""{WebUtility.HtmlEncode(item.Value)}""/>
 ";
-                }
             }
+        }
 
-            yield return
-$@"            </div>
-            <noscript>
-                <div>
-                    <input type=""submit"" value=""Continue""/>
-                </div>
-            </noscript>
-        </form>
-    </body>
+        yield return
+$@"        </div>
+        <noscript>
+            <div>
+                <input type=""submit"" value=""Continue""/>
+            </div>
+        </noscript>
+    </form>
+</body>
+<script>window.addEventListener(""DOMContentLoaded"", function() {{ document.forms[0].submit() }})</script>
 </html>";
         }
 
         /// <summary>
-        /// Converts a Dictionary&lt;string, string&gt; to a HTML fragment redirect page.
+        /// Add query Dictionary&lt;string, string&gt; to URL.
         /// </summary>
-        public static string ToHtmlFragmentPage(this Dictionary<string, string> items, string url, string title = "OAuth 2.0")
+        public static string AddQuery(this string url, Dictionary<string, string> items)
         {
-            var redirectUrl = QueryHelpers.AddQueryString(url, items).Replace('?', '#');
-            return redirectUrl.HtmRedirectActionPage(title: title);
+            var urlWithQuery = QueryHelpers.AddQueryString(url, items);
+            return urlWithQuery;
         }
 
         /// <summary>
-        /// Converts a Dictionary&lt;string, string&gt; to a HTML fragment redirect page.
+        /// Add fragment Dictionary&lt;string, string&gt; to URL.
         /// </summary>
-        public static Task<string> ToHtmlFragmentPageAsync(this Dictionary<string, string> items, string url, string title = "OAuth 2.0")
+        public static string AddFragment(this string url, Dictionary<string, string> items)
         {
-            return Task.FromResult(ToHtmlFragmentPage(items, url, title: title));
-        }
-
-        /// <summary>
-        /// URL to a HTML redirect page.
-        /// </summary>
-        public static string HtmRedirectActionPage(this string url, string title = "OAuth 2.0")
-        {
-            return
-$@"<!DOCTYPE html>
-<html lang=""en"">
-    <head>
-        <meta charset=""utf-8"" />
-        <meta http-equiv=""X-UA-Compatible"" content=""IE=edge"" />
-        <meta http-equiv=""refresh"" content=""0;URL='{url}'"" />
-        <title>{title}</title>
-    </head>
-    <body>
-    </body>
-</html>";
+            url = url.Replace('?', '¤');
+            url = url.Replace('#', '?');
+            var urlWithFragment = QueryHelpers.AddQueryString(url, items).Replace('?', '#');
+            return urlWithFragment.Replace('¤' , '?');
         }
 
         /// <summary>
@@ -136,7 +94,7 @@ $@"<!DOCTYPE html>
         /// <summary>
         /// URLs to a HTML iframe and redirect page.
         /// </summary>
-        public static IEnumerable<string> ToHtmIframePageList(this List<string> urls, string redirectUrl, string title = "OAuth 2.0")
+        private static IEnumerable<string> ToHtmIframePageList(this List<string> urls, string redirectUrl, string title = "OAuth 2.0")
         {
             yield return
 @"<!DOCTYPE html>
@@ -175,4 +133,3 @@ $@"        </div>
         }
     }
 }
-#endif
