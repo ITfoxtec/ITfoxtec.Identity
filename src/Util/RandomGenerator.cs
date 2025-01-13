@@ -45,13 +45,13 @@ namespace ITfoxtec.Identity.Util
         }
 
         /// <summary>
-        /// Generate a code which consists of upper case letters (without the letter O) and numbers (without the number 0).
+        /// Generate a code which consists of upper case letters (without the letter O, I and L) and numbers (without the numbers 0 and 1).
         /// </summary>
         /// <param name="length">Code length.</param>
         public static string GenerateCode(int length)
         {
-            const string upperCaseLettes = "ABCDEFGHIJKLMNPQRSTUVWXYZ";
-            const string numbers = "123456789";
+            const string upperCaseLettes = "ABCDEFGHJKMNPQRSTUVWXYZ";
+            const string numbers = "23456789";
             var possibleChars = upperCaseLettes + numbers;
             return GenerateString(length, possibleChars);
         }
