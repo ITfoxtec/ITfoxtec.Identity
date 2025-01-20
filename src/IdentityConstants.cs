@@ -412,6 +412,11 @@
             /// Windows integrated authentication [MSDN].
             /// </summary>
             public const string Wia = "wia";
+
+            /// <summary>
+            /// Confirmation using an email to the user at a registered email address.
+            /// </summary>
+            public const string Email = "email";
         }
 
         public static class JwtHeaders
