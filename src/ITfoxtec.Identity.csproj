@@ -7,7 +7,7 @@
 		<Authors>Anders Revsgaard</Authors>
 		<Company>ITfoxtec</Company>
 		<PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
-		<Copyright>Copyright © 2023</Copyright>
+		<Copyright>Copyright © 2025</Copyright>
 		<AssemblyName>ITfoxtec.Identity</AssemblyName>
 		<PackageId>ITfoxtec.Identity</PackageId>
 		<PackageTitle>ITfoxtec Identity</PackageTitle>
@@ -22,10 +22,10 @@
 		</Description>
 		<PackageTags>OAuth 2.0 OpenID Connect OIDC</PackageTags>
 		<NeutralLanguage>en-US</NeutralLanguage>
-		<Version>2.13.9</Version>
+		<Version>2.13.10</Version>
 		<PackageIconUrl>https://itfoxtec.com/favicon.ico</PackageIconUrl>
-		<AssemblyVersion>2.13.9</AssemblyVersion>
-		<FileVersion>2.13.9</FileVersion>
+		<AssemblyVersion>2.13.10</AssemblyVersion>
+		<FileVersion>2.13.10</FileVersion>
 		<PackageProjectUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
