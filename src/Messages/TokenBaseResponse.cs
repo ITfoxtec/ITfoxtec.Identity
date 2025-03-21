@@ -39,6 +39,12 @@ namespace ITfoxtec.Identity.Messages
         [JsonProperty(PropertyName = "refresh_token")]
         public string RefreshToken { get; set; }
 
+        /// <summary>
+        /// OPTIONAL, not standard. The validity lifetime, in seconds, of the refresh token issued by the authorization server.
+        /// </summary>
+        [JsonProperty(PropertyName = "refresh_token_expires_in")]
+        public long? RefreshTokenExpiresIn { get; set; }
+
         #region Error
         /// <summary>
         /// If error REQUIRED. A single ASCII [USASCII] error code.
