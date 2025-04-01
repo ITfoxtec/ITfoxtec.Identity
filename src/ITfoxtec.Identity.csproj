@@ -5,25 +5,25 @@
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<Authors>Anders Revsgaard</Authors>
-		<Company>ITfoxtec</Company>
+		<Company>FoxIDs</Company>
 		<PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
 		<Copyright>Copyright © 2025</Copyright>
 		<AssemblyName>ITfoxtec.Identity</AssemblyName>
 		<PackageId>ITfoxtec.Identity</PackageId>
 		<PackageTitle>ITfoxtec Identity</PackageTitle>
-		<Description>
-			OAuth 2.0 and OpenID Connect components.
+		<Description>OAuth 2.0 and OpenID Connect components.
 
-            Support .NET 9.0
+			Support .NET 9.0
 			Support .NET 8.0
 			Support .NET 7.0
 			Support .NET 6.0
 			Support .NET Standard 2.0
-		</Description>
+
+The company name ITfoxtec has changed to FoxIDs but the components will keep the ITfoxtec name as part of the component name for now.</Description>
 		<PackageTags>OAuth 2.0 OpenID Connect OIDC</PackageTags>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<Version>2.13.10</Version>
-		<PackageIconUrl>https://itfoxtec.com/favicon.ico</PackageIconUrl>
+		<PackageIconUrl>https://www.foxids.com/favicon.ico</PackageIconUrl>
 		<AssemblyVersion>2.13.10</AssemblyVersion>
 		<FileVersion>2.13.10</FileVersion>
 		<PackageProjectUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</PackageProjectUrl>
