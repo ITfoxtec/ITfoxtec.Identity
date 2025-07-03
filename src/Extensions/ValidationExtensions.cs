@@ -90,7 +90,7 @@ namespace ITfoxtec.Identity
         /// <summary>
         /// Is Valid OAuth 2.0 Access Token Request or OIDC Token Request.
         /// </summary>
-        public static void Validate(this TokenRequest request)
+        public static void Validate(this TokenRequest request, bool clientCredentialsRequireClientId = false)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -104,7 +104,7 @@ namespace ITfoxtec.Identity
             {
                 if (request.RefreshToken.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.RefreshToken), request.GetTypeName());
             }
-            else if (request.GrantType == IdentityConstants.GrantTypes.ClientCredentials)
+            else if (clientCredentialsRequireClientId && request.GrantType == IdentityConstants.GrantTypes.ClientCredentials)
             {
                 if (request.ClientId.IsNullOrEmpty()) throw new ArgumentNullException(nameof(request.ClientId), request.GetTypeName());
             }
