@@ -292,11 +292,8 @@ namespace ITfoxtec.Identity
                     using (var rsa = jwk.ToRsa(includePrivateParameters: true))
                     {
                         using var certWithKey = cert.CopyWithPrivateKey(rsa);
-
-                        // Re-import as PFX with PersistKeySet so Windows assigns a key container usable by mTLS
-                        var pfxBytes = certWithKey.Export(X509ContentType.Pkcs12);
-                        return CertificateUtil.LoadBytes(pfxBytes,
-                            X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable | X509KeyStorageFlags.UserKeySet);
+                        cert.Dispose();
+                        return ExportAndReimportPfx(certWithKey);
                     }
                 }
                 // ECDSA branch with D present
@@ -316,7 +313,7 @@ namespace ITfoxtec.Identity
 
         #if !NETSTANDARD
         /// <summary>
-        /// Helper method to export a certificate as PFX and re-import it with required key storage flags.
+        /// Export a certificate as PFX and re-import it with required key storage flags.
         /// </summary>
         private static X509Certificate2 ExportAndReimportPfx(X509Certificate2 certWithKey)
         {
