@@ -127,7 +127,11 @@ namespace ITfoxtec.Identity.Util
             if (certificate == null || certificate.Length == 0) throw new ArgumentNullException(nameof(certificate));
             if (password == null) throw new ArgumentNullException(nameof(password));
 
-            return LoadBytes(certificate, password, keyStorageFlags);
+#if NETSTANDARD || NET60 || NET70 || NET80
+            return new X509Certificate2(certificate, password, keyStorageFlags);
+#else
+            return X509CertificateLoader.LoadPkcs12(certificate, password, keyStorageFlags);
+#endif
         }
 
         public static X509Certificate2 LoadBytes(string certificate, string password, X509KeyStorageFlags keyStorageFlags)

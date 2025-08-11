@@ -228,9 +228,6 @@ namespace ITfoxtec.Identity
                 _ => throw new NotSupportedException($"Curve '{jwk.Crv}' not supported.")
             };
 
-            var x = WebEncoders.Base64UrlDecode(jwk.X);
-            var y = WebEncoders.Base64UrlDecode(jwk.Y);
-
             int expectedLen = curve.Oid.FriendlyName switch
             {
                 "nistP256" => 32,
@@ -239,34 +236,36 @@ namespace ITfoxtec.Identity
                 _ => throw new NotSupportedException($"Curve '{curve.Oid.FriendlyName}' not supported.")
             };
 
-            static byte[] LeftPad(byte[] input, int size)
-            {
-                if (input.Length == size) return input;
-                if (input.Length > size) throw new ArgumentException("Input length is larger than expected size.");
-                var padded = new byte[size];
-                Buffer.BlockCopy(input, 0, padded, size - input.Length, input.Length);
-                return padded;
-            }
+            var x = WebEncoders.Base64UrlDecode(jwk.X);
+            var y = WebEncoders.Base64UrlDecode(jwk.Y);
 
             var ecParams = new ECParameters
             {
                 Curve = curve,
                 Q = new ECPoint
                 {
-                    X = LeftPad(x, expectedLen),
-                    Y = LeftPad(y, expectedLen)
+                    X = EcdsaLeftPad(x, expectedLen),
+                    Y = EcdsaLeftPad(y, expectedLen)
                 }
             };
 
             if (includePrivateParameters && !jwk.D.IsNullOrEmpty())
             {
                 var d = WebEncoders.Base64UrlDecode(jwk.D);
-                ecParams.D = LeftPad(d, expectedLen);
+                ecParams.D = EcdsaLeftPad(d, expectedLen);
             }
 
             var ecdsa = ECDsa.Create();
             ecdsa.ImportParameters(ecParams);
             return ecdsa;
+        }
+        private static byte[] EcdsaLeftPad(byte[] input, int size)
+        {
+            if (input.Length == size) return input;
+            if (input.Length > size) throw new ArgumentException("Input length is larger than expected size.");
+            var padded = new byte[size];
+            Buffer.BlockCopy(input, 0, padded, size - input.Length, input.Length);
+            return padded;
         }
 #endif
 
