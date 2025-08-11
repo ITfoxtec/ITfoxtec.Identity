@@ -6,6 +6,7 @@ using System.Linq;
 using MSTokens = Microsoft.IdentityModel.Tokens;
 using ITfoxtec.Identity.Models;
 using System.Collections.Generic;
+using ITfoxtec.Identity.Util;
 
 namespace ITfoxtec.Identity
 {
@@ -208,13 +209,46 @@ namespace ITfoxtec.Identity
         /// <summary>
         /// Converts a JWK to public X509Certificate.
         /// </summary>
-        public static X509Certificate2 ToX509Certificate(this JsonWebKey jwk)
+        public static X509Certificate2 ToX509Certificate(this JsonWebKey jwk
+#if !NETSTANDARD
+        , bool includePrivateKey = false
+#endif
+        )
         {
             if (jwk == null) throw new ArgumentNullException(nameof(jwk));
 
             if (!(jwk.X5c?.Count() > 0)) throw new ArgumentNullException(nameof(jwk.X5c), jwk.GetTypeName());
 
-            return new X509Certificate2(Convert.FromBase64String(jwk.X5c.First()));
+            var cert = CertificateUtil.LoadBytes(jwk.X5c.First());
+#if !NETSTANDARD
+            if (includePrivateKey)
+            {
+                if (jwk.Kty == MSTokens.JsonWebAlgorithmsKeyTypes.RSA && !jwk.D.IsNullOrEmpty() || !jwk.P.IsNullOrEmpty() || !jwk.Q.IsNullOrEmpty() || !jwk.DP.IsNullOrEmpty() || !jwk.DQ.IsNullOrEmpty() || !jwk.QI.IsNullOrEmpty())
+                {
+                    using (var rsa = jwk.ToRsa(includePrivateParameters: true))
+                    {
+                        var certWithKey = cert.CopyWithPrivateKey(rsa);
+                        cert.Dispose();
+                        return certWithKey;
+                    }
+                }
+                else if (jwk.Kty == MSTokens.JsonWebAlgorithmsKeyTypes.EllipticCurve && !jwk.D.IsNullOrEmpty())
+                {
+                    using (var ecdsa = ECDsa.Create())
+                    {
+                        ecdsa.ImportECPrivateKey(WebEncoders.Base64UrlDecode(jwk.D), out _);
+                        var certWithKey = cert.CopyWithPrivateKey(ecdsa);
+                        cert.Dispose();
+                        return certWithKey;
+                    }
+                }
+                else
+                {
+                    return cert; // No private key to add.
+                }
+            }
+#endif
+            return cert;
         }
     }
 }
