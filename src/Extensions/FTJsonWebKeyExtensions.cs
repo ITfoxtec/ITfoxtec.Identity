@@ -292,7 +292,6 @@ namespace ITfoxtec.Identity
                     using (var rsa = jwk.ToRsa(includePrivateParameters: true))
                     {
                         using var certWithKey = cert.CopyWithPrivateKey(rsa);
-                        cert.Dispose();
 
                         // Re-import as PFX with PersistKeySet so Windows assigns a key container usable by mTLS
                         var pfxBytes = certWithKey.Export(X509ContentType.Pkcs12);
