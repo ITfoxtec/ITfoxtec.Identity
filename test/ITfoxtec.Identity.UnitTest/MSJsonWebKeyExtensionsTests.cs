@@ -1,11 +1,14 @@
-﻿using ITfoxtec.Identity.Models;
-using Xunit;
+﻿using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace ITfoxtec.Identity.UnitTest
 {
-    public class FTJsonWebKeyExtensionsTest
+    public class MSJsonWebKeyExtensionsTests
     {
         #region RsaKey
         private static string rsaKey =
@@ -46,30 +49,9 @@ namespace ITfoxtec.Identity.UnitTest
         public void ToMSJsonWebKeyRsaKeyTest()
         {
             var key = rsaKey.ToObject<JsonWebKey>();
-            var msKey = key.ToMSJsonWebKey();
+            var msKey = key.ToFTJsonWebKey();
 
             Assert.Equal(key.Kid, msKey.Kid);
-        }
-
-        [Fact]
-        public void ToMSJsonWebKeysRsaKeyTest()
-        {
-            var keys = new[] { rsaKey.ToObject<JsonWebKey>() };
-            var msKeys = keys.ToMSJsonWebKeys().ToArray();
-
-            for (var i = 0; i < keys.Length; i++)
-            {
-                Assert.Equal(keys[i].Kid, msKeys[i].Kid);
-            }
-        }
-
-        [Fact]
-        public void HasPrivateKeyRsaKeyTest()
-        {
-            var key = rsaKey.ToObject<JsonWebKey>();
-            var hasPrivateKey = key.HasPrivateKey();
-
-            Assert.False(hasPrivateKey);
         }
 
         [Fact]
@@ -104,30 +86,9 @@ namespace ITfoxtec.Identity.UnitTest
         public void ToMSJsonWebKeyEcKeyTest()
         {
             var key = ecKey.ToObject<JsonWebKey>();
-            var msKey = key.ToMSJsonWebKey();
+            var msKey = key.ToFTJsonWebKey();
 
             Assert.Equal(key.Kid, msKey.Kid);
-        }
-
-        [Fact]
-        public void ToMSJsonWebKeysEcKeyTest()
-        {
-            var keys = new[] { ecKey.ToObject<JsonWebKey>() };
-            var msKeys = keys.ToMSJsonWebKeys().ToArray();
-
-            for (var i = 0; i < keys.Length; i++)
-            {
-                Assert.Equal(keys[i].Kid, msKeys[i].Kid);
-            }
-        }
-
-        [Fact]
-        public void HasPrivateKeyEcKeyTest()
-        {
-            var key = ecKey.ToObject<JsonWebKey>();
-            var hasPrivateKey = key.HasPrivateKey();
-
-            Assert.False(hasPrivateKey);
         }
         #endregion
     }
