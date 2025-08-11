@@ -306,16 +306,24 @@ namespace ITfoxtec.Identity
                     {
                         using var certWithKey = cert.CopyWithPrivateKey(ecdsa);
                         cert.Dispose();
-
-                        // Re-import as PFX with PersistKeySet (same reasoning as RSA)
-                        var pfxBytes = certWithKey.Export(X509ContentType.Pkcs12);
-                        return CertificateUtil.LoadBytes(pfxBytes,
-                            X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable | X509KeyStorageFlags.UserKeySet);
+                        return ExportAndReimportPfx(certWithKey);
                     }
                 }
             }
 #endif
             return cert;
         }
+
+        #if !NETSTANDARD
+        /// <summary>
+        /// Helper method to export a certificate as PFX and re-import it with required key storage flags.
+        /// </summary>
+        private static X509Certificate2 ExportAndReimportPfx(X509Certificate2 certWithKey)
+        {
+            var pfxBytes = certWithKey.Export(X509ContentType.Pkcs12);
+            return CertificateUtil.LoadBytes(pfxBytes,
+                X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable | X509KeyStorageFlags.UserKeySet);
+        }
+        #endif
     }
 }
