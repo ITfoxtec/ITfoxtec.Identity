@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.IdentityModel.Tokens;
 using FTModels = ITfoxtec.Identity.Models;
 using System.Collections.Generic;
+using ITfoxtec.Identity.Util;
 
 namespace ITfoxtec.Identity
 {
@@ -208,7 +209,7 @@ namespace ITfoxtec.Identity
 
             if (!(jwk.X5c?.Count() > 0)) throw new ArgumentNullException(nameof(jwk.X5c), jwk.GetTypeName());
 
-            return new X509Certificate2(Convert.FromBase64String(jwk.X5c.First()));
+            return CertificateUtil.LoadBytes(jwk.X5c.First());
         }
     }
 }
