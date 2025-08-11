@@ -288,8 +288,7 @@ namespace ITfoxtec.Identity
             {
                 // RSA branch with complete private parameters
                 if (jwk.Kty == MSTokens.JsonWebAlgorithmsKeyTypes.RSA &&
-                    !jwk.D.IsNullOrEmpty() && !jwk.P.IsNullOrEmpty() && !jwk.Q.IsNullOrEmpty() &&
-                    !jwk.DP.IsNullOrEmpty() && !jwk.DQ.IsNullOrEmpty() && !jwk.QI.IsNullOrEmpty())
+                    !jwk.D.IsNullOrEmpty() && !jwk.P.IsNullOrEmpty() && !jwk.Q.IsNullOrEmpty() && !jwk.DP.IsNullOrEmpty() && !jwk.DQ.IsNullOrEmpty() && !jwk.QI.IsNullOrEmpty())
                 {
                     using (var rsa = jwk.ToRsa(includePrivateParameters: true))
                     {
