@@ -31,17 +31,6 @@ namespace ITfoxtec.Identity.Util
         }
 #endif
 
-        public static X509Certificate2 Load(string path, X509KeyStorageFlags keyStorageFlags)
-        {
-            if (path.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(path));
-
-#if NETSTANDARD || NET60 || NET70 || NET80
-            return new X509Certificate2(path, (string)null, keyStorageFlags);
-#else
-            return X509CertificateLoader.LoadPkcs12FromFile(path, null, keyStorageFlags);
-#endif
-        }
-
         public static X509Certificate2 Load(string path, string password)
         {
             if (string.IsNullOrWhiteSpace(path)) throw new ArgumentNullException(nameof(path));
@@ -66,51 +55,14 @@ namespace ITfoxtec.Identity.Util
 #endif
         }
 
-        public static X509Certificate2 LoadBytes(byte[] certificate)
-        {
-            if (certificate == null || certificate.Length == 0) throw new ArgumentNullException(nameof(certificate));
-
-#if NETSTANDARD || NET60 || NET70 || NET80
-            return new X509Certificate2(certificate);
-#else
-            return X509CertificateLoader.LoadCertificate(certificate);
-#endif
-        }
-
         public static X509Certificate2 LoadBytes(string certificate)
         {
             if (string.IsNullOrWhiteSpace(certificate)) throw new ArgumentNullException(nameof(certificate));
 
-            return LoadBytes(Convert.FromBase64String(certificate));
-        }
-
-        public static X509Certificate2 LoadBytes(byte[] certificate, X509KeyStorageFlags keyStorageFlags)
-        {
-            if (certificate == null || certificate.Length == 0) throw new ArgumentNullException(nameof(certificate));
-
 #if NETSTANDARD || NET60 || NET70 || NET80
-            return new X509Certificate2(certificate, (string)null, keyStorageFlags);
+            return new X509Certificate2(Convert.FromBase64String(certificate));
 #else
-            return X509CertificateLoader.LoadPkcs12(certificate, null, keyStorageFlags);
-#endif
-        }
-
-        public static X509Certificate2 LoadBytes(string certificate, X509KeyStorageFlags keyStorageFlags)
-        {
-            if (string.IsNullOrWhiteSpace(certificate)) throw new ArgumentNullException(nameof(certificate));
-
-            return LoadBytes(Convert.FromBase64String(certificate), keyStorageFlags);
-        }
-
-        public static X509Certificate2 LoadBytes(byte[] certificate, string password)
-        {
-            if (certificate == null || certificate.Length == 0) throw new ArgumentNullException(nameof(certificate));
-            if (password == null) throw new ArgumentNullException(nameof(password));
-
-#if NETSTANDARD || NET60 || NET70 || NET80
-            return new X509Certificate2(certificate, password);
-#else
-            return X509CertificateLoader.LoadPkcs12(certificate, password);
+            return X509CertificateLoader.LoadCertificate(Convert.FromBase64String(certificate));
 #endif
         }
 
@@ -119,15 +71,11 @@ namespace ITfoxtec.Identity.Util
             if (string.IsNullOrWhiteSpace(certificate)) throw new ArgumentNullException(nameof(certificate));
             if (password == null) throw new ArgumentNullException(nameof(password));
 
-            return LoadBytes(Convert.FromBase64String(certificate), password);
-        }
-
-        public static X509Certificate2 LoadBytes(byte[] certificate, string password, X509KeyStorageFlags keyStorageFlags)
-        {
-            if (certificate == null || certificate.Length == 0) throw new ArgumentNullException(nameof(certificate));
-            if (password == null) throw new ArgumentNullException(nameof(password));
-
-            return LoadBytes(certificate, password, keyStorageFlags);
+#if NETSTANDARD || NET60 || NET70 || NET80
+            return new X509Certificate2(Convert.FromBase64String(certificate), password);
+#else
+            return X509CertificateLoader.LoadPkcs12(Convert.FromBase64String(certificate), password);
+#endif
         }
 
         public static X509Certificate2 LoadBytes(string certificate, string password, X509KeyStorageFlags keyStorageFlags)
@@ -135,7 +83,11 @@ namespace ITfoxtec.Identity.Util
             if (string.IsNullOrWhiteSpace(certificate)) throw new ArgumentNullException(nameof(certificate));
             if (password == null) throw new ArgumentNullException(nameof(password));
 
-            return LoadBytes(Convert.FromBase64String(certificate), password, keyStorageFlags);
+#if NETSTANDARD || NET60 || NET70 || NET80
+            return new X509Certificate2(Convert.FromBase64String(certificate), password, keyStorageFlags);
+#else
+            return X509CertificateLoader.LoadPkcs12(Convert.FromBase64String(certificate), password);
+#endif
         }
 
         public static X509Certificate2 Load(StoreName name, StoreLocation location, X509FindType type, string findValue)

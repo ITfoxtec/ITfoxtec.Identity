@@ -6,7 +6,6 @@ using System.Linq;
 using MSTokens = Microsoft.IdentityModel.Tokens;
 using ITfoxtec.Identity.Models;
 using System.Collections.Generic;
-using ITfoxtec.Identity.Util;
 
 namespace ITfoxtec.Identity
 {
@@ -155,8 +154,7 @@ namespace ITfoxtec.Identity
 
             if (includePrivateKey)
             {
-                if (jwk.Kty == MSTokens.JsonWebAlgorithmsKeyTypes.RSA &&
-                    !jwk.D.IsNullOrEmpty() && !jwk.P.IsNullOrEmpty() && !jwk.Q.IsNullOrEmpty() && !jwk.DP.IsNullOrEmpty() && !jwk.DQ.IsNullOrEmpty() && !jwk.QI.IsNullOrEmpty())
+                if (jwk.Kty == MSTokens.JsonWebAlgorithmsKeyTypes.RSA && !jwk.D.IsNullOrEmpty() && !jwk.P.IsNullOrEmpty() && !jwk.Q.IsNullOrEmpty() && !jwk.DP.IsNullOrEmpty() && !jwk.DQ.IsNullOrEmpty() && !jwk.QI.IsNullOrEmpty())
                 {
                     jwkResult.D = jwk.D;
                     jwkResult.P = jwk.P;
@@ -186,8 +184,7 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static bool HasPrivateKey(this JsonWebKey jwk)
         {
-            if (jwk.Kty == MSTokens.JsonWebAlgorithmsKeyTypes.RSA &&
-                (!jwk.D.IsNullOrEmpty() || !jwk.P.IsNullOrEmpty() || !jwk.Q.IsNullOrEmpty() || !jwk.DP.IsNullOrEmpty() || !jwk.DQ.IsNullOrEmpty() || !jwk.QI.IsNullOrEmpty()))
+            if (jwk.Kty == MSTokens.JsonWebAlgorithmsKeyTypes.RSA && !jwk.D.IsNullOrEmpty() || !jwk.P.IsNullOrEmpty() || !jwk.Q.IsNullOrEmpty() || !jwk.DP.IsNullOrEmpty() || !jwk.DQ.IsNullOrEmpty() || !jwk.QI.IsNullOrEmpty())
             {
                 return true;
             }
@@ -206,118 +203,18 @@ namespace ITfoxtec.Identity
         {
             return RSA.Create(jwk.ToRsaParameters(includePrivateParameters));
         }
-
-        /// <summary>
-        /// Converts an EC JWK to ECDsa.
-        /// </summary>
-        public static ECDsa ToEcdsa(this JsonWebKey jwk, bool includePrivateParameters = false)
-        {
-            if (jwk == null) throw new ArgumentNullException(nameof(jwk));
-            if (jwk.Kty != MSTokens.JsonWebAlgorithmsKeyTypes.EllipticCurve)
-                throw new NotSupportedException($"Only key type '{MSTokens.JsonWebAlgorithmsKeyTypes.EllipticCurve}' supported.");
-
-            if (jwk.Crv.IsNullOrEmpty()) throw new ArgumentNullException(nameof(jwk.Crv), jwk.GetTypeName());
-            if (jwk.X.IsNullOrEmpty()) throw new ArgumentNullException(nameof(jwk.X), jwk.GetTypeName());
-            if (jwk.Y.IsNullOrEmpty()) throw new ArgumentNullException(nameof(jwk.Y), jwk.GetTypeName());
-
-            var curve = jwk.Crv switch
-            {
-                "P-256" => ECCurve.NamedCurves.nistP256,
-                "P-384" => ECCurve.NamedCurves.nistP384,
-                "P-521" => ECCurve.NamedCurves.nistP521,
-                _ => throw new NotSupportedException($"Curve '{jwk.Crv}' not supported.")
-            };
-
-            var x = WebEncoders.Base64UrlDecode(jwk.X);
-            var y = WebEncoders.Base64UrlDecode(jwk.Y);
-
-            int expectedLen = curve.Oid.FriendlyName switch
-            {
-                "nistP256" => 32,
-                "nistP384" => 48,
-                "nistP521" => 66,
-                _ => throw new NotSupportedException($"Curve '{curve.Oid.FriendlyName}' not supported.")
-            };
-
-            static byte[] LeftPad(byte[] input, int size)
-            {
-                if (input.Length == size) return input;
-                if (input.Length > size) throw new ArgumentException("Input length is larger than expected size.");
-                var padded = new byte[size];
-                Buffer.BlockCopy(input, 0, padded, size - input.Length, input.Length);
-                return padded;
-            }
-
-            var ecParams = new ECParameters
-            {
-                Curve = curve,
-                Q = new ECPoint
-                {
-                    X = LeftPad(x, expectedLen),
-                    Y = LeftPad(y, expectedLen)
-                }
-            };
-
-            if (includePrivateParameters && !jwk.D.IsNullOrEmpty())
-            {
-                var d = WebEncoders.Base64UrlDecode(jwk.D);
-                ecParams.D = LeftPad(d, expectedLen);
-            }
-
-            var ecdsa = ECDsa.Create();
-            ecdsa.ImportParameters(ecParams);
-            return ecdsa;
-        }
 #endif
 
         /// <summary>
         /// Converts a JWK to public X509Certificate.
         /// </summary>
-        public static X509Certificate2 ToX509Certificate(this JsonWebKey jwk
-#if !NETSTANDARD
-        , bool includePrivateKey = false
-#endif
-        )
+        public static X509Certificate2 ToX509Certificate(this JsonWebKey jwk)
         {
             if (jwk == null) throw new ArgumentNullException(nameof(jwk));
+
             if (!(jwk.X5c?.Count() > 0)) throw new ArgumentNullException(nameof(jwk.X5c), jwk.GetTypeName());
 
-            var cert = CertificateUtil.LoadBytes(jwk.X5c.First());
-#if !NETSTANDARD
-            if (includePrivateKey)
-            {
-                // RSA branch with complete private parameters
-                if (jwk.Kty == MSTokens.JsonWebAlgorithmsKeyTypes.RSA &&
-                    !jwk.D.IsNullOrEmpty() && !jwk.P.IsNullOrEmpty() && !jwk.Q.IsNullOrEmpty() && !jwk.DP.IsNullOrEmpty() && !jwk.DQ.IsNullOrEmpty() && !jwk.QI.IsNullOrEmpty())
-                {
-                    using (var rsa = jwk.ToRsa(includePrivateParameters: true))
-                    {
-                        using var certWithKey = cert.CopyWithPrivateKey(rsa);
-                        cert.Dispose();
-
-                        // Re-import as PFX with PersistKeySet so Windows assigns a key container usable by mTLS
-                        var pfxBytes = certWithKey.Export(X509ContentType.Pkcs12);
-                        return CertificateUtil.LoadBytes(pfxBytes,
-                            X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable | X509KeyStorageFlags.UserKeySet);
-                    }
-                }
-                // ECDSA branch with D present
-                else if (jwk.Kty == MSTokens.JsonWebAlgorithmsKeyTypes.EllipticCurve && !jwk.D.IsNullOrEmpty())
-                {
-                    using (var ecdsa = jwk.ToEcdsa(includePrivateParameters: true))
-                    {
-                        using var certWithKey = cert.CopyWithPrivateKey(ecdsa);
-                        cert.Dispose();
-
-                        // Re-import as PFX with PersistKeySet (same reasoning as RSA)
-                        var pfxBytes = certWithKey.Export(X509ContentType.Pkcs12);
-                        return CertificateUtil.LoadBytes(pfxBytes,
-                            X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable | X509KeyStorageFlags.UserKeySet);
-                    }
-                }
-            }
-#endif
-            return cert;
+            return new X509Certificate2(Convert.FromBase64String(jwk.X5c.First()));
         }
     }
 }
