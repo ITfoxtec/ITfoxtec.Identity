@@ -4,7 +4,7 @@ using Xunit;
 
 namespace ITfoxtec.Identity.UnitTest
 {
-    public class RandomGeneratorTest
+    public class RandomGeneratorTests
     {           
         [Fact]
         public void Generate6Test()

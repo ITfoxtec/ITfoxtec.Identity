@@ -5,7 +5,7 @@ using Xunit;
 
 namespace ITfoxtec.Identity.UnitTest
 {
-    public class ResourceRequestTest
+    public class ResourceRequestTests
     {
         [Theory]
         [InlineData("https://someapi.com/")]
