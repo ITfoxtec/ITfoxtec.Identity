@@ -23,10 +23,10 @@
 The company name ITfoxtec has changed to FoxIDs but the components will keep the ITfoxtec name as part of the component name for now.</Description>
 		<PackageTags>OAuth 2.0 OpenID Connect OIDC</PackageTags>
 		<NeutralLanguage>en-US</NeutralLanguage>
-		<Version>2.15.0</Version>
+		<Version>2.16.0</Version>
 		<PackageIconUrl>https://www.foxids.com/favicon.ico</PackageIconUrl>
-		<AssemblyVersion>2.15.0</AssemblyVersion>
-		<FileVersion>2.15.0</FileVersion>
+		<AssemblyVersion>2.16.0</AssemblyVersion>
+		<FileVersion>2.16.0</FileVersion>
 		<PackageProjectUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
