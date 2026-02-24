@@ -44,7 +44,7 @@ namespace ITfoxtec.Identity
         {
             if (!value.IsNullOrWhiteSpace())
             {
-                return value.Split(' ');
+                return value.Split(' ').Where(v => !v.IsNullOrEmpty()).ToArray();
             }
             return null;
         }
