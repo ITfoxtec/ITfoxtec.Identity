@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -52,6 +53,26 @@ namespace ITfoxtec.Identity.UnitTest
             var tokenString = await token.ToJwtString();
 
             Assert.NotNull(tokenString);
+        }
+
+        [Fact]
+        public async Task CreateTokenIssuesAuthTimeAsInteger64Test()
+        {
+            var testCertificate = await "CN=test1, O=Test".CreateSelfSignedCertificateAsync();
+            var testKey = await testCertificate.ToFTJsonWebKeyAsync(true);
+
+            var authTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+            var token = JwtHandler.CreateToken(testKey, "test-issuer", new[] { "test-aud" }, new[]
+            {
+                new Claim(JwtClaimTypes.Subject, "test-user"),
+                new Claim(JwtClaimTypes.AuthTime, authTime)
+            });
+
+            var authTimeClaim = token.Claims.Single(c => c.Type == JwtClaimTypes.AuthTime);
+
+            Assert.Equal(ClaimValueTypes.Integer64, authTimeClaim.ValueType);
+            Assert.IsType<long>(token.Payload[JwtClaimTypes.AuthTime]);
+            Assert.Equal(long.Parse(authTime), token.Payload[JwtClaimTypes.AuthTime]);
         }
 
         [Fact]
