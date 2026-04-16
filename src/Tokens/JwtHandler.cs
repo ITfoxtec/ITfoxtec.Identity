@@ -50,10 +50,13 @@ namespace ITfoxtec.Identity.Tokens
         public static JwtSecurityToken CreateToken(MSTokens.SecurityKey securityKey, string issuer, IEnumerable<string> audiences, IEnumerable<Claim> claims, DateTimeOffset? issuedAt = null, int beforeIn = 60, int expiresIn = 3600,
             string algorithm = IdentityConstants.Algorithms.Asymmetric.RS256, string typ = IdentityConstants.JwtHeaders.MediaTypes.Jwt)
         {
+            var audienceList = audiences?.ToList();
+            var claimList = claims?.Select(NormalizeClaim).ToList();
+
             if (securityKey == null) throw new ArgumentNullException(nameof(securityKey));
             if (issuer.IsNullOrEmpty()) throw new ArgumentNullException(nameof(issuer));
-            if (audiences?.Count() < 1) throw new ArgumentException($"At least one audience is required.", nameof(audiences));
-            if (claims?.Count() < 1) throw new ArgumentException($"At least one claim is required.", nameof(claims));
+            if (audienceList?.Count < 1) throw new ArgumentException($"At least one audience is required.", nameof(audiences));
+            if (claimList?.Count < 1) throw new ArgumentException($"At least one claim is required.", nameof(claims));
 
             var key = securityKey is MSTokens.JsonWebKey jsonWebKey ? jsonWebKey.ToSecurityKey() : securityKey;
             var header = new JwtHeader(new MSTokens.SigningCredentials(key, algorithm));
@@ -66,15 +69,32 @@ namespace ITfoxtec.Identity.Tokens
             {
                 issuedAt = DateTimeOffset.UtcNow;
             }
-            var payload = new JwtPayload(issuer, audiences.First(), claims, issuedAt.Value.AddSeconds(-beforeIn).UtcDateTime, issuedAt.Value.AddSeconds(expiresIn).UtcDateTime, issuedAt.Value.UtcDateTime);
-            if (audiences.Count() > 1)
+            var payload = new JwtPayload(issuer, audienceList.First(), claimList, issuedAt.Value.AddSeconds(-beforeIn).UtcDateTime, issuedAt.Value.AddSeconds(expiresIn).UtcDateTime, issuedAt.Value.UtcDateTime);
+            if (audienceList.Count > 1)
             {
-                foreach (var audience in audiences.Skip(1))
+                foreach (var audience in audienceList.Skip(1))
                 {
                     payload.AddClaim(new Claim(JwtClaimTypes.Audience, audience));
                 }
             }
             return new JwtSecurityToken(header, payload);
+        }
+
+        private static Claim NormalizeClaim(Claim claim)
+        {
+            if (claim.Type == JwtClaimTypes.AuthTime && claim.ValueType != ClaimValueTypes.Integer64)
+            {
+
+                var normalizedClaimLong = new Claim(claim.Type, claim.Value, ClaimValueTypes.Integer64, claim.Issuer, claim.OriginalIssuer, claim.Subject);
+                foreach (var property in claim.Properties)
+                {
+                    normalizedClaimLong.Properties[property.Key] = property.Value;
+                }
+
+                return normalizedClaimLong;
+            }
+
+            return claim;
         }
 
         /// <summary>
