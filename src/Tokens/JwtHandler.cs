@@ -58,6 +58,8 @@ namespace ITfoxtec.Identity.Tokens
             if (audienceList?.Count < 1) throw new ArgumentException($"At least one audience is required.", nameof(audiences));
             if (claimList?.Count < 1) throw new ArgumentException($"At least one claim is required.", nameof(claims));
 
+            var (arrayClaims, stringAndArrayClaimList) = DevideClaimStringAndArrayTypes(claimList);
+
             var key = securityKey is MSTokens.JsonWebKey jsonWebKey ? jsonWebKey.ToSecurityKey() : securityKey;
             var header = new JwtHeader(new MSTokens.SigningCredentials(key, algorithm));
             if (!typ.IsNullOrEmpty())
@@ -69,7 +71,8 @@ namespace ITfoxtec.Identity.Tokens
             {
                 issuedAt = DateTimeOffset.UtcNow;
             }
-            var payload = new JwtPayload(issuer, audienceList.First(), claimList, issuedAt.Value.AddSeconds(-beforeIn).UtcDateTime, issuedAt.Value.AddSeconds(expiresIn).UtcDateTime, issuedAt.Value.UtcDateTime);
+            var payload = new JwtPayload(issuer, audienceList.First(), stringAndArrayClaimList, issuedAt.Value.AddSeconds(-beforeIn).UtcDateTime, issuedAt.Value.AddSeconds(expiresIn).UtcDateTime, issuedAt.Value.UtcDateTime);
+            AddArrayClaimValues(payload, JwtClaimTypes.Amr, arrayClaims);
             if (audienceList.Count > 1)
             {
                 foreach (var audience in audienceList.Skip(1))
@@ -80,11 +83,29 @@ namespace ITfoxtec.Identity.Tokens
             return new JwtSecurityToken(header, payload);
         }
 
+        private static (List<Claim> arrayClaims, List<Claim> stringAndArrayClaimList) DevideClaimStringAndArrayTypes(List<Claim> claimList)
+        {
+            var arrayClaimType = JwtClaimTypes.Amr;
+
+            var arrayClaims = claimList.Where(c => c.Type == arrayClaimType).ToList();
+            var stringAndArrayClaimList = claimList.Where(c => c.Type != arrayClaimType).ToList();
+
+            return (arrayClaims, stringAndArrayClaimList);
+        }
+
+        private static void AddArrayClaimValues(JwtPayload payload, string claimType, IEnumerable<Claim> claims)
+        {
+            var claimValues = claims?.Select(c => c.Value).ToArray();
+            if (claimValues?.Length > 0)
+            {
+                payload[claimType] = claimValues;
+            }
+        }
+
         private static Claim NormalizeClaim(Claim claim)
         {
             if (claim.Type == JwtClaimTypes.AuthTime && claim.ValueType != ClaimValueTypes.Integer64)
             {
-
                 var normalizedClaimLong = new Claim(claim.Type, claim.Value, ClaimValueTypes.Integer64, claim.Issuer, claim.OriginalIssuer, claim.Subject);
                 foreach (var property in claim.Properties)
                 {

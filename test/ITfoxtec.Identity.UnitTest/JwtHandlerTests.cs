@@ -6,6 +6,7 @@ using ITfoxtec.Identity.Tokens;
 using MSTokens = Microsoft.IdentityModel.Tokens;
 using Xunit;
 using ITfoxtec.Identity.Models;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
 namespace ITfoxtec.Identity.UnitTest
@@ -73,6 +74,27 @@ namespace ITfoxtec.Identity.UnitTest
             Assert.Equal(ClaimValueTypes.Integer64, authTimeClaim.ValueType);
             Assert.IsType<long>(token.Payload[JwtClaimTypes.AuthTime]);
             Assert.Equal(long.Parse(authTime), token.Payload[JwtClaimTypes.AuthTime]);
+        }
+
+        [Fact]
+        public async Task CreateTokenIssuesAmrAsArrayTest()
+        {
+            var testCertificate = await "CN=test1, O=Test".CreateSelfSignedCertificateAsync();
+            var testKey = await testCertificate.ToFTJsonWebKeyAsync(true);
+
+            var token = JwtHandler.CreateToken(testKey, "test-issuer", new[] { "test-aud" }, new[]
+            {
+                new Claim(JwtClaimTypes.Subject, "test-user"),
+                new Claim(JwtClaimTypes.Amr, "pwd")
+            });
+            var tokenString = await token.ToJwtString();
+
+            var payload = JObject.Parse(MSTokens.Base64UrlEncoder.Decode(tokenString.Split('.')[1]));
+            var amrClaim = payload[JwtClaimTypes.Amr];
+
+            Assert.NotNull(amrClaim);
+            Assert.Equal(JTokenType.Array, amrClaim.Type);
+            Assert.Equal(new[] { "pwd" }, amrClaim.Values<string>());
         }
 
         [Fact]
