@@ -30,6 +30,8 @@ The company name ITfoxtec has changed to FoxIDs but the components will keep the
 		<PackageProjectUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
+		<NuGetAudit>true</NuGetAudit>
+		<NuGetAuditMode>all</NuGetAuditMode>
 	</PropertyGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net10.0'">
