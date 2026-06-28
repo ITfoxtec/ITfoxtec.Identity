@@ -68,7 +68,6 @@ namespace ITfoxtec.Identity
 
             var jwk = new JsonWebKey
             {
-                Kty = MSTokens.JsonWebAlgorithmsKeyTypes.RSA,
                 Kid = WebEncoders.Base64UrlEncode(certificate.GetCertHash()),
                 X5c = new List<string> { Convert.ToBase64String(certificate.RawData) }
             };
@@ -76,19 +75,41 @@ namespace ITfoxtec.Identity
             jwk.X5tS256 = certificate.GetCertificateX5tS256();
 
             var securityKey = new MSTokens.X509SecurityKey(certificate);
-            var parameters = (securityKey.PublicKey as RSA).ExportParameters(false);
-            jwk.N = WebEncoders.Base64UrlEncode(parameters.Modulus);
-            jwk.E = WebEncoders.Base64UrlEncode(parameters.Exponent);
-
-            if (includePrivateKey && securityKey.PrivateKeyStatus == MSTokens.PrivateKeyStatus.Exists)
+            if (securityKey.PublicKey is RSA rsaPublicKey)
             {
-                parameters = (securityKey.PrivateKey as RSA).ExportParameters(true);
-                jwk.D = WebEncoders.Base64UrlEncode(parameters.D);
-                jwk.P = WebEncoders.Base64UrlEncode(parameters.P);
-                jwk.Q = WebEncoders.Base64UrlEncode(parameters.Q);
-                jwk.DP = WebEncoders.Base64UrlEncode(parameters.DP);
-                jwk.DQ = WebEncoders.Base64UrlEncode(parameters.DQ);
-                jwk.QI = WebEncoders.Base64UrlEncode(parameters.InverseQ);
+                jwk.Kty = MSTokens.JsonWebAlgorithmsKeyTypes.RSA;
+                var parameters = rsaPublicKey.ExportParameters(false);
+                jwk.N = WebEncoders.Base64UrlEncode(parameters.Modulus);
+                jwk.E = WebEncoders.Base64UrlEncode(parameters.Exponent);
+
+                if (includePrivateKey && securityKey.PrivateKey is RSA rsaPrivateKey)
+                {
+                    parameters = rsaPrivateKey.ExportParameters(true);
+                    jwk.D = WebEncoders.Base64UrlEncode(parameters.D);
+                    jwk.P = WebEncoders.Base64UrlEncode(parameters.P);
+                    jwk.Q = WebEncoders.Base64UrlEncode(parameters.Q);
+                    jwk.DP = WebEncoders.Base64UrlEncode(parameters.DP);
+                    jwk.DQ = WebEncoders.Base64UrlEncode(parameters.DQ);
+                    jwk.QI = WebEncoders.Base64UrlEncode(parameters.InverseQ);
+                }
+            }
+            else if (securityKey.PublicKey is ECDsa ecdsaPublicKey)
+            {
+                jwk.Kty = MSTokens.JsonWebAlgorithmsKeyTypes.EllipticCurve;
+                var parameters = ecdsaPublicKey.ExportParameters(false);
+                jwk.Crv = GetJsonWebKeyCurve(parameters.Curve);
+                jwk.X = WebEncoders.Base64UrlEncode(parameters.Q.X);
+                jwk.Y = WebEncoders.Base64UrlEncode(parameters.Q.Y);
+
+                if (includePrivateKey && securityKey.PrivateKey is ECDsa ecdsaPrivateKey)
+                {
+                    parameters = ecdsaPrivateKey.ExportParameters(true);
+                    jwk.D = WebEncoders.Base64UrlEncode(parameters.D);
+                }
+            }
+            else
+            {
+                throw new NotSupportedException($"Certificate public key type '{securityKey.PublicKey?.GetType().FullName}' is not supported.");
             }
             return jwk;
         }
@@ -135,7 +156,6 @@ namespace ITfoxtec.Identity
 
             var jwk = new MSTokens.JsonWebKey
             {
-                Kty = MSTokens.JsonWebAlgorithmsKeyTypes.RSA,
                 Kid = WebEncoders.Base64UrlEncode(certificate.GetCertHash())
             };
             jwk.X5c.Add(Convert.ToBase64String(certificate.RawData));
@@ -143,19 +163,41 @@ namespace ITfoxtec.Identity
             jwk.X5tS256 = certificate.GetCertificateX5tS256();
 
             var securityKey = new MSTokens.X509SecurityKey(certificate);
-            var parameters = (securityKey.PublicKey as RSA).ExportParameters(false);
-            jwk.N = WebEncoders.Base64UrlEncode(parameters.Modulus);
-            jwk.E = WebEncoders.Base64UrlEncode(parameters.Exponent);
-
-            if (includePrivateKey && securityKey.PrivateKeyStatus == MSTokens.PrivateKeyStatus.Exists)
+            if (securityKey.PublicKey is RSA rsaPublicKey)
             {
-                parameters = (securityKey.PrivateKey as RSA).ExportParameters(true);
-                jwk.D = WebEncoders.Base64UrlEncode(parameters.D);
-                jwk.P = WebEncoders.Base64UrlEncode(parameters.P);
-                jwk.Q = WebEncoders.Base64UrlEncode(parameters.Q);
-                jwk.DP = WebEncoders.Base64UrlEncode(parameters.DP);
-                jwk.DQ = WebEncoders.Base64UrlEncode(parameters.DQ);
-                jwk.QI = WebEncoders.Base64UrlEncode(parameters.InverseQ);
+                jwk.Kty = MSTokens.JsonWebAlgorithmsKeyTypes.RSA;
+                var parameters = rsaPublicKey.ExportParameters(false);
+                jwk.N = WebEncoders.Base64UrlEncode(parameters.Modulus);
+                jwk.E = WebEncoders.Base64UrlEncode(parameters.Exponent);
+
+                if (includePrivateKey && securityKey.PrivateKey is RSA rsaPrivateKey)
+                {
+                    parameters = rsaPrivateKey.ExportParameters(true);
+                    jwk.D = WebEncoders.Base64UrlEncode(parameters.D);
+                    jwk.P = WebEncoders.Base64UrlEncode(parameters.P);
+                    jwk.Q = WebEncoders.Base64UrlEncode(parameters.Q);
+                    jwk.DP = WebEncoders.Base64UrlEncode(parameters.DP);
+                    jwk.DQ = WebEncoders.Base64UrlEncode(parameters.DQ);
+                    jwk.QI = WebEncoders.Base64UrlEncode(parameters.InverseQ);
+                }
+            }
+            else if (securityKey.PublicKey is ECDsa ecdsaPublicKey)
+            {
+                jwk.Kty = MSTokens.JsonWebAlgorithmsKeyTypes.EllipticCurve;
+                var parameters = ecdsaPublicKey.ExportParameters(false);
+                jwk.Crv = GetJsonWebKeyCurve(parameters.Curve);
+                jwk.X = WebEncoders.Base64UrlEncode(parameters.Q.X);
+                jwk.Y = WebEncoders.Base64UrlEncode(parameters.Q.Y);
+
+                if (includePrivateKey && securityKey.PrivateKey is ECDsa ecdsaPrivateKey)
+                {
+                    parameters = ecdsaPrivateKey.ExportParameters(true);
+                    jwk.D = WebEncoders.Base64UrlEncode(parameters.D);
+                }
+            }
+            else
+            {
+                throw new NotSupportedException($"Certificate public key type '{securityKey.PublicKey?.GetType().FullName}' is not supported.");
             }
             return jwk;
         }
@@ -167,6 +209,24 @@ namespace ITfoxtec.Identity
         {
             var key = ToMSJsonWebKey(certificate, includePrivateKey);
             return Task.FromResult(key);
+        }
+
+        private static string GetJsonWebKeyCurve(ECCurve curve)
+        {
+            switch (curve.Oid.Value ?? curve.Oid.FriendlyName)
+            {
+                case "1.2.840.10045.3.1.7":
+                case "nistP256":
+                    return "P-256";
+                case "1.3.132.0.34":
+                case "nistP384":
+                    return "P-384";
+                case "1.3.132.0.35":
+                case "nistP521":
+                    return "P-521";
+                default:
+                    throw new NotSupportedException($"ECDSA certificate curve '{curve.Oid.FriendlyName ?? curve.Oid.Value}' is not supported.");
+            }
         }
     }
 }

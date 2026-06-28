@@ -93,9 +93,26 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static SecurityKey ToSecurityKey(this JsonWebKey jwk)
         {
-            var key = new RsaSecurityKey(jwk.ToRsaParameters(true));
-            key.KeyId = jwk.Kid;
-            return key;
+            if (jwk == null) throw new ArgumentNullException(nameof(jwk));
+
+            if (jwk.Kty == JsonWebAlgorithmsKeyTypes.RSA)
+            {
+                var key = new RsaSecurityKey(jwk.ToRsaParameters(true));
+                key.KeyId = jwk.Kid;
+                return key;
+            }
+            else if (jwk.Kty == JsonWebAlgorithmsKeyTypes.EllipticCurve)
+            {
+#if !NETSTANDARD
+                var key = new ECDsaSecurityKey(jwk.ToEcdsa(true));
+                key.KeyId = jwk.Kid;
+                return key;
+#else
+                throw new NotSupportedException($"Key type '{JsonWebAlgorithmsKeyTypes.EllipticCurve}' is not supported on .NET Standard.");
+#endif
+            }
+
+            throw new NotSupportedException($"Key type '{jwk.Kty}' not supported.");
         }
 
         /// <summary>
@@ -197,6 +214,68 @@ namespace ITfoxtec.Identity
         public static RSA ToRsa(this JsonWebKey jwk, bool includePrivateParameters = false)
         {
             return RSA.Create(jwk.ToRsaParameters(includePrivateParameters));
+        }
+
+        /// <summary>
+        /// Converts an EC JWK to ECDsa.
+        /// </summary>
+        public static ECDsa ToEcdsa(this JsonWebKey jwk, bool includePrivateParameters = false)
+        {
+            if (jwk == null) throw new ArgumentNullException(nameof(jwk));
+            if (jwk.Kty != JsonWebAlgorithmsKeyTypes.EllipticCurve)
+                throw new NotSupportedException($"Only key type '{JsonWebAlgorithmsKeyTypes.EllipticCurve}' supported.");
+
+            if (jwk.Crv.IsNullOrEmpty()) throw new ArgumentNullException(nameof(jwk.Crv), jwk.GetTypeName());
+            if (jwk.X.IsNullOrEmpty()) throw new ArgumentNullException(nameof(jwk.X), jwk.GetTypeName());
+            if (jwk.Y.IsNullOrEmpty()) throw new ArgumentNullException(nameof(jwk.Y), jwk.GetTypeName());
+
+            var curve = jwk.Crv switch
+            {
+                "P-256" => ECCurve.NamedCurves.nistP256,
+                "P-384" => ECCurve.NamedCurves.nistP384,
+                "P-521" => ECCurve.NamedCurves.nistP521,
+                _ => throw new NotSupportedException($"Curve '{jwk.Crv}' not supported.")
+            };
+
+            int expectedLen = curve.Oid.FriendlyName switch
+            {
+                "nistP256" => 32,
+                "nistP384" => 48,
+                "nistP521" => 66,
+                _ => throw new NotSupportedException($"Curve '{curve.Oid.FriendlyName}' not supported.")
+            };
+
+            var x = WebEncoders.Base64UrlDecode(jwk.X);
+            var y = WebEncoders.Base64UrlDecode(jwk.Y);
+
+            var ecParams = new ECParameters
+            {
+                Curve = curve,
+                Q = new ECPoint
+                {
+                    X = EcdsaLeftPad(x, expectedLen),
+                    Y = EcdsaLeftPad(y, expectedLen)
+                }
+            };
+
+            if (includePrivateParameters && !jwk.D.IsNullOrEmpty())
+            {
+                var d = WebEncoders.Base64UrlDecode(jwk.D);
+                ecParams.D = EcdsaLeftPad(d, expectedLen);
+            }
+
+            var ecdsa = ECDsa.Create();
+            ecdsa.ImportParameters(ecParams);
+            return ecdsa;
+        }
+
+        private static byte[] EcdsaLeftPad(byte[] input, int size)
+        {
+            if (input.Length == size) return input;
+            if (input.Length > size) throw new ArgumentException("Input length is larger than expected size.");
+            var padded = new byte[size];
+            Buffer.BlockCopy(input, 0, padded, size - input.Length, input.Length);
+            return padded;
         }
 #endif
 

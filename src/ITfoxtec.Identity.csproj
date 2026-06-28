@@ -23,11 +23,12 @@
 The company name ITfoxtec has changed to FoxIDs but the components will keep the ITfoxtec name as part of the component name for now.</Description>
 		<PackageTags>OAuth 2.0 OpenID Connect OIDC</PackageTags>
 		<NeutralLanguage>en-US</NeutralLanguage>
-		<Version>2.17.3</Version>
+		<Version>2.18.1</Version>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageReleaseNotes>Added ECDSA certificate and EC JWK conversion support, including X.509 certificate export to ITfoxtec and Microsoft JWK models and EC JWK to ECDsaSecurityKey conversion.</PackageReleaseNotes>
 		<PackageIconUrl>https://www.foxids.com/favicon.ico</PackageIconUrl>
-		<AssemblyVersion>2.17.3</AssemblyVersion>
-		<FileVersion>2.17.3</FileVersion>
+		<AssemblyVersion>2.18.1</AssemblyVersion>
+		<FileVersion>2.18.1</FileVersion>
 		<PackageProjectUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
