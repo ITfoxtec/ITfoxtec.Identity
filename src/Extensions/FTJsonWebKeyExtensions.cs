@@ -48,7 +48,7 @@ namespace ITfoxtec.Identity
                 publicKey.X = jwk.X;
                 publicKey.Y = jwk.Y;
             }
-            
+
             return publicKey;
         }
 
@@ -63,9 +63,11 @@ namespace ITfoxtec.Identity
             if (jwk.N.IsNullOrEmpty()) throw new ArgumentNullException(nameof(jwk.N), jwk.GetTypeName());
             if (jwk.E.IsNullOrEmpty()) throw new ArgumentNullException(nameof(jwk.E), jwk.GetTypeName());
 
-            var rsaParameters = new RSAParameters();
-            rsaParameters.Modulus = WebEncoders.Base64UrlDecode(jwk.N);
-            rsaParameters.Exponent = WebEncoders.Base64UrlDecode(jwk.E);
+            var rsaParameters = new RSAParameters
+            {
+                Modulus = WebEncoders.Base64UrlDecode(jwk.N),
+                Exponent = WebEncoders.Base64UrlDecode(jwk.E)
+            };
 
             if (includePrivateParameters && !jwk.D.IsNullOrEmpty() && !jwk.P.IsNullOrEmpty() && !jwk.Q.IsNullOrEmpty() && !jwk.DP.IsNullOrEmpty() && !jwk.DQ.IsNullOrEmpty() && !jwk.QI.IsNullOrEmpty())
             {
@@ -85,9 +87,26 @@ namespace ITfoxtec.Identity
         /// </summary>
         public static MSTokens.SecurityKey ToSecurityKey(this JsonWebKey jwk)
         {
-            var key = new MSTokens.RsaSecurityKey(jwk.ToRsaParameters(true));
-            key.KeyId = jwk.Kid;
-            return key;
+            if (jwk == null) throw new ArgumentNullException(nameof(jwk));
+
+            if (jwk.Kty == MSTokens.JsonWebAlgorithmsKeyTypes.RSA)
+            {
+                var key = new MSTokens.RsaSecurityKey(jwk.ToRsaParameters(true));
+                key.KeyId = jwk.Kid;
+                return key;
+            }
+            else if (jwk.Kty == MSTokens.JsonWebAlgorithmsKeyTypes.EllipticCurve)
+            {
+#if !NETSTANDARD
+                var key = new MSTokens.ECDsaSecurityKey(jwk.ToEcdsa(true));
+                key.KeyId = jwk.Kid;
+                return key;
+#else
+                throw new NotSupportedException($"Key type '{MSTokens.JsonWebAlgorithmsKeyTypes.EllipticCurve}' is not supported on .NET Standard.");
+#endif
+            }
+
+            throw new NotSupportedException($"Key type '{jwk.Kty}' not supported.");
         }
 
         /// <summary>
@@ -311,7 +330,7 @@ namespace ITfoxtec.Identity
             return cert;
         }
 
-        #if !NETSTANDARD
+#if !NETSTANDARD
         /// <summary>
         /// Export a certificate as PFX and re-import it with required key storage flags.
         /// </summary>
@@ -321,6 +340,6 @@ namespace ITfoxtec.Identity
             return CertificateUtil.LoadBytes(pfxBytes,
                 X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable | X509KeyStorageFlags.UserKeySet);
         }
-        #endif
+#endif
     }
 }
