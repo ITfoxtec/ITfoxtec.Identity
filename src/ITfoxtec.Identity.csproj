@@ -23,12 +23,12 @@
 The company name ITfoxtec has changed to FoxIDs but the components will keep the ITfoxtec name as part of the component name for now.</Description>
 		<PackageTags>OAuth 2.0 OpenID Connect OIDC</PackageTags>
 		<NeutralLanguage>en-US</NeutralLanguage>
-		<Version>2.18.1</Version>
+		<Version>2.19.0</Version>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageReleaseNotes>Added ECDSA certificate and EC JWK conversion support, including X.509 certificate export to ITfoxtec and Microsoft JWK models and EC JWK to ECDsaSecurityKey conversion.</PackageReleaseNotes>
+		<PackageReleaseNotes>Increased the maximum OAuth 2.0 and OpenID Connect state length from 2,000 to 4,000 characters for authorization and authentication requests and responses, including RP-initiated logout. Supports longer state values used by Microsoft Entra External Authentication Methods. Applications using StateMax in constants or validation attributes must update the package and rebuild.</PackageReleaseNotes>
 		<PackageIconUrl>https://www.foxids.com/favicon.ico</PackageIconUrl>
-		<AssemblyVersion>2.18.1</AssemblyVersion>
-		<FileVersion>2.18.1</FileVersion>
+		<AssemblyVersion>2.19.0</AssemblyVersion>
+		<FileVersion>2.19.0</FileVersion>
 		<PackageProjectUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>

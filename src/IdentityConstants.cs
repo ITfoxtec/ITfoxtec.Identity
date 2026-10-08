@@ -504,7 +504,7 @@
             public const int ResourceCountMax = 50;
             public const int AudienceMax = 300;
             public const int ScopeMax = 2000;
-            public const int StateMax = 2000;
+            public const int StateMax = 4000;
             public const int NonceMax = 2000;
             public const int TokenTypeMax = 50;
             public const int TokenTypeIdentifierMax = 100;
