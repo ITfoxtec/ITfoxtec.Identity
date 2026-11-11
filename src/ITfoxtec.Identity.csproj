@@ -103,7 +103,7 @@ The company name ITfoxtec has changed to FoxIDs but the components will keep the
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0'">
 		<PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="7.0.20" />
-		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.3.13" />
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.3.14" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<!-- IdentityModel 8.19+ requires cryptography packages that do not support .NET 6/7. -->
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.18.0" />
@@ -124,7 +124,7 @@ The company name ITfoxtec has changed to FoxIDs but the components will keep the
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0'">
 		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.36" />
-		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.3.13" />
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.3.14" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<!-- IdentityModel 8.19+ requires cryptography packages that do not support .NET 6/7. -->
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.18.0" />
@@ -145,7 +145,7 @@ The company name ITfoxtec has changed to FoxIDs but the components will keep the
 	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
 		<PackageReference Include="Microsoft.Extensions.Http" Version="3.1.32" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="3.1.32" />
-		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.3.13" />
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.3.14" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<!-- Keep the legacy dependency set for consumers using older runtimes. -->
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.18.0" />
