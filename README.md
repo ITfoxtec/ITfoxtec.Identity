@@ -11,6 +11,7 @@ ITfoxtec Identity implements OAuth 2.0 and OpenID Connect 1.0.
 dotnet add package ITfoxtec.Identity
 ```
 
+* **Support .NET 11.0**
 * **Support .NET 10.0**
 * **Support .NET 9.0**
 * **Support .NET 8.0**
