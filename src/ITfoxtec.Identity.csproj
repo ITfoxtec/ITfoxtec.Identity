@@ -24,12 +24,12 @@
 The company name ITfoxtec has changed to FoxIDs but the components will keep the ITfoxtec name as part of the component name for now.</Description>
 		<PackageTags>OAuth 2.0 OpenID Connect OIDC</PackageTags>
 		<NeutralLanguage>en-US</NeutralLanguage>
-		<Version>2.20.0</Version>
+		<Version>2.20.1</Version>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageReleaseNotes>Added .NET 11 support and moved unit tests to .NET 11. Updated Microsoft framework packages and Microsoft.NET.Test.Sdk. Retains System.IdentityModel.Tokens.Jwt 8.18.0 for .NET 6, .NET 7 and .NET Standard 2.0 to preserve compatibility with older runtimes.</PackageReleaseNotes>
+		<PackageReleaseNotes>Added RS384 and RS512 support to the OpenID Connect half-hash calculation for access tokens and authorisation codes.</PackageReleaseNotes>
 		<PackageIconUrl>https://www.foxids.com/favicon.ico</PackageIconUrl>
-		<AssemblyVersion>2.20.0</AssemblyVersion>
-		<FileVersion>2.20.0</FileVersion>
+		<AssemblyVersion>2.20.1</AssemblyVersion>
+		<FileVersion>2.20.1</FileVersion>
 		<PackageProjectUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/ITfoxtec/ITfoxtec.Identity</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>

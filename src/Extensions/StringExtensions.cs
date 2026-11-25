@@ -201,23 +201,37 @@ namespace ITfoxtec.Identity
 
         /// <summary>
         /// Compute a base64url encoded left-most half of the hash of the octets of the ASCII representation of a value. 
-        /// For instance, if the algorithm is RS256, hash the value with SHA-256, then take the left-most 128 bits and base64url encode them.
+        /// Supports the RS256, RS384 and RS512 signing algorithms.
         /// </summary>
         public static string LeftMostBase64urlEncodedHash(this string value, string algorithm)
         {
             if (value == null) throw new ArgumentNullException(nameof(value));
-            if (algorithm != IdentityConstants.Algorithms.Asymmetric.RS256) throw new NotSupportedException($"Algorithm {algorithm} not supported. Supports {IdentityConstants.Algorithms.Asymmetric.RS256}.");
+            HashAlgorithm sha;
+            switch (algorithm)
+            {
+                case IdentityConstants.Algorithms.Asymmetric.RS256:
+                    sha = SHA256.Create();
+                    break;
+                case IdentityConstants.Algorithms.Asymmetric.RS384:
+                    sha = SHA384.Create();
+                    break;
+                case IdentityConstants.Algorithms.Asymmetric.RS512:
+                    sha = SHA512.Create();
+                    break;
+                default:
+                    throw new NotSupportedException($"Algorithm {algorithm} not supported. Supports RS256, RS384 and RS512.");
+            }
 
-            using (var sha = SHA256.Create())
+            using (sha)
             {
                 var hash = sha.ComputeHash(Encoding.ASCII.GetBytes(value));
-                return WebEncoders.Base64UrlEncode(hash.Take(16).ToArray());
+                return WebEncoders.Base64UrlEncode(hash, 0, hash.Length / 2);
             }
         }
 
         /// <summary>
-        /// Compute a base64url encoded left-most half of the hash of the octets of the ASCII representation of a value. 
-        /// For instance, if the algorithm is RS256, hash the value with SHA-256, then take the left-most 128 bits and base64url encode them.
+        /// Compute a base64url encoded left-most half of the hash of the octets of the ASCII representation of a value.
+        /// Supports the RS256, RS384 and RS512 signing algorithms.
         /// </summary>
         public static Task<string> LeftMostBase64urlEncodedHashAsync(this string value, string algorithm)
         {
